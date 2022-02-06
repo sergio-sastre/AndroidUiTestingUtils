@@ -36,7 +36,7 @@ dependencies {
 that are inflated with the Activity context! Check the examples in [Road-to-Effective-Snapshot-Testing](https://github.com/sergio-sastre/Road-To-Effective-Snapshot-Testing) to see how to snapshot test any view using the Activity context.
 
 
-**Known issue**: As of `AndroidUiTestingUtils:1.0.0-SNAPSHOT`, pseudolocales (i.e. en_XA and ar_XB) do not work with LocaleTestRule. This will be fixed in the next version
+**Known issue**: As of `AndroidUiTestingUtils:1.0.0-SNAPSHOT`, pseudolocales (i.e. en_XA and ar_XB) do not work with `LocaleTestRule`. This will be fixed in the next version
 
 ## Usage
 1. To use `ActivityScenarioConfigurator` you need to add the following activities to your `debug/manifest`
