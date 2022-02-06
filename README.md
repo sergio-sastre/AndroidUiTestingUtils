@@ -1,14 +1,14 @@
 # AndroidUiTestingUtils
-A set of TestRules, ActivityScenarios and utils to facilitate UI Testing under certain configurations.
+A set of `TestRule`s, `ActivityScenario`s and utils to facilitate UI testing/snapshot testing under certain configurations, independent of the framework you are using.
 It currently supports the following: 
 1. FontSizes
 2. Locales
 
-In the near future, there are plans to also support the following:
+In the near future, there are plans to also support the following, among others:
 1. Orientation
 2. Display
 3. Dark mode
-4. Reduce snapshot testing flakinesss
+4. Reduce snapshot testing flakiness
 
 ## Integration
 To integrate AndroidUiTestingUtils into your project:
@@ -29,13 +29,14 @@ dependencies {
 ```
 
 ## What to keep in mind
-1. For standard UI testing, use TestRules.
-2. For snapshot/screenshot testing any UI component that *does not test the full Activity*, prefer ActivityScenarioConfigurator. That is because:
-   - Some test rules, like FontSizeTestRule, execute the corresponding adb shell commands to change the configuration, and that change might not happen immediately.
-   - ActivityScenarioConfigurator launches a default Activity with the given configuration. Therefore, such configuration changes apply to all UI elements
-that are inflated with the Activity context!
+1. For **standard UI testing**, use `TestRule`s.
+2. For **snapshot/screenshot testing** any UI component that *does not test the full Activity*, prefer `ActivityScenarioConfigurator` to `TestRule`s. That is because:
+   - Some `TestRule`s, like `FontSizeTestRule`, execute the corresponding adb shell commands to change the configuration, and that change might not happen immediately, slowing down your test execution.
+   - `ActivityScenarioConfigurator` launches a default Activity with the given configuration. Therefore, such configuration changes apply to all UI elements
+that are inflated with the Activity context! Check the examples in [Road-to-Effective-Snapshot-Testing](https://github.com/sergio-sastre/Road-To-Effective-Snapshot-Testing) to see how to snapshot test any view using the Activity context.
 
-**Known issue**: As of `AndroidUiTestingUtils:1.0.0-SNAPSHOT`, pseudolocales (i.e. en_XA and ar_XB) do not work. This will be fixed in the next version
+
+**Known issue**: As of `AndroidUiTestingUtils:1.0.0-SNAPSHOT`, pseudolocales (i.e. en_XA and ar_XB) do not work with LocaleTestRule. This will be fixed in the next version
 
 ## Usage
 1. To use `ActivityScenarioConfigurator` you need to add the following activities to your `debug/manifest`
@@ -47,13 +48,14 @@ that are inflated with the Activity context!
 </application>
 ```
 
-2. To use `LocaleTestRule`, add this permission in your `debug.manifest:
+2. To use `LocaleTestRule`, add this permission in your `debug.manifest`:
 ```xml
 <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"
         tools:ignore="ProtectedPermissions"/>
 ```
-
-### ActivityScenario example: Screenshot test with [Shot from pedrovgs](https://github.com/pedrovgs/Shot)
+### Code examples
+#### Screenshot test examples with [Shot from pedrovgs](https://github.com/pedrovgs/Shot)
+1. ActivityScenario
 ```kotlin
 @Test
 fun activityScenarioWithLocaleAndFontSize(){
@@ -78,10 +80,8 @@ fun activityScenarioWithLocaleAndFontSize(){
 }
 ```
 
-Links to real examples coming soon :)
-</br>
-
-In order to test **Jetpack Compose** views with ActivityScenarioConfigurator, use `createEmptyComposeRule()`, for instance:
+2. Jetpack Compose + ActivityScenario</br>
+In order to test **Jetpack Compose** views with `ActivityScenarioConfigurator`, use `createEmptyComposeRule()`, for instance:
 ```kotlin
 
 @get:Rule
@@ -100,11 +100,11 @@ fun composeWithFontSizeTest() {
                      }
                 }
 
-    compareScreenshot(composeTestRule, name = testItem.testName)
+    compareScreenshot(composeTestRule, name = testName)
 }
 ```
 
-### TestRule example
+#### TestRule example
 
 ```kotlin
 
@@ -113,6 +113,12 @@ val localeTestRule = LocaleTestRule(locale)
 
 @get:Rule
 val fontSizeTestRule = FontScaleRules.fontScaleTestRule(fontScale)
+
+@Test
+fun yourTest() {
+   // here your UI or snapshot Test
+   ...
+}
 
 ```
 
