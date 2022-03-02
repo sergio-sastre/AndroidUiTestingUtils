@@ -6,15 +6,16 @@ package sergio.sastre.uitesting.utils.testrules.fontsize
 import android.content.res.Resources
 import android.os.Build
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import sergio.sastre.uitesting.utils.common.FontScale
+import sergio.sastre.uitesting.utils.common.FontSize
 
 class FontScaleSetting internal constructor(private val resources: Resources) {
 
-    fun get(): FontScale {
-        return FontScale.from(resources.configuration.fontScale)
+    fun get(): FontSize {
+        FontSizeTestRule(FontSize.NORMAL)
+        return FontSize.from(resources.configuration.fontScale)
     }
 
-    fun set(scale: FontScale) {
+    fun set(scale: FontSize) {
         try {
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
                 changeFontScaleFromApi25(scale)
@@ -27,19 +28,19 @@ class FontScaleSetting internal constructor(private val resources: Resources) {
         }
     }
 
-    private fun changeFontScalePreApi25(scale: FontScale) {
+    private fun changeFontScalePreApi25(scale: FontSize) {
         resources.configuration.fontScale = java.lang.Float.parseFloat(scale.value)
         val metrics = Resources.getSystem().displayMetrics
         metrics.scaledDensity = resources.configuration.fontScale * metrics.density
         resources.updateConfiguration(resources.configuration, metrics)
     }
 
-    private fun changeFontScaleFromApi25(scale: FontScale) {
+    private fun changeFontScaleFromApi25(scale: FontSize) {
         getInstrumentation().uiAutomation
             .executeShellCommand("settings put system font_scale " + scale.value)
     }
 
-    private fun saveFontScaleError(scale: FontScale): RuntimeException {
+    private fun saveFontScaleError(scale: FontSize): RuntimeException {
         return RuntimeException("Unable to save font size " + scale.name)
     }
 }

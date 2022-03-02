@@ -8,12 +8,31 @@ import org.junit.runner.Description
 import org.junit.runners.model.Statement
 
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import sergio.sastre.uitesting.utils.common.FontScale
+import sergio.sastre.uitesting.utils.common.FontSize
 
-class FontScaleTestRule(
-    private val fontScaleSetting: FontScaleSetting,
-    private val fontScale: FontScale
+/**
+ * A TestRule to change FontSize of the device/emulator via adb
+ *
+ * Strongly based on code from espresso-support library, from Novoda
+ * https://github.com/novoda/espresso-support/tree/master/core/src/main/java/com/novoda/espresso
+ */
+class FontSizeTestRule(
+    private val fontSize: FontSize
 ) : TestWatcher(), TestRule {
+
+    companion object {
+        fun smallFontScaleTestRule(): FontSizeTestRule = FontSizeTestRule(FontSize.SMALL)
+
+        fun normalFontScaleTestRule(): FontSizeTestRule = FontSizeTestRule(FontSize.NORMAL)
+
+        fun largeFontScaleTestRule(): FontSizeTestRule = FontSizeTestRule(FontSize.LARGE)
+
+        fun hugeFontScaleTestRule(): FontSizeTestRule = FontSizeTestRule(FontSize.HUGE)
+    }
+
+    private val fontScaleSetting: FontScaleSetting =
+        FontScaleSetting(getInstrumentation().targetContext.resources)
+
     private var previousScale: Float = 0.toFloat()
 
     override fun starting(description: Description?) {
@@ -21,17 +40,17 @@ class FontScaleTestRule(
     }
 
     override fun finished(description: Description?) {
-        fontScaleSetting.set(FontScale.from(previousScale))
+        fontScaleSetting.set(FontSize.from(previousScale))
     }
 
     override fun apply(base: Statement, description: Description): Statement {
-        return FontScaleStatement(base, fontScaleSetting, fontScale)
+        return FontScaleStatement(base, fontScaleSetting, fontSize)
     }
 
     private class FontScaleStatement constructor(
         private val baseStatement: Statement,
         private val scaleSetting: FontScaleSetting,
-        private val scale: FontScale
+        private val scale: FontSize
     ) : Statement() {
 
         @Throws(Throwable::class)
@@ -46,7 +65,7 @@ class FontScaleTestRule(
             sleepUntil(scaleMatches(initialScale))
         }
 
-        private fun scaleMatches(scale: FontScale): Condition {
+        private fun scaleMatches(scale: FontSize): Condition {
             return object : Condition {
                 override fun holds(): Boolean {
                     return scaleSetting.get() === scale
