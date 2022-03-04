@@ -153,7 +153,7 @@ object ActivityScenarioConfigurator {
         if (orientation == Orientation.LANDSCAPE) {
             LandscapeSnapshotConfiguredActivity::class.java
         } else {
-            SnapshotConfiguredActivity::class.java
+            PortraitSnapshotConfiguredActivity::class.java
         }
 
     private fun Context.wrap(): Context {
@@ -171,7 +171,7 @@ object ActivityScenarioConfigurator {
         return createConfigurationContext(newConfig)
     }
 
-    class SnapshotConfiguredActivity : ComponentActivity() {
+    class PortraitSnapshotConfiguredActivity : ComponentActivity() {
         override fun attachBaseContext(newBase: Context?) {
             super.attachBaseContext(newBase?.wrap())
         }
