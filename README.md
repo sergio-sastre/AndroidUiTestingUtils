@@ -146,7 +146,7 @@ fun snapComposableTest() {
 As of version 1.0.0, it is not supported, but will be added in the next releases. For now, you can circumvent it by creating a custom empty Activity containing the fragment under test, and do like in the example to snapshot test Activities. Keep in mind that you need to define an additional empty Activity for landscape mode to support landscape orientation.
 
 ### Utils
-1. waitFoActivity:
+1. waitForActivity:
    This method is analog to the one defined in [pedrovgs/Shot](https://github.com/pedrovgs/Shot). It's also available in this library for compatibility with other screenshot testing frameworks like Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android).
 
 2. waitForView: Inflates the layout in the main thread and waits till the inflation happens, returning the inflated view. You will need to inflate layouts with the activity context created from the ActivityScenario of this library for the configurations to become effective.
