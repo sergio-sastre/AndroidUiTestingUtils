@@ -87,6 +87,7 @@ fun snapActivityTest() {
 ### Android View
 ```kotlin
 // example for ViewHolder
+@Test
 fun snapViewHolderTest() {
     val activity =
         ActivityScenarioConfigurator.ForView()
