@@ -14,6 +14,16 @@ import java.util.*
 import kotlin.jvm.JvmOverloads
 import kotlin.Throws
 
+/**
+ * A TestRule to change the Locale of the device via reflection. It grants
+ * the CHANGE_CONFIGURATION permission via adb
+ *
+ * Code from fastlane Screengrab
+ * @see https://github.com/fastlane/fastlane/blob/master/screengrab/screengrab-lib/src/main/java/tools.fastlane.screengrab/locale/LocaleTestRule.java
+ *
+ * The code was converted to Kotlin, and added the [grantChangeConfigurationIfNeeded] method
+ * to enable locale change
+ */
 class LocaleTestRule : TestRule {
     private val testLocale: Locale?
     private val testLocaleString: String?
@@ -21,8 +31,12 @@ class LocaleTestRule : TestRule {
     private val targetContext = getInstrumentation().targetContext
     private val packageName = getInstrumentation().targetContext.packageName
 
+    init {
+        grantChangeConfigurationIfNeeded()
+    }
+
     @JvmOverloads
-    constructor(testLocale: String? = LocaleUtil.testLocale) {
+    constructor(testLocale: String? = LocaleUtil.getTestLocale()) {
         this.testLocale = LocaleUtil.localeFromString(testLocale)
         testLocaleString = testLocale
     }
@@ -42,7 +56,6 @@ class LocaleTestRule : TestRule {
         return object : Statement() {
             @Throws(Throwable::class)
             override fun evaluate() {
-                grantChangeConfigurationIfNeeded()
                 var original: LocaleListCompat? = null
                 try {
                     if (testLocale != null) {

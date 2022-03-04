@@ -8,6 +8,6 @@
         tools:ignore="ProtectedPermissions" />
 
     <application>
-        <activity android:name=".activityscenario.ActivityScenarioConfigurator$SnapshotConfiguredActivity" />
+        <activity android:name=".activityscenario.ActivityScenarioConfigurator$PortraitSnapshotConfiguredActivity" />
     </application>
 </manifest>

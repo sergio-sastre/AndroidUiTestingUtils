@@ -1,5 +1,11 @@
 package sergio.sastre.uitesting.utils.common
 
+/**
+ * Code from fastlane Screengrab
+ * https://github.com/fastlane/fastlane/blob/master/screengrab/screengrab-lib/src/main/java/tools.fastlane.screengrab/locale
+ *
+ * The code was converted to Kotlin
+ */
 import android.os.LocaleList
 import android.os.Build
 import androidx.annotation.RequiresApi
