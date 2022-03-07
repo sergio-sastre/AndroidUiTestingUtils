@@ -15,6 +15,8 @@ The setup in which the bug is reproducible:
 - Device or Emulator: [e.g. Emulator]
 - API level: [e.g. API 26+, < API 26]
 - AndroidUiTestingUtils version: [e.g. 1.0.0]
+- Affected Component: [e.g. Activity, Composable, AndroidView]
+- Buggy Configuration: [e.g.  Locale, FontSize, Orientation, Dark Mode]
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
