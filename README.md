@@ -1,3 +1,6 @@
+<a href="https://androidweekly.net/issues/issue-508">
+<img src="https://androidweekly.net/issues/issue-508/badge">
+</a>
 # AndroidUiTestingUtils
 A set of *TestRules*, *ActivityScenarios* and utils to facilitate UI testing & screenshot testing under certain configurations, independent of the UI testing framework you are using.
 For screenshot testing, it supports **Jetpack Compose**, **android Views** (e.g. custom Views, ViewHolders, etc.) and **Activities**.
@@ -91,18 +94,19 @@ fun snapActivityTest() {
 fun snapViewHolderTest() {
     val activity =
         ActivityScenarioConfigurator.ForView()
-            .setFontSize(FontSize)
-            .setLocale(testItem.locale)
+            .setFontSize(FontSize.NORMAL)
+            .setLocale("en")
             .setInitialOrientation(Orientation.PORTRAIT)
+            .setUiMode(UiMode.DAY)
             .launchConfiguredActivity()
             .waitForActivity()
 
     val layout = waitForView {
-        // handy method to inflate views with activities context -> inherits context configuration 
+        // inflate layout inside the activity with its context -> inherits configuration 
         activity.inflate(R.layout.your_view_holder_layout)
     }
 
-    // handy method to asynchronously wait for layout inflation 
+    // wait asynchronously for layout inflation 
     val viewHolder = waitForView {
         YourViewHolder(layout).apply {
             // bind data to ViewHolder here
@@ -151,7 +155,8 @@ As of version 1.0.0, it is not supported, but will be added in the next releases
 
 2. waitForView: Inflates the layout in the main thread and waits till the inflation happens, returning the inflated view. You will need to inflate layouts with the activity context created from the ActivityScenario of this library for the configurations to become effective.
 
-3. activity.inflate(R.layout_of_your_view): Use it to inflate android Views that need the activity context created from the ActivityScenario of this library for the configurations to become effective.
+3. activity.inflate(R.layout_of_your_view): Use it to inflate android Views with the activity's context configuration.
+In doing so, the configuration becomes effective in the view. It also adds the view to the Activity's root.
 
 ### Reading on screenshot testing
 - [An introduction to snapshot testing on Android in 2021](https://sergiosastre.hashnode.dev/an-introduction-to-snapshot-testing-on-android-in-2021)
