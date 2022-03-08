@@ -1,6 +1,7 @@
 <a href="https://androidweekly.net/issues/issue-508">
 <img src="https://androidweekly.net/issues/issue-508/badge">
 </a>
+
 # AndroidUiTestingUtils
 A set of *TestRules*, *ActivityScenarios* and utils to facilitate UI testing & screenshot testing under certain configurations, independent of the UI testing framework you are using.
 For screenshot testing, it supports **Jetpack Compose**, **android Views** (e.g. custom Views, ViewHolders, etc.) and **Activities**.
