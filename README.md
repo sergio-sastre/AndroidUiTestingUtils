@@ -66,8 +66,23 @@ First, you need to add the following permission and activities to your `debug/ma
    ...
 </application>
 ```
+
+To enable pseudolocales **en_XA** & **ar_XB** for your screenshot tests, add this to your build.gradle.
+```groovy
+android {
+   ...
+   buildTypes {
+      ...
+      debug {
+         pseudoLocalesEnabled true
+      }
+   }
+}
+```
+
 ## Screenshot testing examples
-The examples use [pedrovgs/Shot](https://github.com/pedrovgs/Shot). It'd also work with Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android)
+The examples use [pedrovgs/Shot](https://github.com/pedrovgs/Shot). It'd also work with Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android) or with a custom screenshot testing solution.
+
 ### Activity
 ```kotlin
 @get:Rule
@@ -121,6 +136,10 @@ fun snapViewHolderTest() {
     )
 }
 ```
+**Warning**: If the View under test contains system Locale dependent code, like `NumberFormat.getInstance(Locale.getDefault())`, the Locale formatting you've set via `ActivityScenarioConfigurator.ForView().setLocale("my_locale")` will not work. That's because NumberFormat is using the Locale of the Android system, and not that of the Activity we've configured. Beware of using `instrumenation.targetContext` in your tests when using getString() for the very same reason: use Activity's context instead. </br> To solve that issue, you can do one of the following:
+1. Use `NumberFormat.getInstance(anyViewInsideActivity.context.locales[0])` in your production code.
+2. Use `LocaleTestRule("my_locale")` in your tests instead of `ActivityScenarioConfigurator.ForView().setLocale("my_locale")`.
+
 ### Jetpack Compose
 ```kotlin
 // needs an EmptyComposeRule to be compatible with ActivityScenario
@@ -147,6 +166,10 @@ fun snapComposableTest() {
     compareScreenshot(rule = composeTestRule, name = "your_unique_test_name")
 }
 ```
+**Warning**: If the Composable under test contains system Locale dependent code, like `NumberFormat.getInstance(Locale.getDefault())`, the Locale formatting you've set via `ActivityScenarioConfigurator.ForComposable().setLocale("my_locale")` will not work. That's because NumberFormat is using the Locale of the Android system, and not that of the Activity we've configured, which is applied to the LocaleContext of our Composables. </br> To solve that issue, you can do one of the following:
+1. Use `NumberFormat.getInstance(LocaleContext.current.locales[0])` in your production code.
+2. Use `LocaleTestRule("my_locale")` in your tests instead of `ActivityScenarioConfigurator.ForComposable().setLocale("my_locale")`.
+
 ### Fragment
 As of version 1.0.0, it is not supported, but will be added in the next releases. For now, you can circumvent it by creating a custom empty Activity containing the fragment under test, and do like in the example to snapshot test Activities. Keep in mind that you need to define an additional empty Activity for landscape mode to support landscape orientation.
 
