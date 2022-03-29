@@ -94,13 +94,16 @@ val fontSize = FontSizeTestRule(FontSize.HUGE)
 @Test
 fun snapActivityTest() {
     // Locale and FontSize are only supported via TestRules for Activities
-    val activity = ActivityScenarioConfigurator.ForActivity()
+    val activityScenario = ActivityScenarioConfigurator.ForActivity()
         .setOrientation(Orientation.LANDSCAPE)
         .setUiMode(UiMode.NIGHT)
         .launch(YourActivity::class.java)
-        .waitForActivity()
+        
+    val activity = activityScenario.waitForActivity()
     
     compareScreenshot(activity = activity, name = "your_unique_test_name")
+    
+    activityScenario.close()
 }
 ```
 ### Android View
@@ -108,14 +111,15 @@ fun snapActivityTest() {
 // example for ViewHolder
 @Test
 fun snapViewHolderTest() {
-    val activity =
+    val activityScenario =
         ActivityScenarioConfigurator.ForView()
             .setFontSize(FontSize.NORMAL)
             .setLocale("en")
             .setInitialOrientation(Orientation.PORTRAIT)
             .setUiMode(UiMode.DAY)
             .launchConfiguredActivity()
-            .waitForActivity()
+
+    val activity = activityScenario.waitForActivity()
 
     val layout = waitForView {
         // inflate layout inside the activity with its context -> inherits configuration 
@@ -134,6 +138,8 @@ fun snapViewHolderTest() {
         heightInPx = layout.height,
         name = "your_unique_test_name"
     )
+    
+    activityScenario.close()
 }
 ```
 **Warning**: If the View under test contains system Locale dependent code, like `NumberFormat.getInstance(Locale.getDefault())`, the Locale formatting you've set via `ActivityScenarioConfigurator.ForView().setLocale("my_locale")` will not work. That's because NumberFormat is using the Locale of the Android system, and not that of the Activity we've configured. Beware of using `instrumenation.targetContext` in your tests when using getString() for the very same reason: use Activity's context instead. </br> To solve that issue, you can do one of the following:
@@ -148,7 +154,7 @@ val composeTestRule = createEmptyComposeRule()
 
 @Test
 fun snapComposableTest() {
-    ActivityScenarioConfigurator.ForComposable()
+    val activityScenario = ActivityScenarioConfigurator.ForComposable()
         .setFontSize(FontSize.SMALL)
         .setLocale("de")
         .setInitialOrientation(Orientation.PORTRAIT)
@@ -161,9 +167,12 @@ fun snapComposableTest() {
                 }
             }
         }
-        .waitForActivity()
+        
+    activityScenario.waitForActivity()
 
     compareScreenshot(rule = composeTestRule, name = "your_unique_test_name")
+    
+    activityScenario.close()
 }
 ```
 **Warning**: If the Composable under test contains system Locale dependent code, like `NumberFormat.getInstance(Locale.getDefault())`, the Locale formatting you've set via `ActivityScenarioConfigurator.ForComposable().setLocale("my_locale")` will not work. That's because NumberFormat is using the Locale of the Android system, and not that of the Activity we've configured, which is applied to the LocaleContext of our Composables. </br> To solve that issue, you can do one of the following:
