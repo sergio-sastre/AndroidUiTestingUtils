@@ -14,7 +14,7 @@ enum class FontSize(val value: String) {
                     return fontScale
                 }
             }
-            throw IllegalArgumentException("Unknown scale: $scale")
+            throw IllegalArgumentException("Unknown font scale: $scale")
         }
     }
 }

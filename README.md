@@ -8,14 +8,17 @@ For screenshot testing, it supports **Jetpack Compose**, **android Views** (e.g.
 </br></br>
 Currently, with this library you can easily change the following configurations in your instrumented tests:
 1. Locale (also Pseudolocales **en_XA** & **ar_XB**)
-2. FontSize
+2. Font size
 3. Orientation
-4. Dark Mode /Day-Night Mode
+4. Dark mode /Day-Night mode
+5. Display size - **from 1.1.0-beta**
+
+You can find out why verifying our design under such configurations is important in this blog post: 
+- [Design a pixel perfect Android app 🎨](https://sergiosastre.hashnode.dev/design-a-pixel-perfect-android-app-with-screenshot-testing)
 
 In the near future, there are plans to also support, among others:
-1. Display
-2. FragmentScenario
-3. Reduce snapshot testing flakiness
+1. FragmentScenario
+2. Reduce snapshot testing flakiness
 
 ## Table of Contents
 - [Integration](#integration)
@@ -45,6 +48,12 @@ Add a dependency to `build.gradle`
 ```groovy
 dependencies {
     androidTestImplementation 'com.github.sergio-sastre:AndroidUiTestingUtils:1.0.0'
+}
+```
+or if you want to test the Display Size change, use the last beta:
+```groovy
+dependencies {
+    androidTestImplementation 'com.github.sergio-sastre:AndroidUiTestingUtils:1.1.0-beta'
 }
 ```
 
@@ -89,12 +98,15 @@ The examples use [pedrovgs/Shot](https://github.com/pedrovgs/Shot). It'd also wo
 val locale = LocaleTestRule("en")
 
 @get:Rule
-val fontSize = FontSizeTestRule(FontSize.HUGE)
+val fontSize = FontSizeTestRule(FontSize.HUGE).withTimeOut(inMillis = 15_000) // default is 10_000
+
+@get:Rule
+val displaySize = DisplaySizeTestRule(DisplaySize.LARGEST).withTimeOut(inMillis = 15_000)
    
 @Test
 fun snapActivityTest() {
-    // Locale and FontSize are only supported via TestRules for Activities
-    val activityScenario = ActivityScenarioConfigurator.ForActivity()
+    // Locale, FontSize & DisplaySize are only supported via TestRules for Activities
+    val activity = ActivityScenarioConfigurator.ForActivity()
         .setOrientation(Orientation.LANDSCAPE)
         .setUiMode(UiMode.NIGHT)
         .launch(YourActivity::class.java)
@@ -117,6 +129,7 @@ fun snapViewHolderTest() {
             .setLocale("en")
             .setInitialOrientation(Orientation.PORTRAIT)
             .setUiMode(UiMode.DAY)
+            .setDisplaySize(DisplaySize.SMALL)
             .launchConfiguredActivity()
 
     val activity = activityScenario.waitForActivity()
@@ -159,6 +172,7 @@ fun snapComposableTest() {
         .setLocale("de")
         .setInitialOrientation(Orientation.PORTRAIT)
         .setUiMode(UiMode.DAY)
+        .setDisplaySize(DisplaySize.LARGE)
         .launchConfiguredActivity()
         .onActivity {
             it.setContent {
@@ -193,17 +207,21 @@ In doing so, the configuration becomes effective in the view. It also adds the v
 
 ### Reading on screenshot testing
 - [An introduction to snapshot testing on Android in 2021](https://sergiosastre.hashnode.dev/an-introduction-to-snapshot-testing-on-android-in-2021)
-- [The secrets of effectively snapshot testing on Android](https://sergiosastre.hashnode.dev/the-secrets-of-effectively-snapshot-testing-on-android)
+- [The secrets of effectively snapshot testing on Android 🔓](https://sergiosastre.hashnode.dev/the-secrets-of-effectively-snapshot-testing-on-android)
 - [UI tests vs. snapshot tests on Android: which one should I write? 🤔](https://sergiosastre.hashnode.dev/ui-tests-vs-snapshot-tests-on-android-which-one-should-i-write)
+- [Design a pixel perfect Android app 🎨](https://sergiosastre.hashnode.dev/design-a-pixel-perfect-android-app-with-screenshot-testing)
 
 ## Standard UI testing
-For standard UI testing, you can use the same approach as for snapshot testing Activities. In case you do not want to use ActivityScenario for your tests, the following TestRules and methods are provided:
+For standard UI testing, you can use the same approach as for snapshot testing Activities. In case you do not want to use ActivityScenario at all in your tests, the following TestRules and methods are provided:
 ```kotlin
 @get:Rule
 val locale = LocaleTestRule("en")
 
 @get:Rule
-val fontSize = FontSizeTestRule(FontSize.HUGE)
+val fontSize = FontSizeTestRule(FontSize.HUGE).withTimeOut(inMillis = 15_000) // default is 10_000
+
+@get:Rule
+val displaySize = DisplaySizeTestRule(DisplaySize.LARGEST).withTimeOut(inMillis = 15_000)
 
 @get:Rule
 val uiMode = DayNightRule(UiMode.NIGHT)

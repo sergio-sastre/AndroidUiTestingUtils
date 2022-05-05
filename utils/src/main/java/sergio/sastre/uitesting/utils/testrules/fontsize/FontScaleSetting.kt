@@ -11,7 +11,6 @@ import sergio.sastre.uitesting.utils.common.FontSize
 class FontScaleSetting internal constructor(private val resources: Resources) {
 
     fun get(): FontSize {
-        FontSizeTestRule(FontSize.NORMAL)
         return FontSize.from(resources.configuration.fontScale)
     }
 
@@ -22,7 +21,6 @@ class FontScaleSetting internal constructor(private val resources: Resources) {
             } else {
                 changeFontScalePreApi25(scale)
             }
-
         } catch (e: Exception) {
             throw saveFontScaleError(scale)
         }
