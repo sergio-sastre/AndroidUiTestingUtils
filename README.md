@@ -98,7 +98,7 @@ The examples use [pedrovgs/Shot](https://github.com/pedrovgs/Shot). It'd also wo
 val locale = LocaleTestRule("en")
 
 @get:Rule
-val fontSize = FontSizeTestRule(FontSize.HUGE).withTimeOut(inMillis = 15_000) // default is 10_000
+val fontSize = FontSizeTestRule(FontSize.HUGE).withTimeOut(inMillis = 15_000) // default is 10_000, available in 1.1.0-beta
 
 @get:Rule
 val displaySize = DisplaySizeTestRule(DisplaySize.LARGEST).withTimeOut(inMillis = 15_000)
@@ -218,7 +218,7 @@ For standard UI testing, you can use the same approach as for snapshot testing A
 val locale = LocaleTestRule("en")
 
 @get:Rule
-val fontSize = FontSizeTestRule(FontSize.HUGE).withTimeOut(inMillis = 15_000) // default is 10_000
+val fontSize = FontSizeTestRule(FontSize.HUGE).withTimeOut(inMillis = 15_000) // default is 10_000, available in 1.1.0-beta
 
 @get:Rule
 val displaySize = DisplaySizeTestRule(DisplaySize.LARGEST).withTimeOut(inMillis = 15_000)
