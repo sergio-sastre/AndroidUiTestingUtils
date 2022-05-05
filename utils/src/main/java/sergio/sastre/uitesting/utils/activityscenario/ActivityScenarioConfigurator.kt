@@ -13,6 +13,7 @@ import sergio.sastre.uitesting.utils.common.LocaleUtil
 import sergio.sastre.uitesting.utils.common.Orientation
 import sergio.sastre.uitesting.utils.common.UiMode
 import sergio.sastre.uitesting.utils.activityscenario.orientation.OrientationTestWatcher
+import sergio.sastre.uitesting.utils.common.DisplaySize
 import java.util.*
 
 object ActivityScenarioConfigurator {
@@ -20,6 +21,7 @@ object ActivityScenarioConfigurator {
     private var locale: Locale? = null
     private var orientation: Orientation? = null
     private var uiMode: UiMode? = null
+    private var displaySize: DisplaySize? = null
 
     @JvmInline
     value class StringLocale(val locale: String)
@@ -59,6 +61,10 @@ object ActivityScenarioConfigurator {
 
         fun setInitialOrientation(orientation: Orientation): ForView = apply {
             ActivityScenarioConfigurator.orientation = orientation
+        }
+
+        fun setDisplaySize(displaySize: DisplaySize): ForView = apply {
+            ActivityScenarioConfigurator.displaySize = displaySize
         }
 
         fun launchConfiguredActivity() =
@@ -102,6 +108,10 @@ object ActivityScenarioConfigurator {
 
         fun setInitialOrientation(orientation: Orientation): ForComposable = apply {
             ActivityScenarioConfigurator.orientation = orientation
+        }
+
+        fun setDisplaySize(displaySize: DisplaySize): ForComposable = apply {
+            ActivityScenarioConfigurator.displaySize = displaySize
         }
 
         fun launchConfiguredActivity() =
@@ -162,11 +172,16 @@ object ActivityScenarioConfigurator {
         fontSize?.run { newConfig.fontScale = value.toFloat() }
         locale?.run { newConfig.setLocale(this) }
         uiMode?.run { newConfig.uiMode = this.configurationInt }
+        displaySize?.run {
+            val newDensityDpi = this.value.toFloat() * this@wrap.resources.configuration.densityDpi
+            newConfig.densityDpi = newDensityDpi.toInt()
+        }
 
         fontSize = null
         locale = null
         uiMode = null
         orientation = null
+        displaySize = null
 
         return createConfigurationContext(newConfig)
     }

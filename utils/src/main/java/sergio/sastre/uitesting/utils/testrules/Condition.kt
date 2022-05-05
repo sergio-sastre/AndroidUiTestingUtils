@@ -1,4 +1,4 @@
-package sergio.sastre.uitesting.utils.testrules.fontsize
+package sergio.sastre.uitesting.utils.testrules
 
 /**
  * Taken from : https://github.com/novoda/espresso-support
