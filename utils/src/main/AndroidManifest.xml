@@ -8,9 +8,14 @@
         tools:ignore="ProtectedPermissions" />
 
     <application>
-        <activity android:name=".activityscenario.ActivityScenarioConfigurator$PortraitSnapshotConfiguredActivity" />
-        <activity android:name=".activityscenario.ActivityScenarioConfigurator$LandscapeSnapshotConfiguredActivity"
-            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".activityscenario.ActivityScenarioConfigurator$PortraitSnapshotConfiguredActivity"
+            android:exported="true"
+            tools:node="merge"/>
+        <activity
+            android:name=".activityscenario.ActivityScenarioConfigurator$LandscapeSnapshotConfiguredActivity"
+            android:exported="true"
+            android:screenOrientation="landscape"
+            tools:node="merge"/>
     </application>
-
 </manifest>
