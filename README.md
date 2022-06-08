@@ -11,7 +11,7 @@ Currently, with this library you can easily change the following configurations 
 2. Font size
 3. Orientation
 4. Dark mode /Day-Night mode
-5. Display size - **from 1.1.0-beta**
+5. Display size
 
 You can find out why verifying our design under such configurations is important in this blog post: 
 - [Design a pixel perfect Android app 🎨](https://sergiosastre.hashnode.dev/design-a-pixel-perfect-android-app-with-screenshot-testing)
@@ -19,6 +19,8 @@ You can find out why verifying our design under such configurations is important
 In the near future, there are plans to also support, among others:
 1. FragmentScenario
 2. Reduce snapshot testing flakiness
+3. Folding features
+4. Enable Accessibility features 
 
 ## Table of Contents
 - [Integration](#integration)
@@ -47,13 +49,7 @@ allprojects {
 Add a dependency to `build.gradle`
 ```groovy
 dependencies {
-    androidTestImplementation 'com.github.sergio-sastre:AndroidUiTestingUtils:1.0.0'
-}
-```
-or if you want to test the Display Size change, use the last beta:
-```groovy
-dependencies {
-    androidTestImplementation 'com.github.sergio-sastre:AndroidUiTestingUtils:1.1.0-beta'
+    androidTestImplementation 'com.github.sergio-sastre:AndroidUiTestingUtils:1.1.0'
 }
 ```
 
@@ -61,7 +57,7 @@ dependencies {
 ## Configuration
 First, you need to add the following permission and activities to your `debug/manifest`
 ```xml
-<!-- Required to change the Locale -->
+<!-- Required to change the Locale (for screenshot testing Activities only) -->
 <uses-permission
         android:name="android.permission.CHANGE_CONFIGURATION"
         tools:ignore="ProtectedPermissions" />
@@ -90,7 +86,7 @@ android {
 ```
 
 ## Screenshot testing examples
-The examples use [pedrovgs/Shot](https://github.com/pedrovgs/Shot). It'd also work with Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android) or with a custom screenshot testing solution.
+The examples use [pedrovgs/Shot](https://github.com/pedrovgs/Shot). It'd also work with any other on-device screenshot testing framework, like Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android), Dropbox [Dropshots](https://github.com/dropbox/dropshots) or with a custom screenshot testing solution.
 
 ### Activity
 ```kotlin
@@ -143,6 +139,7 @@ fun snapViewHolderTest() {
     val viewHolder = waitForView {
         YourViewHolder(layout).apply {
             // bind data to ViewHolder here
+            ...
         }
     }
     
@@ -176,7 +173,7 @@ fun snapComposableTest() {
         .launchConfiguredActivity()
         .onActivity {
             it.setContent {
-                AppTheme { // uses isSystemInDarkTheme() internally
+                AppTheme { // this theme must use isSystemInDarkTheme() internally
                     yourComposable()
                 }
             }
