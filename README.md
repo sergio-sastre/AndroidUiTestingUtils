@@ -2,7 +2,11 @@
 <img src="https://androidweekly.net/issues/issue-508/badge">
 </a>
 
-# AndroidUiTestingUtils
+# Android UI testing utils
+<p align="left">
+<img width="130" src="https://user-images.githubusercontent.com/6097181/172724660-778176b0-a6b0-4aad-b6b4-7115ad4fc7f3.png">
+</p>
+
 A set of *TestRules*, *ActivityScenarios* and utils to facilitate UI testing & screenshot testing under certain configurations, independent of the UI testing framework you are using.
 For screenshot testing, it supports **Jetpack Compose**, **android Views** (e.g. custom Views, ViewHolders, etc.) and **Activities**.
 </br></br>
@@ -49,7 +53,7 @@ allprojects {
 Add a dependency to `build.gradle`
 ```groovy
 dependencies {
-    androidTestImplementation 'com.github.sergio-sastre:AndroidUiTestingUtils:1.1.0'
+    androidTestImplementation 'com.github.sergio-sastre:AndroidUiTestingUtils:1.1.1'
 }
 ```
 
@@ -94,7 +98,7 @@ The examples use [pedrovgs/Shot](https://github.com/pedrovgs/Shot). It'd also wo
 val locale = LocaleTestRule("en")
 
 @get:Rule
-val fontSize = FontSizeTestRule(FontSize.HUGE).withTimeOut(inMillis = 15_000) // default is 10_000, available in 1.1.0-beta
+val fontSize = FontSizeTestRule(FontSize.HUGE).withTimeOut(inMillis = 15_000) // default is 10_000
 
 @get:Rule
 val displaySize = DisplaySizeTestRule(DisplaySize.LARGEST).withTimeOut(inMillis = 15_000)
@@ -191,7 +195,7 @@ fun snapComposableTest() {
 2. Use `LocaleTestRule("my_locale")` in your tests instead of `ActivityScenarioConfigurator.ForComposable().setLocale("my_locale")`.
 
 ### Fragment
-As of version 1.0.0, it is not supported, but will be added in the next releases. For now, you can circumvent it by creating a custom empty Activity containing the fragment under test, and do like in the example to snapshot test Activities. Keep in mind that you need to define an additional empty Activity for landscape mode to support landscape orientation.
+As of version 1.1.1, it is not supported, but will be added in the next releases. For now, you can circumvent it by creating a custom empty Activity containing the fragment under test, and do like in the example to snapshot test Activities. Keep in mind that you need to define an additional empty Activity for landscape mode to support landscape orientation.
 
 ### Utils
 1. waitForActivity:
@@ -215,7 +219,7 @@ For standard UI testing, you can use the same approach as for snapshot testing A
 val locale = LocaleTestRule("en")
 
 @get:Rule
-val fontSize = FontSizeTestRule(FontSize.HUGE).withTimeOut(inMillis = 15_000) // default is 10_000, available in 1.1.0-beta
+val fontSize = FontSizeTestRule(FontSize.HUGE).withTimeOut(inMillis = 15_000) // default is 10_000
 
 @get:Rule
 val displaySize = DisplaySizeTestRule(DisplaySize.LARGEST).withTimeOut(inMillis = 15_000)
@@ -242,4 +246,7 @@ This library has been possible due to the work others have done previously. Most
 7. Once approved, I will merge the code in both repos, and you will be added as a contributor to [Android UI testing utils](https://github.com/sergio-sastre/AndroidUiTestingUtils) as well as [Road to effective snapshot testing](https://github.com/sergio-sastre/RoadToEffectiveSnapshotTesting). 
 
 I'll try to make the process easier in the future if I see many issues/feature requests incoming :)
+
+</br></br>
+<a href="https://www.flaticon.com/free-icons/ninja" title="ninja icons">Android UI testing utils logo modified from one by Freepik - Flaticon</a>
 
