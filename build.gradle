@@ -14,10 +14,6 @@ buildscript {
     }
 }
 
-plugins {
-    id 'com.autonomousapps.dependency-analysis' version "1.5.0"
-}
-
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
