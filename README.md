@@ -8,6 +8,7 @@
 </p>
 
 A set of *TestRules*, *ActivityScenarios* and utils to facilitate UI testing & screenshot testing under certain configurations, independent of the UI testing framework you are using.
+</br></br>
 For screenshot testing, it supports **Jetpack Compose**, **android Views** (e.g. custom Views, ViewHolders, etc.) and **Activities**.
 </br></br>
 Currently, with this library you can easily change the following configurations in your instrumented tests:
