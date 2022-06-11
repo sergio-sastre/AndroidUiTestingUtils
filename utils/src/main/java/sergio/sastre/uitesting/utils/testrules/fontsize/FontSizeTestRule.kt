@@ -39,8 +39,7 @@ class FontSizeTestRule(
 
     private var timeOutInMillis = MAX_RETRIES_TO_WAIT_FOR_SETTING * SLEEP_TO_WAIT_FOR_SETTING_MILLIS
 
-    private val fontScaleSetting: FontScaleSetting =
-        FontScaleSetting(getInstrumentation().targetContext.resources)
+    private val fontScaleSetting: FontScaleSetting = FontScaleSetting()
 
     private var previousScale: Float = 0.toFloat()
 

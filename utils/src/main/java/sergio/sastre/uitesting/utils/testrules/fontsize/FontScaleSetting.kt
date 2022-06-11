@@ -8,10 +8,12 @@ import android.os.Build
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import sergio.sastre.uitesting.utils.common.FontSize
 
-class FontScaleSetting internal constructor(private val resources: Resources) {
+class FontScaleSetting internal constructor() {
+
+    private fun resources() = getInstrumentation().targetContext.resources
 
     fun get(): FontSize {
-        return FontSize.from(resources.configuration.fontScale)
+        return FontSize.from(resources().configuration.fontScale)
     }
 
     fun set(scale: FontSize) {
@@ -27,10 +29,11 @@ class FontScaleSetting internal constructor(private val resources: Resources) {
     }
 
     private fun changeFontScalePreApi25(scale: FontSize) {
+        val resources = resources()
         resources.configuration.fontScale = java.lang.Float.parseFloat(scale.value)
         val metrics = Resources.getSystem().displayMetrics
-        metrics.scaledDensity = resources.configuration.fontScale * metrics.density
-        resources.updateConfiguration(resources.configuration, metrics)
+        metrics.scaledDensity = resources().configuration.fontScale * metrics.density
+        resources().updateConfiguration(resources.configuration, metrics)
     }
 
     private fun changeFontScaleFromApi25(scale: FontSize) {
