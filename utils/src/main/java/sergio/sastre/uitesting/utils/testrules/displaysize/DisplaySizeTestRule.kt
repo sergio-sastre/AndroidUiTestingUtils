@@ -38,10 +38,9 @@ class DisplaySizeTestRule(
 
     private var timeOutInMillis = MAX_RETRIES_TO_WAIT_FOR_SETTING * SLEEP_TO_WAIT_FOR_SETTING_MILLIS
 
-    private val displayScaleSetting: DisplayScaleSetting =
-        DisplayScaleSetting(getInstrumentation().targetContext.resources)
+    private val displayScaleSetting: DisplayScaleSetting = DisplayScaleSetting()
 
-    private var previousScale: Int = 0
+    private var previousDensityDpi: Int = 0
 
     /**
      * Since the Display Size setting is changed via adb, it might take longer than expected to
@@ -53,11 +52,11 @@ class DisplaySizeTestRule(
     }
 
     override fun starting(description: Description?) {
-        previousScale = getInstrumentation().targetContext.resources.configuration.densityDpi
+        previousDensityDpi = getInstrumentation().targetContext.resources.configuration.densityDpi
     }
 
     override fun finished(description: Description?) {
-        displayScaleSetting.resetDisplaySizeScale(previousScale)
+        displayScaleSetting.resetDisplaySizeScale(previousDensityDpi)
     }
 
     override fun apply(base: Statement, description: Description): Statement {

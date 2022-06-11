@@ -1,13 +1,14 @@
 package sergio.sastre.uitesting.utils.testrules.displaysize
 
-import android.content.res.Resources
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import sergio.sastre.uitesting.utils.common.DisplaySize
 
-class DisplayScaleSetting internal constructor(private val resources: Resources) {
+class DisplayScaleSetting internal constructor() {
+
+    private fun resources() = getInstrumentation().targetContext.resources
 
     fun getDensityDpi(): Int {
-        return resources.configuration.densityDpi
+        return resources().configuration.densityDpi
     }
 
     fun resetDisplaySizeScale(originalDensity: Int) {
@@ -20,7 +21,7 @@ class DisplayScaleSetting internal constructor(private val resources: Resources)
 
     fun setDisplaySizeScale(scale: DisplaySize) {
         try {
-            val targetDensityDpi = resources.configuration.densityDpi * (scale.value).toFloat()
+            val targetDensityDpi = resources().configuration.densityDpi * (scale.value).toFloat()
             getInstrumentation().uiAutomation
                 .executeShellCommand("wm density " + targetDensityDpi.toInt())
         } catch (e: Exception) {
