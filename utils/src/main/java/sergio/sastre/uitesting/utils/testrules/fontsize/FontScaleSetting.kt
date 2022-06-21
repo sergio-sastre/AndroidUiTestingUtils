@@ -8,7 +8,10 @@ import android.os.Build
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import sergio.sastre.uitesting.utils.common.FontSize
 
-class FontScaleSetting internal constructor(private val resources: Resources) {
+class FontScaleSetting internal constructor() {
+
+    private val resources
+        get() = getInstrumentation().targetContext.resources
 
     fun get(): FontSize {
         return FontSize.from(resources.configuration.fontScale)
