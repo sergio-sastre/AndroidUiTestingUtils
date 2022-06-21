@@ -1,6 +1,7 @@
 package sergio.sastre.uitesting.utils.testrules.fontsize
 
 import android.os.SystemClock
+import android.util.Log
 import androidx.annotation.IntRange
 
 import org.junit.rules.TestRule
@@ -11,7 +12,6 @@ import org.junit.runners.model.Statement
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import sergio.sastre.uitesting.utils.common.FontSize
 import sergio.sastre.uitesting.utils.testrules.Condition
-import sergio.sastre.uitesting.utils.testrules.displaysize.DisplaySizeTestRule
 import sergio.sastre.uitesting.utils.testrules.fontsize.FontSizeTestRule.FontScaleStatement.Companion.MAX_RETRIES_TO_WAIT_FOR_SETTING
 import sergio.sastre.uitesting.utils.testrules.fontsize.FontSizeTestRule.FontScaleStatement.Companion.SLEEP_TO_WAIT_FOR_SETTING_MILLIS
 
@@ -75,12 +75,12 @@ class FontSizeTestRule(
         override fun evaluate() {
             val initialScale = scaleSetting.get()
             scaleSetting.set(scale)
-            sleepUntil(scaleMatches(scale))
+            sleepUntil(scaleMatches(scale), scale)
 
             baseStatement.evaluate()
 
             scaleSetting.set(initialScale)
-            sleepUntil(scaleMatches(initialScale))
+            sleepUntil(scaleMatches(initialScale), initialScale)
         }
 
         private fun scaleMatches(scale: FontSize): Condition {
@@ -91,20 +91,28 @@ class FontSizeTestRule(
             }
         }
 
-        private fun sleepUntil(condition: Condition) {
+        @Synchronized
+        private fun sleepUntil(condition: Condition, expectedFontSize: FontSize) {
+            var iterations = 0
             var retries = 0
             while (!condition.holds()) {
+                iterations++
                 val retriesCount = timeOutInMillis / SLEEP_TO_WAIT_FOR_SETTING_MILLIS
                 SystemClock.sleep(SLEEP_TO_WAIT_FOR_SETTING_MILLIS.toLong())
-                if (retries == retriesCount) {
-                    throw timeoutError(retries)
+                val mustRetry = iterations % 10 == 0
+                if (mustRetry) {
+                    retries++
+                    scaleSetting.set(expectedFontSize)
+                    Log.d("FontSizeTestRule", "trying to set FontSize to ${expectedFontSize.name}, $retries retry")
                 }
-                retries++
+                if (iterations == retriesCount) {
+                    throw timeoutError()
+                }
             }
         }
 
-        private fun timeoutError(retries: Int): AssertionError {
-            return AssertionError("Spent too long waiting trying to set font scale.$retries retries")
+        private fun timeoutError(): AssertionError {
+            return AssertionError("Spent too long waiting trying to set font scale: $timeOutInMillis milliseconds")
         }
 
         companion object {

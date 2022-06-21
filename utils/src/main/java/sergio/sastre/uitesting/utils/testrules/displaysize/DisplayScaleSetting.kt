@@ -5,13 +5,14 @@ import sergio.sastre.uitesting.utils.common.DisplaySize
 
 class DisplayScaleSetting internal constructor() {
 
-    private fun resources() = getInstrumentation().targetContext.resources
+    private val resources
+        get() = getInstrumentation().targetContext.resources
 
     fun getDensityDpi(): Int {
-        return resources().configuration.densityDpi
+        return resources.configuration.densityDpi
     }
 
-    fun resetDisplaySizeScale(originalDensity: Int) {
+    fun setDisplaySizeScale(originalDensity: Int) {
         try {
             getInstrumentation().uiAutomation.executeShellCommand("wm density reset")
         } catch (e: Exception) {
@@ -21,7 +22,7 @@ class DisplayScaleSetting internal constructor() {
 
     fun setDisplaySizeScale(scale: DisplaySize) {
         try {
-            val targetDensityDpi = resources().configuration.densityDpi * (scale.value).toFloat()
+            val targetDensityDpi = resources.configuration.densityDpi * (scale.value).toFloat()
             getInstrumentation().uiAutomation
                 .executeShellCommand("wm density " + targetDensityDpi.toInt())
         } catch (e: Exception) {

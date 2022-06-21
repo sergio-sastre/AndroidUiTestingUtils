@@ -54,7 +54,7 @@ allprojects {
 Add a dependency to `build.gradle`
 ```groovy
 dependencies {
-    androidTestImplementation 'com.github.sergio-sastre:AndroidUiTestingUtils:1.1.1'
+    androidTestImplementation 'com.github.sergio-sastre:AndroidUiTestingUtils:1.1.2'
 }
 ```
 
@@ -62,11 +62,6 @@ dependencies {
 ## Configuration
 First, you need to add the following permission and activities to your `debug/manifest`
 ```xml
-<!-- Required to change the Locale (for screenshot testing Activities only) -->
-<uses-permission
-        android:name="android.permission.CHANGE_CONFIGURATION"
-        tools:ignore="ProtectedPermissions" />
-   ...
 <!-- Required for ActivityScenarios -->
 <application
    ...
@@ -88,6 +83,16 @@ android {
       }
    }
 }
+```
+
+### Pre 1.1.2
+You also need to add the following permission and activities to your `debug/manifest` if not using version 1.1.2 or higher
+```xml
+<!-- Required to change the Locale via LocaleTestRule (required for snapshot testing Activities only) -->
+<uses-permission
+    android:name="android.permission.CHANGE_CONFIGURATION"
+    tools:ignore="ProtectedPermissions" />
+    ...
 ```
 
 ## Screenshot testing examples
@@ -136,7 +141,7 @@ fun snapViewHolderTest() {
     val activity = activityScenario.waitForActivity()
 
     val layout = waitForView {
-        // inflate layout inside the activity with its context -> inherits configuration 
+        // IMPORTANT: To inherit the configuration, inflate layout inside the activity with its context 
         activity.inflate(R.layout.your_view_holder_layout)
     }
 
@@ -230,9 +235,14 @@ val uiMode = DayNightRule(UiMode.NIGHT)
 
 activity.rotateTo(Orientation.LANDSCAPE)
 ```
+**WARNING**: When using DisplaySizeTestRule and FontSizeTesRule together in the same test, make sure your emulator has enough RAM and VM heap to avoid Exceptions when running the tests.
+The recommended configuration is the following:
+- RAM: 4GB
+- VM heap: 1GB
+
 # Code attributions
 This library has been possible due to the work others have done previously. Most TestRules are based on code written by others:
-- LocaleTestRule -> [Screengrab](https://github.com/fastlane/fastlane/tree/master/screengrab/screengrab-lib/src/main/java/tools.fastlane.screengrab/locale)
+- LocaleTestRule -> [Screengrab](https://github.com/fastlane/fastlane/tree/master/screengrab/screengrab-lib/src/main/java/tools.fastlane.screengrab/locale) (pre 1.1.2 only)
 - FontSizeTestRule -> [Novoda/espresso-support](https://github.com/novoda/espresso-support/tree/master/core/src/main/java/com/novoda/espresso)
 - UiModeTestRule -> [AdevintaSpain/Barista](https://github.com/AdevintaSpain/Barista)
 - Orientation change for activities -> [Shopify/android-testify](https://github.com/Shopify/android-testify/)

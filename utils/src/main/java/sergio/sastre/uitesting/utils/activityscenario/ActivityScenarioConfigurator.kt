@@ -173,7 +173,7 @@ object ActivityScenarioConfigurator {
         locale?.run { newConfig.setLocale(this) }
         uiMode?.run { newConfig.uiMode = this.configurationInt }
         displaySize?.run {
-            val newDensityDpi = this.value.toFloat() * this@wrap.resources.configuration.densityDpi
+            val newDensityDpi = this.value.toFloat() * newConfig.densityDpi
             newConfig.densityDpi = newDensityDpi.toInt()
         }
 

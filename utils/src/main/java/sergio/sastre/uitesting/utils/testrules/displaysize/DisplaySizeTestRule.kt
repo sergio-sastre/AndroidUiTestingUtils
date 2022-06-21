@@ -1,6 +1,7 @@
 package sergio.sastre.uitesting.utils.testrules.displaysize
 
 import android.os.SystemClock
+import android.util.Log
 import androidx.annotation.IntRange
 
 import org.junit.rules.TestRule
@@ -22,12 +23,16 @@ class DisplaySizeTestRule(
 ) : TestWatcher(), TestRule {
 
     companion object {
-        fun smallDisplaySizeTestRule(): DisplaySizeTestRule = DisplaySizeTestRule(DisplaySize.SMALL)
+        fun smallDisplaySizeTestRule(): DisplaySizeTestRule = DisplaySizeTestRule(
+            DisplaySize.SMALL
+        )
 
         fun normalDisplaySizeTestRule(): DisplaySizeTestRule =
             DisplaySizeTestRule(DisplaySize.NORMAL)
 
-        fun largeDisplaySizeTestRule(): DisplaySizeTestRule = DisplaySizeTestRule(DisplaySize.LARGE)
+        fun largeDisplaySizeTestRule(): DisplaySizeTestRule = DisplaySizeTestRule(
+            DisplaySize.LARGE
+        )
 
         fun largerDisplaySizeTestRule(): DisplaySizeTestRule =
             DisplaySizeTestRule(DisplaySize.LARGER)
@@ -48,7 +53,7 @@ class DisplaySizeTestRule(
      * time out which is [MAX_RETRIES_TO_WAIT_FOR_SETTING] * [SLEEP_TO_WAIT_FOR_SETTING_MILLIS]
      */
     fun withTimeOut(@IntRange(from = 0) inMillis: Int): DisplaySizeTestRule = apply {
-        this.timeOutInMillis =  inMillis
+        this.timeOutInMillis = inMillis
     }
 
     override fun starting(description: Description?) {
@@ -56,7 +61,7 @@ class DisplaySizeTestRule(
     }
 
     override fun finished(description: Description?) {
-        displayScaleSetting.resetDisplaySizeScale(previousDensityDpi)
+        displayScaleSetting.setDisplaySizeScale(previousDensityDpi)
     }
 
     override fun apply(base: Statement, description: Description): Statement {
@@ -75,12 +80,12 @@ class DisplaySizeTestRule(
             val initialDisplay = scaleSetting.getDensityDpi()
             val expectedDisplay = (initialDisplay * scale.value.toFloat()).toInt()
             scaleSetting.setDisplaySizeScale(scale)
-            sleepUntil(scaleMatches(expectedDisplay))
+            sleepUntil(scaleMatches(expectedDisplay), expectedDisplay)
 
             baseStatement.evaluate()
 
-            scaleSetting.resetDisplaySizeScale(initialDisplay)
-            sleepUntil(scaleMatches(initialDisplay))
+            scaleSetting.setDisplaySizeScale(initialDisplay)
+            sleepUntil(scaleMatches(initialDisplay), initialDisplay)
         }
 
         private fun scaleMatches(densityDpi: Int): Condition {
@@ -91,20 +96,28 @@ class DisplaySizeTestRule(
             }
         }
 
-        private fun sleepUntil(condition: Condition) {
+        @Synchronized
+        private fun sleepUntil(condition: Condition, expectedDisplay: Int) {
+            var iterations = 0
             var retries = 0
             while (!condition.holds()) {
-                val retriesCount = timeOutInMillis / SLEEP_TO_WAIT_FOR_SETTING_MILLIS
+                iterations++
+                val iterationsCount = timeOutInMillis / SLEEP_TO_WAIT_FOR_SETTING_MILLIS
                 SystemClock.sleep(SLEEP_TO_WAIT_FOR_SETTING_MILLIS.toLong())
-                if (retries == retriesCount) {
-                    throw timeoutError(retries)
+                val mustRetry = iterations % 10 == 0
+                if (mustRetry) {
+                    retries++
+                    scaleSetting.setDisplaySizeScale(expectedDisplay)
+                    Log.d("DisplaySizeTestRule", "trying to set DisplaySize to $expectedDisplay, $retries retry")
                 }
-                retries++
+                if (iterations == iterationsCount) {
+                    throw timeoutError()
+                }
             }
         }
 
-        private fun timeoutError(retries: Int): AssertionError {
-            return AssertionError("Spent too long waiting trying to set display scale.$retries retries")
+        private fun timeoutError(): AssertionError {
+            return AssertionError("Spent too long waiting trying to set display scale: $timeOutInMillis milliseconds")
         }
 
         companion object {
