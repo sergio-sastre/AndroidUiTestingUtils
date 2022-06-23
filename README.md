@@ -86,7 +86,7 @@ android {
 ```
 
 ### Pre 1.1.2
-You also need to add the following permission and activities to your `debug/manifest` if not using version 1.1.2 or higher
+You also need to add the following permission to your `debug/manifest` if not using version 1.1.2 or higher
 ```xml
 <!-- Required to change the Locale via LocaleTestRule (required for snapshot testing Activities only) -->
 <uses-permission
@@ -235,7 +235,7 @@ val uiMode = DayNightRule(UiMode.NIGHT)
 
 activity.rotateTo(Orientation.LANDSCAPE)
 ```
-**WARNING**: When using DisplaySizeTestRule and FontSizeTesRule together in the same test, make sure your emulator has enough RAM and VM heap to avoid Exceptions when running the tests.
+**WARNING**: When using *DisplaySizeTestRule* and *FontSizeTesRule* together in the same test, make sure your emulator has enough RAM and VM heap to avoid Exceptions when running the tests.
 The recommended configuration is the following:
 - RAM: 4GB
 - VM heap: 1GB
