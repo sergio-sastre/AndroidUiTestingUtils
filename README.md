@@ -201,7 +201,7 @@ fun snapComposableTest() {
 2. Use `LocaleTestRule("my_locale")` in your tests instead of `ActivityScenarioConfigurator.ForComposable().setLocale("my_locale")`.
 
 ### Fragment
-As of version 1.1.1, it is not supported, but will be added in the next releases. For now, you can circumvent it by creating a custom empty Activity containing the fragment under test, and do like in the example to snapshot test Activities. Keep in mind that you need to define an additional empty Activity for landscape mode to support landscape orientation.
+As of version 1.1.2, it is not supported, but will be added in the next releases. For now, you can circumvent it by creating a custom empty Activity containing the fragment under test, and do like in the example to snapshot test Activities. Keep in mind that you need to define an additional empty Activity for landscape mode to support landscape orientation.
 
 ### Utils
 1. waitForActivity:
