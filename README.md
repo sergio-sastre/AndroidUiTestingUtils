@@ -8,6 +8,7 @@
 </p>
 
 A set of *TestRules*, *ActivityScenarios* and utils to facilitate UI testing & screenshot testing under certain configurations, independent of the UI testing framework you are using.
+<br clear="left"/>
 </br></br>
 For screenshot testing, it supports **Jetpack Compose**, **android Views** (e.g. custom Views, ViewHolders, etc.) and **Activities**.
 </br></br>
@@ -26,6 +27,14 @@ In the near future, there are plans to also support, among others:
 2. Reduce snapshot testing flakiness
 3. Folding features
 4. Enable Accessibility features 
+
+## Sponsors
+Thanks to [Screenshotbot](https://screenshotbot.io) for their support!
+<p>
+<img align="left" width="100" src="https://user-images.githubusercontent.com/6097181/192350235-b3b5dc63-e7e7-48da-bdb6-851a130aaf8d.png">
+</p>
+By using Screenshotbot instead of the in-build record/verify modes provided by most screenshot libraries, you'll give your colleages a better developer experience, since they will not be required to manually record screenshots after every run, instead getting notifications on their Pull Requests.
+<br clear="left"/>
 
 ## Table of Contents
 - [Integration](#integration)
