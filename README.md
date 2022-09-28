@@ -7,13 +7,15 @@
 <img width="130" src="https://user-images.githubusercontent.com/6097181/172724660-778176b0-a6b0-4aad-b6b4-7115ad4fc7f3.png">
 </p>
 
-A set of *TestRules*, *ActivityScenarios* and utils to facilitate UI testing & screenshot testing under certain configurations, independent of the UI testing framework you are using.
+A set of *TestRules*, *ActivityScenarios* and utils to facilitate UI & screenshot testing under certain configurations, independent of the UI testing framework you are using.
 <br clear="left"/>
 </br></br>
 For screenshot testing, it supports **Jetpack Compose**, **android Views** (e.g. custom Views, ViewHolders, etc.) and **Activities**.
 </br></br>
 Currently, with this library you can easily change the following configurations in your instrumented tests:
 1. Locale (also Pseudolocales **en_XA** & **ar_XB**)
+   1. App Locale (i.e. per-app language preference)
+   2. System Locale
 2. Font size
 3. Orientation
 4. Dark mode /Day-Night mode
@@ -92,11 +94,9 @@ android {
    }
 }
 ```
-
-### Pre 1.1.2
-You also need to add the following permission to your `debug/manifest` if not using version 1.1.2 or higher
+To change the System Locale, you also need to add the following permission to your `debug/manifest`
 ```xml
-<!-- Required to change the Locale via LocaleTestRule (required for snapshot testing Activities only) -->
+<!-- Required to change the Locale via SystemLocaleTestRule (required for snapshot testing Activities only) -->
 <uses-permission
     android:name="android.permission.CHANGE_CONFIGURATION"
     tools:ignore="ProtectedPermissions" />
@@ -108,8 +108,13 @@ The examples use [pedrovgs/Shot](https://github.com/pedrovgs/Shot). It'd also wo
 
 ### Activity
 ```kotlin
+// Sets the Locale of the app under test only, i.e. the "per-app language preference" feature
 @get:Rule
 val locale = LocaleTestRule("en")
+
+// Sets the Locale of the Android system
+@get:Rule
+val systemLocale = SystemLocaleTestRule("en")
 
 @get:Rule
 val fontSize = FontSizeTestRule(FontSize.HUGE).withTimeOut(inMillis = 15_000) // default is 10_000
@@ -172,7 +177,7 @@ fun snapViewHolderTest() {
 ```
 **Warning**: If the View under test contains system Locale dependent code, like `NumberFormat.getInstance(Locale.getDefault())`, the Locale formatting you've set via `ActivityScenarioConfigurator.ForView().setLocale("my_locale")` will not work. That's because NumberFormat is using the Locale of the Android system, and not that of the Activity we've configured. Beware of using `instrumenation.targetContext` in your tests when using getString() for the very same reason: use Activity's context instead. </br> To solve that issue, you can do one of the following:
 1. Use `NumberFormat.getInstance(anyViewInsideActivity.context.locales[0])` in your production code.
-2. Use `LocaleTestRule("my_locale")` in your tests instead of `ActivityScenarioConfigurator.ForView().setLocale("my_locale")`.
+2. Use `SystemLocaleTestRule("my_locale")` in your tests instead of `ActivityScenarioConfigurator.ForView().setLocale("my_locale")`.
 
 ### Jetpack Compose
 ```kotlin
@@ -206,7 +211,7 @@ fun snapComposableTest() {
 ```
 **Warning**: If the Composable under test contains system Locale dependent code, like `NumberFormat.getInstance(Locale.getDefault())`, the Locale formatting you've set via `ActivityScenarioConfigurator.ForComposable().setLocale("my_locale")` will not work. That's because NumberFormat is using the Locale of the Android system, and not that of the Activity we've configured, which is applied to the LocaleContext of our Composables. </br> To solve that issue, you can do one of the following:
 1. Use `NumberFormat.getInstance(LocaleContext.current.locales[0])` in your production code.
-2. Use `LocaleTestRule("my_locale")` in your tests instead of `ActivityScenarioConfigurator.ForComposable().setLocale("my_locale")`.
+2. Use `SystemLocaleTestRule("my_locale")` in your tests instead of `ActivityScenarioConfigurator.ForComposable().setLocale("my_locale")`.
 
 ### Fragment
 As of version 1.1.2, it is not supported, but will be added in the next releases. For now, you can circumvent it by creating a custom empty Activity containing the fragment under test, and do like in the example to snapshot test Activities. Keep in mind that you need to define an additional empty Activity for landscape mode to support landscape orientation.
@@ -221,7 +226,7 @@ As of version 1.1.2, it is not supported, but will be added in the next releases
 In doing so, the configuration becomes effective in the view. It also adds the view to the Activity's root.
 
 ### Reading on screenshot testing
-- [An introduction to snapshot testing on Android in 2021](https://sergiosastre.hashnode.dev/an-introduction-to-snapshot-testing-on-android-in-2021)
+- [An introduction to snapshot testing on Android in 2021 📸](https://sergiosastre.hashnode.dev/an-introduction-to-snapshot-testing-on-android-in-2021)
 - [The secrets of effectively snapshot testing on Android 🔓](https://sergiosastre.hashnode.dev/the-secrets-of-effectively-snapshot-testing-on-android)
 - [UI tests vs. snapshot tests on Android: which one should I write? 🤔](https://sergiosastre.hashnode.dev/ui-tests-vs-snapshot-tests-on-android-which-one-should-i-write)
 - [Design a pixel perfect Android app 🎨](https://sergiosastre.hashnode.dev/design-a-pixel-perfect-android-app-with-screenshot-testing)
@@ -229,8 +234,13 @@ In doing so, the configuration becomes effective in the view. It also adds the v
 ## Standard UI testing
 For standard UI testing, you can use the same approach as for snapshot testing Activities. In case you do not want to use ActivityScenario at all in your tests, the following TestRules and methods are provided:
 ```kotlin
+// Sets the Locale of the app under test only, i.e. the per-app language preference feature
 @get:Rule
 val locale = LocaleTestRule("en")
+
+// Sets the Locale of the Android system
+@get:Rule
+val systemLocale = SystemLocaleTestRule("en")
 
 @get:Rule
 val fontSize = FontSizeTestRule(FontSize.HUGE).withTimeOut(inMillis = 15_000) // default is 10_000
@@ -250,7 +260,7 @@ The recommended configuration is the following:
 
 # Code attributions
 This library has been possible due to the work others have done previously. Most TestRules are based on code written by others:
-- LocaleTestRule -> [Screengrab](https://github.com/fastlane/fastlane/tree/master/screengrab/screengrab-lib/src/main/java/tools.fastlane.screengrab/locale) (pre 1.1.2 only)
+- SystemLocaleTestRule -> [Screengrab](https://github.com/fastlane/fastlane/tree/master/screengrab/screengrab-lib/src/main/java/tools.fastlane.screengrab/locale)
 - FontSizeTestRule -> [Novoda/espresso-support](https://github.com/novoda/espresso-support/tree/master/core/src/main/java/com/novoda/espresso)
 - UiModeTestRule -> [AdevintaSpain/Barista](https://github.com/AdevintaSpain/Barista)
 - Orientation change for activities -> [Shopify/android-testify](https://github.com/Shopify/android-testify/)
