@@ -1,6 +1,5 @@
 package sergio.sastre.uitesting.utils.testrules.locale
 
-import android.Manifest.permission.CHANGE_CONFIGURATION
 import android.content.pm.PackageManager.*
 import androidx.core.content.ContextCompat.*
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
@@ -9,14 +8,15 @@ import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import sergio.sastre.uitesting.utils.common.LocaleListCompat
 import sergio.sastre.uitesting.utils.common.LocaleUtil
+import sergio.sastre.uitesting.utils.utils.grantChangeConfigurationIfNeeded
 import java.lang.StringBuilder
 import java.util.*
 import kotlin.jvm.JvmOverloads
 import kotlin.Throws
 
 /**
- * A TestRule to change the Locale of the device via reflection. It grants
- * the CHANGE_CONFIGURATION permission via adb
+ * A TestRule to change the Locale of the device via reflection and non-SDK APIs
+ * (Configuration#updateConfiguration). It grants the CHANGE_CONFIGURATION permission via adb
  *
  * Code from fastlane Screengrab
  * @see https://github.com/fastlane/fastlane/blob/master/screengrab/screengrab-lib/src/main/java/tools.fastlane.screengrab/locale/LocaleTestRule.java
@@ -27,12 +27,9 @@ import kotlin.Throws
 class SystemLocaleTestRule : TestRule {
     private val testLocale: Locale?
     private val testLocaleString: String?
-    private val uiAutomation = getInstrumentation().uiAutomation
-    private val targetContext = getInstrumentation().targetContext
-    private val packageName = getInstrumentation().targetContext.packageName
 
     init {
-        grantChangeConfigurationIfNeeded()
+        getInstrumentation().grantChangeConfigurationIfNeeded()
     }
 
     @JvmOverloads
@@ -68,20 +65,6 @@ class SystemLocaleTestRule : TestRule {
                     }
                 }
             }
-        }
-    }
-
-    private fun grantChangeConfigurationIfNeeded() {
-        if (checkSelfPermission(targetContext, CHANGE_CONFIGURATION) != PERMISSION_GRANTED) {
-            /*
-          The following fails on API 27 or before
-          UiAutomation.grantRuntimePermission(...)
-
-          Therefore better to use .executeShellCommand(..)
-         */
-            uiAutomation.executeShellCommand(
-                "pm grant $packageName android.permission.CHANGE_CONFIGURATION"
-            )
         }
     }
 }
