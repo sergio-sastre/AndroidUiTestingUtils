@@ -18,8 +18,9 @@ Currently, with this library you can easily change the following configurations 
    2. System Locale
 2. Font size
 3. Orientation
-4. Dark mode /Day-Night mode
-5. Display size
+4. Custom themes
+5. Dark mode /Day-Night mode
+6. Display size
 
 You can find out why verifying our design under such configurations is important in this blog post: 
 - [Design a pixel perfect Android app 🎨](https://sergiosastre.hashnode.dev/design-a-pixel-perfect-android-app-with-screenshot-testing)
@@ -124,7 +125,8 @@ val displaySize = DisplaySizeTestRule(DisplaySize.LARGEST).withTimeOut(inMillis 
    
 @Test
 fun snapActivityTest() {
-    // Locale, FontSize & DisplaySize are only supported via TestRules for Activities
+    // Custom themes are not supported
+    // AppLocale, SystemLocale, FontSize & DisplaySize are only supported via TestRules for Activities
     val activity = ActivityScenarioConfigurator.ForActivity()
         .setOrientation(Orientation.LANDSCAPE)
         .setUiMode(UiMode.NIGHT)
@@ -148,6 +150,7 @@ fun snapViewHolderTest() {
             .setLocale("en")
             .setInitialOrientation(Orientation.PORTRAIT)
             .setUiMode(UiMode.DAY)
+            .setTheme(R.style.Custom_Theme)
             .setDisplaySize(DisplaySize.SMALL)
             .launchConfiguredActivity()
 

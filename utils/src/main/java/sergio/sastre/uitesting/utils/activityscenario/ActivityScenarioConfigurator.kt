@@ -6,7 +6,9 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.FragmentActivity
 import androidx.test.core.app.ActivityScenario
 import sergio.sastre.uitesting.utils.common.FontSize
 import sergio.sastre.uitesting.utils.common.LocaleUtil
@@ -23,8 +25,9 @@ object ActivityScenarioConfigurator {
     private var uiMode: UiMode? = null
     private var displaySize: DisplaySize? = null
 
-    @JvmInline
-    value class StringLocale(val locale: String)
+    @StyleRes
+    private var themeId: Int? = null
+
 
     /**
      *  Use this for snapshot testing any view that is not an Activity or Composable, e.g. Dialog,
@@ -47,10 +50,6 @@ object ActivityScenarioConfigurator {
             ActivityScenarioConfigurator.locale = LocaleUtil.localeFromString(locale)
         }
 
-        fun setLocale(stringLocale: StringLocale): ForView = apply {
-            ActivityScenarioConfigurator.locale = LocaleUtil.localeFromString(stringLocale.locale)
-        }
-
         fun setLocale(locale: Locale): ForView = apply {
             ActivityScenarioConfigurator.locale = locale
         }
@@ -67,7 +66,11 @@ object ActivityScenarioConfigurator {
             ActivityScenarioConfigurator.displaySize = displaySize
         }
 
-        fun launchConfiguredActivity() =
+        fun setTheme(@StyleRes theme: Int): ForView = apply {
+            ActivityScenarioConfigurator.themeId = theme
+        }
+
+        fun launchConfiguredActivity(): ActivityScenario<out FragmentActivity> =
             ActivityScenario.launch(activityForOrientation(orientation))
     }
 
@@ -94,10 +97,6 @@ object ActivityScenarioConfigurator {
             ActivityScenarioConfigurator.locale = LocaleUtil.localeFromString(locale)
         }
 
-        fun setLocale(stringLocale: StringLocale): ForComposable = apply {
-            ActivityScenarioConfigurator.locale = LocaleUtil.localeFromString(stringLocale.locale)
-        }
-
         fun setLocale(locale: Locale): ForComposable = apply {
             ActivityScenarioConfigurator.locale = locale
         }
@@ -114,7 +113,7 @@ object ActivityScenarioConfigurator {
             ActivityScenarioConfigurator.displaySize = displaySize
         }
 
-        fun launchConfiguredActivity() =
+        fun launchConfiguredActivity(): ActivityScenario<out FragmentActivity> =
             ActivityScenario.launch(activityForOrientation(orientation))
     }
 
@@ -166,6 +165,13 @@ object ActivityScenarioConfigurator {
             PortraitSnapshotConfiguredActivity::class.java
         }
 
+    private fun Activity.applyThemeId() {
+        themeId?.also {
+            setTheme(it)
+            themeId = null
+        }
+    }
+
     private fun Context.wrap(): Context {
         val newConfig = Configuration(resources.configuration)
 
@@ -186,16 +192,26 @@ object ActivityScenarioConfigurator {
         return createConfigurationContext(newConfig)
     }
 
-    class PortraitSnapshotConfiguredActivity : ComponentActivity() {
+    class PortraitSnapshotConfiguredActivity : FragmentActivity() {
         override fun attachBaseContext(newBase: Context?) {
             super.attachBaseContext(newBase?.wrap())
+        }
+
+        override fun onCreate(savedInstanceState: Bundle?) {
+            applyThemeId()
+            super.onCreate(savedInstanceState)
         }
     }
 
     class LandscapeSnapshotConfiguredActivity :
-        ComponentActivity() {
+        FragmentActivity() {
         override fun attachBaseContext(newBase: Context?) {
             super.attachBaseContext(newBase?.wrap())
+        }
+
+        override fun onCreate(savedInstanceState: Bundle?) {
+            applyThemeId()
+            super.onCreate(savedInstanceState)
         }
     }
 }
