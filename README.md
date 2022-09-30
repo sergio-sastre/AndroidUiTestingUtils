@@ -10,7 +10,7 @@
 A set of *TestRules*, *ActivityScenarios* and utils to facilitate UI & screenshot testing under certain configurations, independent of the UI testing framework you are using.
 <br clear="left"/>
 </br></br>
-For screenshot testing, it supports **Jetpack Compose**, **android Views** (e.g. custom Views, ViewHolders, etc.) and **Activities**.
+For screenshot testing, it supports **Jetpack Compose**, **android Views** (e.g. custom Views, ViewHolders, etc.), **Activities** and **Fragments**.
 </br></br>
 Currently, with this library you can easily change the following configurations in your instrumented tests:
 1. Locale (also Pseudolocales **en_XA** & **ar_XB**)
@@ -26,10 +26,9 @@ You can find out why verifying our design under such configurations is important
 - [Design a pixel perfect Android app 🎨](https://sergiosastre.hashnode.dev/design-a-pixel-perfect-android-app-with-screenshot-testing)
 
 In the near future, there are plans to also support, among others:
-1. FragmentScenario
-2. Reduce snapshot testing flakiness
-3. Folding features
-4. Enable Accessibility features 
+1. Reduce snapshot testing flakiness
+2. Folding features
+3. Enable Accessibility features 
 
 ## Sponsors
 Thanks to [Screenshotbot](https://screenshotbot.io) for their support!
@@ -130,7 +129,7 @@ fun snapActivityTest() {
     val activity = ActivityScenarioConfigurator.ForActivity()
         .setOrientation(Orientation.LANDSCAPE)
         .setUiMode(UiMode.NIGHT)
-        .launch(YourActivity::class.java)
+        .launch(MyActivity::class.java)
         
     val activity = activityScenario.waitForActivity()
     
@@ -217,15 +216,64 @@ fun snapComposableTest() {
 2. Use `SystemLocaleTestRule("my_locale")` in your tests instead of `ActivityScenarioConfigurator.ForComposable().setLocale("my_locale")`.
 
 ### Fragment
-As of version 1.1.2, it is not supported, but will be added in the next releases. For now, you can circumvent it by creating a custom empty Activity containing the fragment under test, and do like in the example to snapshot test Activities. Keep in mind that you need to define an additional empty Activity for landscape mode to support landscape orientation.
+The simplest way is to use the **FragmentScenarioConfiguratorRule**
+```kotlin
+@get:Rule
+val fragmentScenarioRule = fragmentScenarioConfiguratorRule<MyFragment>(
+    fragmentArgs = bundleOf("arg_key" to "arg_value"),
+    configItemWithTheme = FragmentConfigItem(
+        orientation = Orientation.LANDSCAPE,
+        uiMode = UiMode.DAY,
+        locale = "de",
+        fontSize = FontSize.SMALL,
+        displaySize = DisplaySize.SMALL,
+        theme = R.style.Custom_Theme,
+    ),
+)
 
+@Test
+fun snapFragment() {
+    compareScreenshot(
+        fragment = fragmentScenarioRule.fragmentScenario.waitForFragment(),
+        name = "your_unique_test_name",
+    )
+}
+```
+
+In case you don't want to/cannot use the rule, you can use the plain **FragmentScenarioConfigurator**.
+This would be its equivalent:
+```kotlin
+@Test
+fun snapFragment() {
+    val fragmentScenarioConfigurator =
+        FragmentScenarioConfigurator
+            .setInitialOrientation(Orientation.LANDSCAPE)
+            .setUiMode(UiMode.DAY)
+            .setLocale("de")
+            .setFontSize(FontSize.SMALL)
+            .setDisplaySize(DisplaySize.LARGE)
+            .setTheme(R.style.Custom_Theme)
+            .launchInContainer<MyFragment>(
+                fragmentArgs = bundleOf("arg_key" to "arg_value"),
+            )
+
+    compareScreenshot(
+        fragment = fragmentScenarioConfigurator.waitForFragment(),
+        name = "your_unique_test_name",
+    )
+
+    fragmentScenarioConfigurator.close()
+}
+```
 ### Utils
 1. waitForActivity:
    This method is analog to the one defined in [pedrovgs/Shot](https://github.com/pedrovgs/Shot). It's also available in this library for compatibility with other screenshot testing frameworks like Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android).
 
-2. waitForView: Inflates the layout in the main thread and waits till the inflation happens, returning the inflated view. You will need to inflate layouts with the activity context created from the ActivityScenario of this library for the configurations to become effective.
+2. waitForFragment: Analog to waitForActivity but for Fragment
 
-3. activity.inflate(R.layout_of_your_view): Use it to inflate android Views with the activity's context configuration.
+3. waitForView: Inflates the layout in the main thread and waits till the inflation happens, returning the inflated view. You will need to inflate layouts with the activity context created from the ActivityScenario of this library for the configurations to become effective.
+
+4. activity.inflate(R.layout_of_your_view): Use it to inflate android Views with the activity's context configuration.
 In doing so, the configuration becomes effective in the view. It also adds the view to the Activity's root.
 
 ### Reading on screenshot testing

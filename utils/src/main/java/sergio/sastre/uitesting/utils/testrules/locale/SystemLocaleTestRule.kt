@@ -2,7 +2,6 @@ package sergio.sastre.uitesting.utils.testrules.locale
 
 import android.content.pm.PackageManager.*
 import androidx.core.content.ContextCompat.*
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
@@ -29,7 +28,7 @@ class SystemLocaleTestRule : TestRule {
     private val testLocaleString: String?
 
     init {
-        getInstrumentation().grantChangeConfigurationIfNeeded()
+        grantChangeConfigurationIfNeeded()
     }
 
     @JvmOverloads

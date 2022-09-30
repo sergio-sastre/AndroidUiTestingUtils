@@ -1,10 +1,13 @@
 package sergio.sastre.uitesting.utils.utils
 
+import android.Manifest
 import android.app.Activity
+import android.content.pm.PackageManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
 import androidx.test.core.app.ActivityScenario
 import androidx.test.platform.app.InstrumentationRegistry
 import sergio.sastre.uitesting.utils.activityscenario.orientation.OrientationHelper
@@ -67,5 +70,24 @@ fun Activity.rotateTo(orientation: Orientation) {
     OrientationHelper(this).apply {
         requestedOrientation = orientation.activityInfo
         afterActivityLaunched()
+    }
+}
+
+fun grantChangeConfigurationIfNeeded() {
+    val instrumentation = InstrumentationRegistry.getInstrumentation()
+    if (ContextCompat.checkSelfPermission(
+            instrumentation.targetContext,
+            Manifest.permission.CHANGE_CONFIGURATION
+        ) != PackageManager.PERMISSION_GRANTED
+    ) {
+        /*
+      The following fails on API 27 or before
+      UiAutomation.grantRuntimePermission(...)
+
+      Therefore better to use .executeShellCommand(..)
+     */
+        instrumentation.uiAutomation.executeShellCommand(
+            "pm grant ${instrumentation.targetContext.packageName} android.permission.CHANGE_CONFIGURATION"
+        )
     }
 }
