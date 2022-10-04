@@ -103,6 +103,16 @@ To change the System Locale, you also need to add the following permission to yo
     ...
 ```
 
+To change the App Locale via `LocaleTestRule`, you need to add the following dependency in your `app/build.gradle`
+```kotlin
+implementation 'androidx.appcompat:appcompat:1.6.0-rc01'
+```
+and 
+```kotlin
+compileSdkVersion 33
+```
+**Warning**: `LocaleTestRule` does not work together with `ActivityScenarioForActivityRule` or `ActivityScenarioConfigurator.ForActivity()`.
+
 ## Screenshot testing examples
 The examples use [pedrovgs/Shot](https://github.com/pedrovgs/Shot). It'd also work with any other on-device screenshot testing framework, like Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android), Dropbox [Dropshots](https://github.com/dropbox/dropshots) or with a custom screenshot testing solution.
 
