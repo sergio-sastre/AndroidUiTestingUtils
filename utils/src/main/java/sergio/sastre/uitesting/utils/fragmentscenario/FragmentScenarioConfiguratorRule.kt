@@ -24,6 +24,10 @@ class FragmentScenarioConfiguratorRule<F : Fragment>(
                 config?.theme?.also { theme -> setTheme(theme) }
             }.launchInContainer(fragmentClass, fragmentArgs, initialState, factory)
 
+    val fragment: Fragment by lazy {
+        fragmentScenario.waitForFragment()
+    }
+
     override fun after() {
         fragmentScenario.close()
     }

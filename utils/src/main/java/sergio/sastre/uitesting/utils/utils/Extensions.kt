@@ -25,6 +25,21 @@ import sergio.sastre.uitesting.utils.common.Orientation
  */
 fun Activity.inflate(@LayoutRes layoutId: Int, id: Int = android.R.id.content): View {
     val root = findViewById<View>(id) as ViewGroup
+    return LayoutInflater.from(this).inflate(layoutId, root, true)
+}
+
+/**
+ * Returns a view with [layoutId] using the context of [Activity], and attaches it to the root.
+ * In addition to [inflate], it also waits synchronously till the main thread is Idle.
+ *
+ * This is meant to snapshot test custom views, ViewHolders, Dialogs, etc. after launching an
+ * Activity via ActivityScenarioConfigurator.
+ *
+ * All views inflated with the context of this Activity inherit its configuration, like Locale,
+ * FontSize, UiMode, etc.
+ */
+fun Activity.inflateAndWaitForIdle(@LayoutRes layoutId: Int, id: Int = android.R.id.content): View {
+    val root = findViewById<View>(id) as ViewGroup
     return waitForView {
         LayoutInflater.from(this).inflate(layoutId, root, true)
     }

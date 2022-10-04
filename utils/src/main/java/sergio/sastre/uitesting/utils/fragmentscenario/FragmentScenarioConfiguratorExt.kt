@@ -32,11 +32,11 @@ inline fun <reified T : Fragment> fragmentScenarioConfiguratorRule(
     fragmentArgs: Bundle? = null,
     initialState: Lifecycle.State = Lifecycle.State.RESUMED,
     factory: FragmentFactory? = null,
-    configItemWithTheme: FragmentConfigItem? = null,
+    config: FragmentConfigItem? = null,
 ): FragmentScenarioConfiguratorRule<T> = FragmentScenarioConfiguratorRule(
     T::class.java,
     fragmentArgs,
     initialState,
     factory,
-    configItemWithTheme,
+    config,
 )
