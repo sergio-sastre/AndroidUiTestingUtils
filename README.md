@@ -107,11 +107,33 @@ To change the System Locale, you also need to add the following permission to yo
 The examples use [pedrovgs/Shot](https://github.com/pedrovgs/Shot). It'd also work with any other on-device screenshot testing framework, like Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android), Dropbox [Dropshots](https://github.com/dropbox/dropshots) or with a custom screenshot testing solution.
 
 ### Activity
+The simplest way is to use the **ActivityScenarioForActivityRule**, The simplest way is to use the **ActivityScenarioForViewRule**, to avoid the need for closing the ActivityScenario.
 ```kotlin
-// Sets the Locale of the app under test only, i.e. the "per-app language preference" feature
 @get:Rule
-val locale = LocaleTestRule("en")
+val rule = 
+    activityScenarioForActivityRule<MyActivity>(
+        config = ActivityConfigItem(
+            orientation = Orientation.LANDSCAPE,
+            uiMode = UiMode.NIGHT,
+            fontSize = FontSize.HUGE,
+            systemLocale = "en",
+            displaySize = DisplaySize.LARGEST,
+        )
+    )
 
+@Test
+fun snapActivityTest() {
+    compareScreenshot(
+        activity = rule.activity,
+        name = "your_unique_test_name"
+    )
+}
+```
+
+In case you don't want to/cannot use the rule, you can use **ActivityScenarioConfigurator.ForActivity()** directly in the test.
+Currently, this is the only means to set a timeOut for the FontSize and DisplaySize TestRules, if needed. 
+This would be its equivalent:
+```kotlin
 // Sets the Locale of the Android system
 @get:Rule
 val systemLocale = SystemLocaleTestRule("en")
@@ -126,7 +148,7 @@ val displaySize = DisplaySizeTestRule(DisplaySize.LARGEST).withTimeOut(inMillis 
 fun snapActivityTest() {
     // Custom themes are not supported
     // AppLocale, SystemLocale, FontSize & DisplaySize are only supported via TestRules for Activities
-    val activity = ActivityScenarioConfigurator.ForActivity()
+    val activityScenario = ActivityScenarioConfigurator.ForActivity()
         .setOrientation(Orientation.LANDSCAPE)
         .setUiMode(UiMode.NIGHT)
         .launch(MyActivity::class.java)
@@ -139,6 +161,44 @@ fun snapActivityTest() {
 }
 ```
 ### Android View
+The simplest way is to use the **ActivityScenarioForViewRule**, to avoid the need for closing the ActivityScenario.
+```kotlin
+@get:Rule
+val rule = 
+    ActivityScenarioForViewRule(
+        config = ViewConfigItem(
+            fontSize = FontSize.NORMAL,
+            locale = "en",
+            orientation = Orientation.PORTRAIT,
+            uiMode = UiMode.DAY,
+            theme = R.style.Custom_Theme,
+            displaySize = DisplaySize.SMALL,
+        )
+    )    
+
+@Test
+fun snapViewHolderTest() {
+    // IMPORTANT: The rule inflates a layout inside the activity with its context to inherit the configuration 
+    val layout = rule.inflate(R.layout.your_view_holder_layout)
+    
+    // wait asynchronously for layout inflation 
+    val viewHolder = waitForView {
+        YourViewHolder(layout).apply {
+            // bind data to ViewHolder here
+            ...
+        }
+    }
+
+    compareScreenshot(
+        holder = viewHolder,
+        heightInPx = layout.height,
+        name = "your_unique_test_name"
+    )
+}
+```
+
+In case you don't want to/cannot use the rule, you can use **ActivityScenarioConfigurator.ForView()**.
+This would be its equivalent:
 ```kotlin
 // example for ViewHolder
 @Test
@@ -182,6 +242,40 @@ fun snapViewHolderTest() {
 2. Use `SystemLocaleTestRule("my_locale")` in your tests instead of `ActivityScenarioConfigurator.ForView().setLocale("my_locale")`.
 
 ### Jetpack Compose
+The simplest way is to use the **ActivityScenarioForComposableRule**, to avoid the need for:
+1) calling createEmptyComposeRule()
+2) closing the ActivityScenario.
+```kotlin
+@get:Rule
+val rule = ActivityScenarioForComposableRule(
+        config = ComposableConfigItem(
+            fontSize = FontSize.SMALL,
+            locale = "de",
+            uiMode = UiMode.DAY,
+            displaySize = DisplaySize.LARGE,
+            orientation = Orientation.PORTRAIT,
+        )
+    )
+
+@Test
+fun snapComposableTest() {
+    rule.activityScenario
+        .onActivity {
+            it.setContent {
+                AppTheme { // this theme must use isSystemInDarkTheme() internally
+                    yourComposable()
+                }
+            }
+        }
+
+    compareScreenshot(
+        rule = rule.composeTestRule, 
+        name = "your_unique_test_name"
+    )
+}
+```
+In case you don't want to/cannot use the rule, you can use **ActivityScenarioConfigurator.ForComposable()** together with **createEmptyComposeRule()**.
+This would be its equivalent:
 ```kotlin
 // needs an EmptyComposeRule to be compatible with ActivityScenario
 @get:Rule

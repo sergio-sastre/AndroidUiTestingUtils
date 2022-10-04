@@ -25,7 +25,9 @@ import sergio.sastre.uitesting.utils.common.Orientation
  */
 fun Activity.inflate(@LayoutRes layoutId: Int, id: Int = android.R.id.content): View {
     val root = findViewById<View>(id) as ViewGroup
-    return LayoutInflater.from(this).inflate(layoutId, root, true)
+    return waitForView {
+        LayoutInflater.from(this).inflate(layoutId, root, true)
+    }
 }
 
 /**
