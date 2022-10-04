@@ -11,8 +11,8 @@ android {
         minSdk 21
         targetSdk 33
 
-        versionCode 8
-        versionName "1.2.0"
+        versionCode 9
+        versionName "1.2.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -53,7 +53,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'sergio.sastre'
                 artifactId = 'uitesting.utils'
-                version = '1.2.0'
+                version = '1.2.1'
             }
         }
     }

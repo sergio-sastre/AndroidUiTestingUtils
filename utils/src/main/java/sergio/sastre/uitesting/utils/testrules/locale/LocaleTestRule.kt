@@ -14,6 +14,10 @@ import kotlin.Throws
 
 /**
  * A TestRule to change the Locale of the application.
+ *
+ * Warning: it currently does not work together with
+ * 1. ActivityScenarioForActivityRule
+ * 2. ActivityScenarioConfigurator.ForActivity()
  */
 class LocaleTestRule : TestRule {
     private val testLocale: Locale?

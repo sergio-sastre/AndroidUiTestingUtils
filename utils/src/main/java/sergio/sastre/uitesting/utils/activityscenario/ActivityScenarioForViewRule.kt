@@ -4,6 +4,7 @@ import android.app.Activity
 import androidx.annotation.LayoutRes
 import org.junit.rules.ExternalResource
 import sergio.sastre.uitesting.utils.utils.inflate
+import sergio.sastre.uitesting.utils.utils.inflateAndWaitForIdle
 import sergio.sastre.uitesting.utils.utils.waitForActivity
 
 class ActivityScenarioForViewRule(
@@ -22,8 +23,8 @@ class ActivityScenarioForViewRule(
 
     val activity: Activity by lazy { activityScenario.waitForActivity() }
 
-    fun inflate(@LayoutRes layoutId: Int, id: Int = android.R.id.content) =
-        activity.inflate(layoutId, id)
+    fun inflateAndWaitForIdle(@LayoutRes layoutId: Int, id: Int = android.R.id.content) =
+        activity.inflateAndWaitForIdle(layoutId, id)
 
     override fun after() {
         activityScenario.close()
