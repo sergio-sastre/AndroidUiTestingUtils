@@ -29,6 +29,7 @@ class FontScaleSetting internal constructor() {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun changeFontScalePreApi25(scale: FontSize) {
         resources.configuration.fontScale = java.lang.Float.parseFloat(scale.value)
         val metrics = Resources.getSystem().displayMetrics
