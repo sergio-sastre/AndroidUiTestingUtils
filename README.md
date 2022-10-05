@@ -34,9 +34,10 @@ You can find out why verifying our design under such configurations is important
 
 In the near future, there are plans to also support, among others:
 
-1. Reduce snapshot testing flakiness
-2. Folding features
-3. Enable Accessibility features
+1. Enable **framework-agnostic** & **shared screenshot testing** i.e. same test running either on device or on JVM
+2. Reduce snapshot testing flakiness
+3. Folding features
+4. Enable Accessibility features
 
 ## Sponsors
 
@@ -84,9 +85,6 @@ dependencies {
     androidTestImplementation 'com.github.sergio-sastre:AndroidUiTestingUtils:1.2.1'
 }
 ```
-
-The latter will make the app crash with
-`java.lang.RuntimeException: This method can not be called from the main application thread`
 
 # Usage
 
