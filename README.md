@@ -1,3 +1,4 @@
+[![](https://jitpack.io/v/sergio-sastre/AndroidUiTestingUtils.svg)](https://jitpack.io/#sergio-sastre/AndroidUiTestingUtils)</br>
 <a href="https://androidweekly.net/issues/issue-508">
 <img src="https://androidweekly.net/issues/issue-508/badge">
 </a>
@@ -54,10 +55,10 @@ Requests.
 - [Usage](#usage)
   - [Configuration](#configuration)
   - [Screnshot testing examples](#screenshot-testing-examples)
-  - [Activity](#activity)
-  - [Android View](#android-view)
-  - [Jetpack Compose](#jetpack-compose)
-  - [Fragment](#fragment)
+    - [Activity](#activity)
+    - [Android View](#android-view)
+    - [Jetpack Compose](#jetpack-compose)
+    - [Fragment](#fragment)
   - [Utils](#utils)
   - [Reading on screenshot testing](#reading-on-screenshot-testing)
   - [Standard UI testing](#standard-ui-testing)
@@ -95,10 +96,16 @@ First, you need to add the following permission and activities to your `debug/ma
 
 ```xml
 <!-- Required for ActivityScenarios -->
-<application...<activity
-android:name="sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioConfigurator$PortraitSnapshotConfiguredActivity" /><activity
-android:name="sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioConfigurator$LandscapeSnapshotConfiguredActivity"
-android:screenOrientation="landscape" />...</application>
+<application...
+    <activity
+        android:name="sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioConfigurator$PortraitSnapshotConfiguredActivity" 
+    />
+    <activity
+        android:name="sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioConfigurator$LandscapeSnapshotConfiguredActivity"
+        android:screenOrientation="landscape" 
+    />
+...
+</application>
 ```
 
 To enable pseudolocales **en_XA** & **ar_XB** for your screenshot tests, add this to your
@@ -121,18 +128,30 @@ To change the System Locale, you also need to add the following permission to yo
 ```xml
 <!-- Required to change the Locale via SystemLocaleTestRule (required for snapshot testing Activities only) -->
 <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"
-    tools:ignore="ProtectedPermissions" />...
+    tools:ignore="ProtectedPermissions" />
 ```
 
 To change the App Locale via `LocaleTestRule`, you need to add the following dependency in your `app/build.gradle`
 ```kotlin
-implementation 'androidx.appcompat:appcompat:1.6.0-rc01'
-```
-and 
-```kotlin
 compileSdkVersion 33
+...
+androidTestImplementation 'androidx.appcompat:appcompat:1.6.0-rc01'
 ```
-**Warning**: `LocaleTestRule` does not work together with `ActivityScenarioForActivityRule` or `ActivityScenarioConfigurator.ForActivity()`.
+**Warning**: `LocaleTestRule` does ONLY work with **ActivityScenarioConfigurator.ForActivity()**, i.e. it
+does not work with **ActivityScenarioForActivityRule**. Moreover, for **Fragments**, **Views** and **Composables** call the
+`setLocale("my_locale")` of their corresponding Fragment/ActivityScenarioConfigurator or the `ConfigItem(locale = "myLocale")` of their corresponding TestRule e.g. to achieve it:
+```kotlin
+ActivityScenarioConfigurator.ForView().setLocale("my_locale")
+```
+or
+
+```kotlin
+@get:Rule
+val rule =
+    ActivityScenarioForViewRule(
+        config = ViewConfigItem(locale = "my_locale")
+    )
+```
 
 ## Screenshot testing examples
 
@@ -144,8 +163,7 @@ solution.
 
 ### Activity
 
-The simplest way is to use the **ActivityScenarioForActivityRule**, The simplest way is to use
-the **ActivityScenarioForViewRule**, to avoid the need for closing the ActivityScenario.
+The simplest way is to use the **ActivityScenarioForActivityRule**, to avoid the need for closing the ActivityScenario.
 
 ```kotlin
 @get:Rule
@@ -164,17 +182,22 @@ val rule =
 fun snapActivityTest() {
     compareScreenshot(
         activity = rule.activity,
-        name = "your_unique_test_name"
+        name = "your_unique_test_name",
     )
 }
 ```
 
-In case you don't want to/cannot use the rule, you can use **
-ActivityScenarioConfigurator.ForActivity()** directly in the test. Currently, this is the only means
-to set a timeOut for the FontSize and DisplaySize TestRules, if needed. This would be its
-equivalent:
+In case you don't want to/cannot use the rule, you can use **ActivityScenarioConfigurator.ForActivity()** directly in the test. Currently, this is the only means to set
+1. A TimeOut for the FontSize and DisplaySize TestRules
+2. A LocaleTestRule for per-app language preferences
+
+Apart from that, this would be equivalent:
 
 ```kotlin
+// Sets the Locale of the app under test only, i.e. the per-app language preference feature
+@get:Rule
+val locale = LocaleTestRule("ar")
+
 // Sets the Locale of the Android system
 @get:Rule
 val systemLocale = SystemLocaleTestRule("en")
@@ -237,13 +260,12 @@ fun snapViewHolderTest() {
     compareScreenshot(
         holder = viewHolder,
         heightInPx = layout.height,
-        name = "your_unique_test_name"
+        name = "your_unique_test_name",
     )
 }
 ```
 
-In case you don't want to/cannot use the rule, you can use **
-ActivityScenarioConfigurator.ForView()**. This would be its equivalent:
+In case you don't want to/cannot use the rule, you can use **ActivityScenarioConfigurator.ForView()**. This would be its equivalent:
 
 ```kotlin
 // example for ViewHolder
@@ -275,7 +297,7 @@ fun snapViewHolderTest() {
     compareScreenshot(
         holder = viewHolder,
         heightInPx = layout.height,
-        name = "your_unique_test_name"
+        name = "your_unique_test_name",
     )
 
     activityScenario.close()
@@ -326,13 +348,12 @@ fun snapComposableTest() {
 
     compareScreenshot(
         rule = rule.composeRule,
-        name = "your_unique_test_name"
+        name = "your_unique_test_name",
     )
 }
 ```
 
-In case you don't want to/cannot use the rule, you can use **
-ActivityScenarioConfigurator.ForComposable()** together with **createEmptyComposeRule()**. This
+In case you don't want to/cannot use the rule, you can use **ActivityScenarioConfigurator.ForComposable()** together with **createEmptyComposeRule()**. This
 would be its equivalent:
 
 ```kotlin
@@ -403,8 +424,7 @@ fun snapFragment() {
 }
 ```
 
-In case you don't want to/cannot use the rule, you can use the plain **
-FragmentScenarioConfigurator**. This would be its equivalent:
+In case you don't want to/cannot use the rule, you can use the plain **FragmentScenarioConfigurator**. This would be its equivalent:
 
 ```kotlin
 @Test
@@ -430,7 +450,7 @@ fun snapFragment() {
 }
 ```
 
-### Utils
+## Utils
 
 1. waitForActivity:
    This method is analog to the one defined in [pedrovgs/Shot](https://github.com/pedrovgs/Shot).
@@ -453,7 +473,7 @@ fun snapFragment() {
    Do not wrap it with waitForView{} or it will throw an exception.
 
 
-### Reading on screenshot testing
+## Reading on screenshot testing
 
 - [An introduction to snapshot testing on Android in 2021 📸](https://sergiosastre.hashnode.dev/an-introduction-to-snapshot-testing-on-android-in-2021)
 - [The secrets of effectively snapshot testing on Android 🔓](https://sergiosastre.hashnode.dev/the-secrets-of-effectively-snapshot-testing-on-android)
@@ -462,8 +482,7 @@ fun snapFragment() {
 
 ## Standard UI testing
 
-For standard UI testing, you can use the same approach as for snapshot testing Activities. In case
-you do not want to use ActivityScenario at all in your tests, the following TestRules and methods
+For standard UI testing, you can use the same approach as for snapshot testing Activities. The following TestRules and methods
 are provided:
 
 ```kotlin
