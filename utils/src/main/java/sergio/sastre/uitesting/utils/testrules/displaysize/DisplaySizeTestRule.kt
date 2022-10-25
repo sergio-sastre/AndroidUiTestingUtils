@@ -61,7 +61,7 @@ class DisplaySizeTestRule(
     }
 
     override fun finished(description: Description?) {
-        displayScaleSetting.setDisplaySizeScale(previousDensityDpi)
+        displayScaleSetting.resetDisplaySizeScale(previousDensityDpi)
     }
 
     override fun apply(base: Statement, description: Description): Statement {
@@ -84,7 +84,7 @@ class DisplaySizeTestRule(
 
             baseStatement.evaluate()
 
-            scaleSetting.setDisplaySizeScale(initialDisplay)
+            scaleSetting.resetDisplaySizeScale(initialDisplay)
             sleepUntil(scaleMatches(initialDisplay), initialDisplay)
         }
 

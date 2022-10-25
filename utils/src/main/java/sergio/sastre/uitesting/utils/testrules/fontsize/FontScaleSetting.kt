@@ -7,6 +7,7 @@ import android.content.res.Resources
 import android.os.Build
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import sergio.sastre.uitesting.utils.common.FontSize
+import sergio.sastre.uitesting.utils.utils.waitForExecuteShellCommand
 
 class FontScaleSetting internal constructor() {
 
@@ -38,8 +39,7 @@ class FontScaleSetting internal constructor() {
     }
 
     private fun changeFontScaleFromApi25(scale: FontSize) {
-        getInstrumentation().uiAutomation
-            .executeShellCommand("settings put system font_scale " + scale.value)
+        getInstrumentation().waitForExecuteShellCommand("settings put system font_scale " + scale.value)
     }
 
     private fun saveFontScaleError(scale: FontSize): RuntimeException {
