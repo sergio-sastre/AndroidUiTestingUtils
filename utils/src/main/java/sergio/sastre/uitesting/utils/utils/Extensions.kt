@@ -2,7 +2,9 @@ package sergio.sastre.uitesting.utils.utils
 
 import android.Manifest
 import android.app.Activity
+import android.app.Instrumentation
 import android.content.pm.PackageManager
+import android.os.ParcelFileDescriptor
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +16,16 @@ import sergio.sastre.uitesting.utils.activityscenario.orientation.OrientationHel
 import java.lang.IllegalStateException
 import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioConfigurator
 import sergio.sastre.uitesting.utils.common.Orientation
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
+private fun waitForCompletion(descriptor: ParcelFileDescriptor) {
+    val reader =
+        BufferedReader(InputStreamReader(ParcelFileDescriptor.AutoCloseInputStream(descriptor)))
+    reader.use {
+        it.readText()
+    }
+}
 
 /**
  * Returns a view with [layoutId] using the context of [Activity], and attaches it to the root.
@@ -90,6 +102,10 @@ fun Activity.rotateTo(orientation: Orientation) {
     }
 }
 
+fun Instrumentation.waitForExecuteShellCommand(command: String) {
+    waitForCompletion(uiAutomation.executeShellCommand(command))
+}
+
 fun grantChangeConfigurationIfNeeded() {
     val instrumentation = InstrumentationRegistry.getInstrumentation()
     if (ContextCompat.checkSelfPermission(
@@ -103,7 +119,7 @@ fun grantChangeConfigurationIfNeeded() {
 
       Therefore better to use .executeShellCommand(..)
      */
-        instrumentation.uiAutomation.executeShellCommand(
+        instrumentation.waitForExecuteShellCommand(
             "pm grant ${instrumentation.targetContext.packageName} android.permission.CHANGE_CONFIGURATION"
         )
     }
