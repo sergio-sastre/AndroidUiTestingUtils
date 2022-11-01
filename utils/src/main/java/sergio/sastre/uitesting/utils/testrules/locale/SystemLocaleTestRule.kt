@@ -9,7 +9,6 @@ import sergio.sastre.uitesting.utils.common.LocaleListCompat
 import sergio.sastre.uitesting.utils.common.LocaleUtil
 import sergio.sastre.uitesting.utils.utils.grantChangeConfigurationIfNeeded
 import java.util.*
-import kotlin.jvm.JvmOverloads
 import kotlin.Throws
 
 /**
