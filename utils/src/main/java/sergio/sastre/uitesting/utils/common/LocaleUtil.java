@@ -1,22 +1,23 @@
 package sergio.sastre.uitesting.utils.common;
 
-import static androidx.test.platform.app.InstrumentationRegistry.getArguments;
-
 import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.LocaleList;
 import android.util.Log;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
 
 import org.lsposed.hiddenapibypass.HiddenApiBypass;
 
 /**
- * Code strongly based on that from fastlane Screengrab, but adding a bugfix for calling the
- * updateConfiguration method, which was added to the non-SDK interface list since API 28:
- * https://github.com/fastlane/fastlane/blob/master/screengrab/screengrab-lib/src/main/java/tools.fastlane.screengrab/locale
+ * Code strongly based on that from fastlane Screengrab, but
+ * 1. adding a bugfix for calling the updateConfiguration method, which was added to
+ *    the non-SDK interface list since API 28:
+ *    https://github.com/fastlane/fastlane/blob/master/screengrab/screengrab-lib/src/main/java/tools.fastlane.screengrab/locale
+ * 2. Add support for complex Locales like "sr-Latn-RS", "sr-Cyrl-RS" or "zh-Latn-TW-pinyin"
  *
  * Converting it to Kotlin led to errors while using pseudlocales
  */
@@ -51,35 +52,8 @@ public final class LocaleUtil {
             Configuration config =
                     (Configuration) methodGetConfiguration.invoke(activityManagerNative);
 
-            config.getClass().getField("userSetLocale").setBoolean(config, true);
-            LocaleListCompat ret;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                ret = new LocaleListCompat(config.getLocales());
-            } else {
-                ret = new LocaleListCompat(config.locale);
-            }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                config.setLocales(locale.getLocaleList());
-            } else {
-                config.locale = locale.getLocale();
-            }
-
-            config.setLayoutDirection(locale.getPreferredLocale());
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                HiddenApiBypass.invoke(
-                        amnClass,
-                        activityManagerNative,
-                        "updateConfiguration",
-                        config
-                );
-            } else {
-                Method updateConfigurationMethod =
-                        amnClass.getMethod("updateConfiguration", Configuration.class);
-                updateConfigurationMethod.setAccessible(true);
-                updateConfigurationMethod.invoke(activityManagerNative, config);
-            }
+            LocaleListCompat ret = updateLocale(locale, config);
+            updateConfiguration(amnClass, activityManagerNative, config);
             Log.d(TAG, "Locale changed to " + locale);
             return ret;
         } catch (Exception var8) {
@@ -88,15 +62,52 @@ public final class LocaleUtil {
         }
     }
 
-    /**
-     * @deprecated
-     */
-    @Deprecated
+    private static LocaleListCompat updateLocale(
+            LocaleListCompat locale,
+            Configuration config
+    ) throws NoSuchFieldException, IllegalAccessException {
+        config.getClass().getField("userSetLocale").setBoolean(config, true);
+        LocaleListCompat ret;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            ret = new LocaleListCompat(config.getLocales());
+        } else {
+            ret = new LocaleListCompat(config.locale);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            config.setLocales(locale.getLocaleList());
+        } else {
+            config.locale = locale.getLocale();
+        }
+        config.setLayoutDirection(locale.getPreferredLocale());
+        return ret;
+    }
+
+    private static void updateConfiguration(
+            Class<?> amnClass,
+            Object activityManagerNative,
+            Configuration config
+    ) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            HiddenApiBypass.invoke(
+                    amnClass,
+                    activityManagerNative,
+                    "updateConfiguration",
+                    config
+            );
+        } else {
+            Method updateConfigurationMethod =
+                    amnClass.getMethod("updateConfiguration", Configuration.class);
+            updateConfigurationMethod.setAccessible(true);
+            updateConfigurationMethod.invoke(activityManagerNative, config);
+        }
+    }
+
     public static void changeDeviceLocaleTo(Locale locale) {
         changeDeviceLocaleTo(new LocaleListCompat(locale));
     }
 
-    public static String[] localePartsFrom(String localeString) {
+    private static String[] localePartsFrom(String localeString) {
         if (localeString == null) {
             return null;
         } else {
@@ -105,7 +116,7 @@ public final class LocaleUtil {
         }
     }
 
-    public static Locale localeFromParts(String[] localeParts) {
+    private static Locale localeFromParts(String[] localeParts) {
         if (localeParts != null && localeParts.length != 0) {
             if (localeParts.length == 1) {
                 return new Locale(localeParts[0]);
@@ -120,11 +131,13 @@ public final class LocaleUtil {
     }
 
     public static Locale localeFromString(String locale) {
-        return localeFromParts(localePartsFrom(locale));
-    }
-
-    public static String getTestLocale() {
-        return getArguments().getString("testLocale");
+        Locale localeForTag = Locale.forLanguageTag(locale);
+        if (localeForTag.toString().isEmpty()) {
+            return localeFromParts(localePartsFrom(locale));
+        } else {
+            // Locales passed in ISO form like "en_US" or pseudolocales "en_XA", "ar_XB"
+            return localeForTag;
+        }
     }
 
     private LocaleUtil() {
