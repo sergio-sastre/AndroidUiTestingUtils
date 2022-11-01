@@ -8,9 +8,7 @@ import org.junit.runners.model.Statement
 import sergio.sastre.uitesting.utils.common.LocaleListCompat
 import sergio.sastre.uitesting.utils.common.LocaleUtil
 import sergio.sastre.uitesting.utils.utils.grantChangeConfigurationIfNeeded
-import java.lang.StringBuilder
 import java.util.*
-import kotlin.jvm.JvmOverloads
 import kotlin.Throws
 
 /**
@@ -25,26 +23,16 @@ import kotlin.Throws
  */
 class SystemLocaleTestRule : TestRule {
     private val testLocale: Locale?
-    private val testLocaleString: String?
 
     init {
         grantChangeConfigurationIfNeeded()
     }
 
-    @JvmOverloads
-    constructor(testLocale: String? = LocaleUtil.getTestLocale()) {
+    constructor(testLocale: String) {
         this.testLocale = LocaleUtil.localeFromString(testLocale)
-        testLocaleString = testLocale
     }
 
-    @Deprecated("Prefer using a String")
     constructor(testLocale: Locale) {
-        val sb = StringBuilder(testLocale.language)
-        val localeCountry = testLocale.country
-        if (localeCountry.isNotEmpty()) {
-            sb.append("-").append(localeCountry)
-        }
-        testLocaleString = sb.toString()
         this.testLocale = testLocale
     }
 

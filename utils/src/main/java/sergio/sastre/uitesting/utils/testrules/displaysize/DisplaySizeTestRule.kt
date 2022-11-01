@@ -61,7 +61,7 @@ class DisplaySizeTestRule(
     }
 
     override fun finished(description: Description?) {
-        displayScaleSetting.setDisplaySizeScale(previousDensityDpi)
+        displayScaleSetting.resetDisplaySizeScale(previousDensityDpi)
     }
 
     override fun apply(base: Statement, description: Description): Statement {
@@ -77,21 +77,21 @@ class DisplaySizeTestRule(
 
         @Throws(Throwable::class)
         override fun evaluate() {
-            val initialDisplay = scaleSetting.getDensityDpi()
+            val initialDisplay = scaleSetting.densityDpi
             val expectedDisplay = (initialDisplay * scale.value.toFloat()).toInt()
             scaleSetting.setDisplaySizeScale(scale)
             sleepUntil(scaleMatches(expectedDisplay), expectedDisplay)
 
             baseStatement.evaluate()
 
-            scaleSetting.setDisplaySizeScale(initialDisplay)
+            scaleSetting.resetDisplaySizeScale(initialDisplay)
             sleepUntil(scaleMatches(initialDisplay), initialDisplay)
         }
 
         private fun scaleMatches(densityDpi: Int): Condition {
             return object : Condition {
                 override fun holds(): Boolean {
-                    return scaleSetting.getDensityDpi() == densityDpi
+                    return scaleSetting.densityDpi == densityDpi
                 }
             }
         }
