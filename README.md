@@ -34,10 +34,10 @@ You can find out why verifying our design under such configurations is important
 
 In the near future, there are plans to also support, among others:
 
-1. Enable **framework-agnostic** & **shared screenshot testing** i.e. same test running either on device or on JVM
+1. **framework-agnostic** & **shared screenshot testing** i.e. same test running either on device or on JVM
 2. Reduce snapshot testing flakiness
 3. Folding features
-4. Enable Accessibility features
+4. Accessibility features
 
 ## Sponsors
 
@@ -93,7 +93,7 @@ dependencies {
 First, you need to add the following permission and activities to your `debug/manifest`
 
 ```xml
-<!-- Required for ActivityScenarios -->
+<!-- Required for ActivityScenarios only -->
 <application...
     <activity
         android:name="sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioConfigurator$PortraitSnapshotConfiguredActivity" 
@@ -124,7 +124,7 @@ android {
 To change the System Locale, you also need to add the following permission to your `debug/manifest`
 
 ```xml
-<!-- Required to change the Locale via SystemLocaleTestRule (required for snapshot testing Activities only) -->
+<!-- Required to change the Locale via SystemLocaleTestRule (e.g. for snapshot testing Activities) -->
 <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"
     tools:ignore="ProtectedPermissions" />
 ```
@@ -133,10 +133,10 @@ To change the App Locale via `LocaleTestRule`, you need to add the following dep
 ```kotlin
 compileSdkVersion 33
 ...
-androidTestImplementation 'androidx.appcompat:appcompat:1.6.0-rc01'
+androidTestImplementation 'androidx.appcompat:appcompat:1.6.0-alpha04' //or higher version!
 ```
 **Warning**: `LocaleTestRule` does ONLY work with **ActivityScenarioConfigurator.ForActivity()**, i.e. it
-does not work with **ActivityScenarioForActivityRule**. Moreover, for **Fragments**, **Views** and **Composables** call the
+does not work with **ActivityScenarioForActivityRule**. However, for **Fragments**, **Views** and **Composables** call the
 `setLocale("my_locale")` of their corresponding Fragment/ActivityScenarioConfigurator or the `ConfigItem(locale = "myLocale")` of their corresponding TestRule e.g. to achieve it:
 ```kotlin
 ActivityScenarioConfigurator.ForView().setLocale("my_locale")

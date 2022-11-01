@@ -9,9 +9,8 @@ class DisplayScaleSetting internal constructor() {
     private val resources
         get() = getInstrumentation().targetContext.resources
 
-    fun getDensityDpi(): Int {
-        return resources.configuration.densityDpi
-    }
+    val densityDpi: Int
+        get() = resources.configuration.densityDpi
 
     fun resetDisplaySizeScale(originalDensity: Int) {
         try {
@@ -21,7 +20,7 @@ class DisplayScaleSetting internal constructor() {
         }
     }
 
-    fun setDisplaySizeScale(targetDensity: Int){
+    fun setDisplaySizeScale(targetDensity: Int) {
         try {
             getInstrumentation().waitForExecuteShellCommand("wm density $targetDensity")
         } catch (e: Exception) {
@@ -30,7 +29,7 @@ class DisplayScaleSetting internal constructor() {
     }
 
     fun setDisplaySizeScale(scale: DisplaySize) {
-        val targetDensity = resources.configuration.densityDpi * (scale.value).toFloat()
+        val targetDensity = densityDpi * (scale.value).toFloat()
         setDisplaySizeScale(targetDensity.toInt())
     }
 }

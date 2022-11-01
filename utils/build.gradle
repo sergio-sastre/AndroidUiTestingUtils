@@ -11,8 +11,8 @@ android {
         minSdk 21
         targetSdk 33
 
-        versionCode 9
-        versionName "1.2.1"
+        versionCode 10
+        versionName "1.2.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -30,20 +30,20 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-        freeCompilerArgs +=["-Xjvm-default=all",]
+        freeCompilerArgs += ["-Xjvm-default=all"]
     }
 }
 
 dependencies {
     api 'androidx.appcompat:appcompat:1.7.0-alpha01'
     api 'com.google.android.material:material:1.7.0'
-    api 'androidx.test:core:1.5.0-beta01'
+    api 'androidx.test:core:1.5.0-rc01'
     api 'androidx.core:core-ktx:1.9.0'
     api 'androidx.test.ext:junit:1.1.3'
     api 'androidx.test.espresso:espresso-core:3.4.0'
-    api 'androidx.compose.ui:ui-test-junit4:1.2.1'
-    api 'androidx.fragment:fragment-ktx:1.5.3'
-    api 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
+    api 'androidx.compose.ui:ui-test-junit4:1.3.0'
+    api 'androidx.fragment:fragment-ktx:1.5.4'
+    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
 }
 
 //https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/
@@ -54,7 +54,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'sergio.sastre'
                 artifactId = 'uitesting.utils'
-                version = '1.2.1'
+                version = '1.2.2'
             }
         }
     }
