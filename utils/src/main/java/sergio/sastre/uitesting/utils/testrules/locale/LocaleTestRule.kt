@@ -15,9 +15,9 @@ import kotlin.Throws
  *
  * The Locale of the System does not change. Use SystemLocaleTestRule instead for that.
  *
- * Warning: it currently does not work together with
- * 1. ActivityScenarioForActivityRule
- * 2. ActivityScenarioConfigurator.ForActivity()
+ * Warning: it currently does NOT work together with ActivityScenarioForActivityRule.
+ * However, you can use it together with ActivityScenarioConfigurator.ForActivity() for
+ * testing activities
  */
 class LocaleTestRule : TestRule {
     private val testLocale: Locale?
