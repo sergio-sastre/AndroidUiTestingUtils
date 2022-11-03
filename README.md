@@ -82,7 +82,7 @@ Add a dependency to `build.gradle`
 
 ```groovy
 dependencies {
-    androidTestImplementation 'com.github.sergio-sastre:AndroidUiTestingUtils:1.2.1'
+    androidTestImplementation 'com.github.sergio-sastre:AndroidUiTestingUtils:1.2.2'
 }
 ```
 
