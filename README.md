@@ -82,7 +82,10 @@ Add a dependency to `build.gradle`
 
 ```groovy
 dependencies {
-    androidTestImplementation 'com.github.sergio-sastre:AndroidUiTestingUtils:1.2.2'
+    androidTestImplementation('com.github.sergio-sastre:AndroidUiTestingUtils:1.2.2') {
+        exclude group: 'androidx.compose.ui' // add this to avoid compose version clashes
+    }
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:your_compose_version"
 }
 ```
 
