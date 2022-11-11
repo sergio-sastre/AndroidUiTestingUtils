@@ -55,6 +55,10 @@ Requests.
 - [Integration](#integration)
 - [Usage](#usage)
   - [Configuration](#configuration)
+    - [ActivityScenarios](#activityscenarios)
+    - [Pseudolocales](#pseudolocales)
+    - [System Locale](#system-locale)
+    - [App Locale](#app-locale)
   - [Screnshot testing examples](#screenshot-testing-examples)
     - [Activity](#activity)
     - [Android View](#android-view)
@@ -78,22 +82,33 @@ allprojects {
 }
 ```
 
-Add a dependency to `build.gradle`
+
+
+Set the comple SdkVersion and add a dependency to `build.gradle`
+
+```kotlin
+compileSdkVersion 33
+```
 
 ```groovy
 dependencies {
     androidTestImplementation('com.github.sergio-sastre:AndroidUiTestingUtils:1.2.2') {
-        exclude group: 'androidx.compose.ui' // add this to avoid compose version clashes
+        // if necessary, add this to avoid compose version clashes
+        exclude group: 'androidx.compose.ui'
     }
+    // add this if excluding 'androidx.compose.ui' due to compose version clashes 
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:your_compose_version"
 }
 ```
+
 
 # Usage
 
 ## Configuration
 
-First, you need to add the following permission and activities to your `debug/manifest`
+### ActivityScenarios
+
+Add the following permission and activities to your `debug/manifest`
 
 ```xml
 <!-- Required for ActivityScenarios only -->
@@ -109,6 +124,7 @@ First, you need to add the following permission and activities to your `debug/ma
 </application>
 ```
 
+### Pseudolocales
 To enable pseudolocales **en_XA** & **ar_XB** for your screenshot tests, add this to your
 build.gradle.
 
@@ -123,19 +139,17 @@ android {
     }
 }
 ```
-
-To change the System Locale, you also need to add the following permission to your `debug/manifest`
+### System Locale
+To change the System Locale , you also need to add the following permission to your `debug/manifest`
 
 ```xml
 <!-- Required to change the Locale via SystemLocaleTestRule (e.g. for snapshot testing Activities) -->
 <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"
     tools:ignore="ProtectedPermissions" />
 ```
-
-To change the App Locale via `LocaleTestRule`, you need to add the following dependency in your `app/build.gradle`
+### App Locale
+To change the App Locale, which is possible via `LocaleTestRule`, you need to add the following dependency in your `app/build.gradle`
 ```kotlin
-compileSdkVersion 33
-...
 androidTestImplementation 'androidx.appcompat:appcompat:1.6.0-alpha04' //or higher version!
 ```
 **Warning**: `LocaleTestRule` does ONLY work with **ActivityScenarioConfigurator.ForActivity()**, i.e. it
