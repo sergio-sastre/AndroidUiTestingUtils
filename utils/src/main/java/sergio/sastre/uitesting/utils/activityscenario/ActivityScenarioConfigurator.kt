@@ -133,6 +133,13 @@ object ActivityScenarioConfigurator {
 
         private var orientationTestWatcher: OrientationTestWatcher? = null
 
+        @Deprecated(
+            message = "Use UiModeTestRule instead",
+            replaceWith = ReplaceWith(
+                "UiModeTestRule(uiMode.appCompatDelegateInt)",
+                "sergio.sastre.uitesting.utils.testrules.uiMode.UiModeTestRule",
+            )
+        )
         fun setUiMode(uiMode: UiMode): ForActivity = apply {
             AppCompatDelegate.setDefaultNightMode(uiMode.appCompatDelegateInt)
         }
