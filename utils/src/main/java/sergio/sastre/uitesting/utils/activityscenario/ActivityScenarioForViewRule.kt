@@ -3,7 +3,6 @@ package sergio.sastre.uitesting.utils.activityscenario
 import android.app.Activity
 import androidx.annotation.LayoutRes
 import org.junit.rules.ExternalResource
-import sergio.sastre.uitesting.utils.utils.inflate
 import sergio.sastre.uitesting.utils.utils.inflateAndWaitForIdle
 import sergio.sastre.uitesting.utils.utils.waitForActivity
 
