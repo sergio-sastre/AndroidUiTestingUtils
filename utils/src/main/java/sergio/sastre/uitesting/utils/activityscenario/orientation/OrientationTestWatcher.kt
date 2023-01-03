@@ -1,10 +1,8 @@
 package sergio.sastre.uitesting.utils.activityscenario.orientation
 
 import android.app.Activity
-import android.content.pm.ActivityInfo
 import androidx.test.core.app.ActivityScenario
 import org.junit.rules.TestWatcher
-import org.junit.runner.Description
 import sergio.sastre.uitesting.utils.common.Orientation
 
 class OrientationTestWatcher(private val orientation: Orientation?) : TestWatcher() {
@@ -24,13 +22,7 @@ class OrientationTestWatcher(private val orientation: Orientation?) : TestWatche
                 orientationHelper?.requestedOrientation = this.activityInfo
             }
         }
-        orientationHelper?.afterActivityLaunched()
+        orientationHelper?.setLayoutOrientation()
         return activityScenario
-    }
-
-    override fun finished(description: Description?) {
-        activityScenario?.onActivity {
-            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
     }
 }
