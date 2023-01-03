@@ -31,7 +31,9 @@ class ActivityScenarioForComposableRule(
     val activity: Activity by lazy { activityScenario.waitForActivity() }
 
     override fun apply(base: Statement?, description: Description?): Statement {
-        return emptyComposeRule.apply(base, description)
+        // we need to call super, otherwise after() will not be called
+        val externalResourceStatement = super.apply(base, description)
+        return emptyComposeRule.apply(externalResourceStatement, description)
     }
 
     override fun after() {

@@ -3,7 +3,6 @@ package sergio.sastre.uitesting.utils.activityscenario
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-
 import androidx.test.core.app.ActivityScenario
 import org.junit.rules.ExternalResource
 import org.junit.rules.RuleChain

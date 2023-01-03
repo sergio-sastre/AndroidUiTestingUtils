@@ -98,7 +98,7 @@ fun <V> waitForView(actionToDo: () -> V): V =
 fun Activity.rotateTo(orientation: Orientation) {
     OrientationHelper(this).apply {
         requestedOrientation = orientation.activityInfo
-        afterActivityLaunched()
+        setLayoutOrientation()
     }
 }
 
