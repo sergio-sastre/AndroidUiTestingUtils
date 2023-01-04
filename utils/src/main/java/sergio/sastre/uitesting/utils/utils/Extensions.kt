@@ -2,6 +2,7 @@ package sergio.sastre.uitesting.utils.utils
 
 import android.Manifest
 import android.app.Activity
+import android.app.Dialog
 import android.app.Instrumentation
 import android.content.pm.PackageManager
 import android.os.ParcelFileDescriptor
@@ -9,9 +10,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
-import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import sergio.sastre.uitesting.utils.activityscenario.orientation.OrientationHelper
 import java.lang.IllegalStateException
 import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioConfigurator
@@ -80,7 +83,7 @@ fun <A : Activity> ActivityScenario<A>.waitForActivity(): A {
  * This also includes inflation
  */
 fun <V> waitForView(actionToDo: () -> V): V =
-    InstrumentationRegistry.getInstrumentation().run {
+    getInstrumentation().run {
         var view: V? = null
         runOnMainSync { view = actionToDo() }
         waitForIdleSync()
@@ -106,8 +109,85 @@ fun Instrumentation.waitForExecuteShellCommand(command: String) {
     waitForCompletion(uiAutomation.executeShellCommand(command))
 }
 
+/**
+ * Waits for the Ui thread to be Idle and calculates the expected dimensions of the
+ * [RecyclerView.ViewHolder].
+ * This is necessary to take a screenshot with the expected size of the dialog. For that, we need
+ * to provide [RecyclerView.ViewHolder]#measureHeight/measureWidth to the method used to take/verify
+ * the screenshot.
+ */
+fun waitForMeasuredViewHolder(
+    exactHeightPx: Int? = null,
+    exactWidthPx: Int? = null,
+    actionToDo: () -> RecyclerView.ViewHolder,
+): RecyclerView.ViewHolder =
+    waitForView { actionToDo() }.apply {
+        itemView.setDimensions(exactHeightPx, exactWidthPx)
+    }
+
+/**
+ * Waits for the Ui thread to be Idle and calculates the expected dimensions of the
+ * [View].
+ * This is necessary to take a screenshot with the expected size of the dialog. For that, we need
+ * to provide [View]#measureHeight/measureWidth to the method used to take/verify
+ * the screenshot.
+ */
+fun waitForMeasuredView(
+    exactHeightPx: Int? = null,
+    exactWidthPx: Int? = null,
+    actionToDo: () -> View,
+): View =
+    waitForView { actionToDo() }.apply {
+        setDimensions(exactHeightPx, exactWidthPx)
+    }
+
+/**
+ * Waits for the Ui thread to be Idle and calculates the expected dimensions of the
+ * [Dialog].
+ * This is necessary to take a screenshot with the expected size of the dialog. For that, we need
+ * to provide [Dialog]#measureHeight/measureWidth to the method used to take/verify
+ * the screenshot.
+ */
+fun waitForMeasuredDialog(
+    exactWidthPx: Int? = null,
+    exactHeightPx: Int? = null,
+    actionToDo: () -> Dialog,
+): Dialog =
+    waitForView { actionToDo().apply { show() } }.apply {
+        window!!.decorView.setDimensions(exactHeightPx, exactWidthPx)
+    }
+
+private fun View.setDimensions(
+    exactHeightPx: Int? = null,
+    exactWidthPx: Int? = null,
+) {
+    getInstrumentation().apply {
+        runOnMainSync {
+            MeasureViewHelpers
+                .setupView(this@setDimensions)
+                .also {
+                    if (exactHeightPx != null) {
+                        it.setExactHeightPx(exactHeightPx)
+                    }
+                }
+                .setExactWidthPx(exactWidthPx ?: this@setDimensions.width)
+                .layout()
+        }
+        waitForIdleSync()
+    }
+}
+
+fun Activity.waitForComposeView(): ComposeView =
+    waitForView {
+        window
+            .decorView
+            .findViewById<ViewGroup>(android.R.id.content)
+            .getChildAt(0) as ComposeView
+    }
+
+
 fun grantChangeConfigurationIfNeeded() {
-    val instrumentation = InstrumentationRegistry.getInstrumentation()
+    val instrumentation = getInstrumentation()
     if (ContextCompat.checkSelfPermission(
             instrumentation.targetContext,
             Manifest.permission.CHANGE_CONFIGURATION
