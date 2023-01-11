@@ -22,7 +22,7 @@ internal class OrientationHelper<T : Activity>(
     var requestedOrientation: Int? = null
     private lateinit var lifecycleLatch: CountDownLatch
 
-    fun afterActivityLaunched() {
+    internal fun setLayoutOrientation() {
 
         // Set the orientation based on how the activity was launched
         deviceOrientation = if (activity.isLandscape)

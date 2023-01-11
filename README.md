@@ -64,6 +64,7 @@ Requests.
     - [Android View](#android-view)
     - [Jetpack Compose](#jetpack-compose)
     - [Fragment](#fragment)
+    - [Bitmap](#bitmap)
   - [Utils](#utils)
   - [Reading on screenshot testing](#reading-on-screenshot-testing)
   - [Standard UI testing](#standard-ui-testing)
@@ -81,9 +82,6 @@ allprojects {
     }
 }
 ```
-
-
-
 Set the comple SdkVersion and add a dependency to `build.gradle`
 
 ```kotlin
@@ -92,7 +90,7 @@ compileSdkVersion 33
 
 ```groovy
 dependencies {
-    androidTestImplementation('com.github.sergio-sastre:AndroidUiTestingUtils:1.2.2') {
+    androidTestImplementation('com.github.sergio-sastre:AndroidUiTestingUtils:1.2.3') {
         // if necessary, add this to avoid compose version clashes
         exclude group: 'androidx.compose.ui'
     }
@@ -140,7 +138,8 @@ android {
 }
 ```
 ### System Locale
-To change the System Locale , you also need to add the following permission to your `debug/manifest`
+To change the System Locale , you also need to add the following permission to your `debug/manifest`.
+For multi-module apps, do this in the app module.
 
 ```xml
 <!-- Required to change the Locale via SystemLocaleTestRule (e.g. for snapshot testing Activities) -->
@@ -170,11 +169,13 @@ val rule =
 
 ## Screenshot testing examples
 
-The examples use [pedrovgs/Shot](https://github.com/pedrovgs/Shot). It'd also work with any other
-on-device screenshot testing framework, like
+The examples use [pedrovgs/Shot](https://github.com/pedrovgs/Shot). It also works with any other
+on-device screenshot testing library, like
 Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android),
 Dropbox [Dropshots](https://github.com/dropbox/dropshots) or with a custom screenshot testing
 solution.
+
+You can find more complete examples with Shot and Dropshots in the [Android screenshot testing playground](https://github.com/sergio-sastre/Android-screenshot-testing-playground) repo.
 
 ### Activity
 
@@ -223,13 +224,15 @@ val fontSize = FontSizeTestRule(FontSize.HUGE).withTimeOut(inMillis = 15_000) //
 @get:Rule
 val displaySize = DisplaySizeTestRule(DisplaySize.LARGEST).withTimeOut(inMillis = 15_000)
 
+@get:Rule
+val uiMode = UiModeTestRule(UiMode.NIGHT)
+
 @Test
 fun snapActivityTest() {
     // Custom themes are not supported
     // AppLocale, SystemLocale, FontSize & DisplaySize are only supported via TestRules for Activities
     val activityScenario = ActivityScenarioConfigurator.ForActivity()
         .setOrientation(Orientation.LANDSCAPE)
-        .setUiMode(UiMode.NIGHT)
         .launch(MyActivity::class.java)
 
     val activity = activityScenario.waitForActivity()
@@ -265,7 +268,7 @@ fun snapViewHolderTest() {
     val layout = rule.inflateAndWaitForIdle(R.layout.your_view_holder_layout)
 
     // wait asynchronously for layout inflation 
-    val viewHolder = waitForView {
+    val viewHolder = waitForMeasuredViewHolder {
         YourViewHolder(layout).apply {
             // bind data to ViewHolder here
             ...
@@ -274,7 +277,7 @@ fun snapViewHolderTest() {
 
     compareScreenshot(
         holder = viewHolder,
-        heightInPx = layout.height,
+        heightInPx = viewHolder.itemView.height,
         name = "your_unique_test_name",
     )
 }
@@ -302,7 +305,7 @@ fun snapViewHolderTest() {
     val layout = activity.inflateAndWaitForIdle(R.layout.your_view_holder_layout)
 
     // wait asynchronously for layout inflation 
-    val viewHolder = waitForView {
+    val viewHolder = waitForMeasuredViewHolder {
         YourViewHolder(layout).apply {
             // bind data to ViewHolder here
             ...
@@ -311,7 +314,7 @@ fun snapViewHolderTest() {
 
     compareScreenshot(
         holder = viewHolder,
-        heightInPx = layout.height,
+        heightInPx = viewHolder.itemView.height,
         name = "your_unique_test_name",
     )
 
@@ -465,28 +468,95 @@ fun snapFragment() {
 }
 ```
 
+### Bitmap
+
+Most screenshot testing libraries use `Canvas` with `Bitmap.Config.ARGB_8888` as default for generating bitmaps (i.e. the screenshots) from the Activities/Fragments/ViewHolders/Views/Dialogs/Composables...
+That's because Canvas is supported in all Android versions.</br>
+Nevertheless, such bitmaps generated using `Canvas` have some limitations, e.g. UI elements are rendered without considering elevation.
+
+Fortunately, such libraries let you pass the bitmap (i.e.the screenshot) as argument in their record/verify methods.
+In doing so, we can draw the views with elevation to a bitmap with `PixelCopy`.
+
+AndroidUiTestingUtils provides methods to easily generate bitmaps from the Activities/Fragments/ViewHolders/Views/Dialogs/Composables:
+1. `drawToBitmap(config = Bitmap.Config.ARGB_8888)` -> uses `Canvas` under the hood
+2. `drawToBitmapWithElevation(config = Bitmap.Config.ARGB_8888)` -> uses `PixelCopy` under the hood
+
+Differences between both might be specially noticeable in API 31:
+<p align="center">
+<img width="350" src="../../Downloads/drawToBitmapWithElevation.png">
+</p>
+
+> Note
+> If using `PixelCopy` with ViewHolders/Views/Dialogs/Composables, consider launching the container Activity with transparent background for a more realistic screenshot of the UI component.
+> ```kotlin
+> ActivityScenarioConfigurator.ForView() // or .ForComposable()
+>       ...
+>       .launchConfiguredActivity(backgroundColor = Color.TRANSPARENT)
+> ```
+> or
+> ```kotlin
+> ActivityScenarioForViewRule( // or ActivityScenarioForComposableRule()
+>       viewConfig = ...,
+>       backgroundColor = Color.TRANSPARENT,
+> )
+> ```
+> Otherwise it uses the default Dark/Light Theme background colors (e.g. white and dark grey).
+
+Using `PixelCopy` instead of `Canvas` comes with its own drawbacks though. In general, don't use
+PixelCopy to draw views that don't fit on the screen. </br>
+
+| Canvas                                                              |                                  PixelCopy                                   |
+|---------------------------------------------------------------------|:----------------------------------------------------------------------------:|
+| ✅ Can render elements beyond the screen,<br/> e.g. long ScrollViews | ❌ Cannot render elements beyond the screen,<br/> resizing if that's the case | 
+| ❌ Ignores elevation<sup>1</sup> of UI elements while drawing        |        ✅ Considers elevation<sup>1</sup> of UI elements while drawing        |
+
+<sup>1</sup> Elevation can be manifested in many ways: a UI layer on top of another or a shadow in a CardView.
+
+And using `PixelCopy` in your screenshot tests is as simple as this (example with Shot):
+```kotlin
+// for UI Components like Activities/Fragments/ViewHolders/Views/Dialogs
+compareScreenshot(
+    bitmap = uiComponent.drawToBitmapWithElevation(),
+    name = "your_unique_test_name",
+)
+```
+```kotlin
+// for Composables
+compareScreenshot(
+    bitmap = activity.waitForComposableView().drawToBitmapWithElevation(),
+    name = "your_unique_test_name",
+)
+```
+
 ## Utils
 
-1. waitForActivity:
-   This method is analog to the one defined in [pedrovgs/Shot](https://github.com/pedrovgs/Shot).
+**Wait**
+1. `waitForActivity`:
+   Analog to the one defined in [pedrovgs/Shot](https://github.com/pedrovgs/Shot).
    It's also available in this library for compatibility with other screenshot testing frameworks
    like
    Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android)
-   .
+   .</br></br>
+2. `waitForFragment`: Analog to waitForActivity but for Fragment.</br></br>
 
-2. waitForFragment: Analog to waitForActivity but for Fragment
+3. `activity.waitForComposeView`: Returns the root Composable in the activity as a ComposeView. You can call later `drawToBitmap` or `drawToBitmapWithElevation` on it to screenshot test its corresponding bitmap.</br></br>
 
-3. waitForView: Inflates the layout in the main thread and waits till the inflation happens,
-   returning the inflated view. You will need to inflate layouts with the activity context created
-   from the ActivityScenario of this library for the configurations to become effective.
+4. `waitForMeasuredView/Dialog/ViewHolder(exactWidth, exactHeight)`: Inflates the layout in the main thread, sets its width and height to those given, and waits till the thread is idle,
+      returning the inflated view. Comes in handy with libraries that do not support, to take a screenshot with a given width/height, like Dropshots.</br></br>
 
-4. activity.inflate(R.layout_of_your_view): Use it to inflate android Views with the activity's
+>**Warning**
+> Prefer `waitForMeasuredView` over `waitForView` (which is discouraged), specially if using Dropshots:
+> <p align="center">
+> <img width="800" src="../../Downloads/waitForMeasuredView vs waitForView.png">
+> </p>
+
+**Inflate or measure**
+5. `activity.inflate(R.layout_of_your_view)`: Use it to inflate android Views with the activity's
    context configuration. In doing so, the configuration becomes effective in the view. It also adds
-   the view to the Activity's root.
-
-5. activity.inflateAndWaitForIdle(R.layout_of_your_view): Like activity.inflate, but waits till the view is Idle to return it.
-   Do not wrap it with waitForView{} or it will throw an exception.
-
+   the view to the Activity's root.</br></br>
+6. `activity.inflateAndWaitForIdle(R.layout_of_your_view)`: Like activity.inflate, but waits till the view is Idle to return it.
+   Do not wrap it with waitForMeasuredView{} or it will throw an exception.</br></br>
+7. `MeasureViewHelpers`: Analog to the `ViewHelpers` defined in Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android). In most cases, you don't need to use it directly but via `waitForMeasuredView(exactWidth, exactHeight)`, which calls `MeasuredViewHelpers` under the hood.
 
 ## Reading on screenshot testing
 
@@ -516,7 +586,7 @@ val fontSize = FontSizeTestRule(FontSize.HUGE).withTimeOut(inMillis = 15_000) //
 val displaySize = DisplaySizeTestRule(DisplaySize.LARGEST).withTimeOut(inMillis = 15_000)
 
 @get:Rule
-val uiMode = DayNightRule(UiMode.NIGHT)
+val uiMode = UiModeTestRule(UiMode.NIGHT)
 
 activity.rotateTo(Orientation.LANDSCAPE)
 ```

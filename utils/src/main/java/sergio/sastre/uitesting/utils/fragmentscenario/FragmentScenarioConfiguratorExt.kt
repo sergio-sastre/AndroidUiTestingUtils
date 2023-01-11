@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.Lifecycle
 
+/**
+ * Returns a [Fragment] from a [FragmentScenarioConfigurator].
+*/
 fun <A : Fragment> FragmentScenarioConfigurator<A>.waitForFragment(): A {
     var fragment: A? = null
     onFragment {

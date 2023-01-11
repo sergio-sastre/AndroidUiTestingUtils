@@ -4,10 +4,16 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.View
 import androidx.activity.ComponentActivity
+import androidx.annotation.ColorInt
+import androidx.annotation.Discouraged
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.ui.graphics.Color
+import androidx.core.graphics.toColorInt
 import androidx.fragment.app.FragmentActivity
 import androidx.test.core.app.ActivityScenario
 import sergio.sastre.uitesting.utils.common.FontSize
@@ -24,6 +30,9 @@ object ActivityScenarioConfigurator {
     private var orientation: Orientation? = null
     private var uiMode: UiMode? = null
     private var displaySize: DisplaySize? = null
+
+    @ColorInt
+    private var backgroundColor: Int? = null
 
     @StyleRes
     private var themeId: Int? = null
@@ -70,8 +79,12 @@ object ActivityScenarioConfigurator {
             ActivityScenarioConfigurator.themeId = theme
         }
 
-        fun launchConfiguredActivity(): ActivityScenario<out FragmentActivity> =
-            ActivityScenario.launch(activityForOrientation(orientation))
+        fun launchConfiguredActivity(
+            @ColorInt backgroundColor: Int? = null,
+        ): ActivityScenario<out FragmentActivity> {
+            ActivityScenarioConfigurator.backgroundColor = backgroundColor
+            return ActivityScenario.launch(activityForOrientation(orientation))
+        }
     }
 
     /**
@@ -113,8 +126,12 @@ object ActivityScenarioConfigurator {
             ActivityScenarioConfigurator.displaySize = displaySize
         }
 
-        fun launchConfiguredActivity(): ActivityScenario<out FragmentActivity> =
-            ActivityScenario.launch(activityForOrientation(orientation))
+        fun launchConfiguredActivity(
+            @ColorInt backgroundColor: Int? = null,
+        ): ActivityScenario<out FragmentActivity> {
+            ActivityScenarioConfigurator.backgroundColor = backgroundColor
+            return ActivityScenario.launch(activityForOrientation(orientation))
+        }
     }
 
     /**
@@ -133,6 +150,11 @@ object ActivityScenarioConfigurator {
 
         private var orientationTestWatcher: OrientationTestWatcher? = null
 
+        @Discouraged(
+            message = "Consider using UiModeTestRule(uiMode.appCompatDelegateInt). " +
+                    "Using this method might throw an IllegalStateException: Must be called from " +
+                    "main thread."
+        )
         fun setUiMode(uiMode: UiMode): ForActivity = apply {
             AppCompatDelegate.setDefaultNightMode(uiMode.appCompatDelegateInt)
         }
@@ -166,9 +188,17 @@ object ActivityScenarioConfigurator {
         }
 
     private fun Activity.applyThemeId() {
-        themeId?.also {
-            setTheme(it)
+        themeId?.run {
+            setTheme(this)
             themeId = null
+        }
+    }
+
+    private fun Activity.applyWindowStyle() {
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+        backgroundColor?.run {
+            window.setBackgroundDrawable(ColorDrawable(this))
+            backgroundColor = null
         }
     }
 
@@ -199,6 +229,7 @@ object ActivityScenarioConfigurator {
 
         override fun onCreate(savedInstanceState: Bundle?) {
             applyThemeId()
+            applyWindowStyle()
             super.onCreate(savedInstanceState)
         }
     }
@@ -211,6 +242,7 @@ object ActivityScenarioConfigurator {
 
         override fun onCreate(savedInstanceState: Bundle?) {
             applyThemeId()
+            applyWindowStyle()
             super.onCreate(savedInstanceState)
         }
     }
