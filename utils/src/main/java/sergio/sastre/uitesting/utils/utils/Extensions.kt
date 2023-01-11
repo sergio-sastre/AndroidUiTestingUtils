@@ -65,7 +65,8 @@ fun Activity.inflateAndWaitForIdle(
 }
 
 /**
- * Wait for Activity. This is a copy-cat of Shot method to be able to extend it conveniently.
+ * Returns an [Activity] from an [ActivityScenario].
+ * This is a copy-cat of Shot method to be able to extend it conveniently.
  */
 fun <A : Activity> ActivityScenario<A>.waitForActivity(): A {
     var activity: A? = null
