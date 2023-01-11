@@ -1,6 +1,7 @@
 package sergio.sastre.uitesting.utils.activityscenario
 
 import android.app.Activity
+import androidx.annotation.ColorInt
 import androidx.annotation.LayoutRes
 import org.junit.rules.ExternalResource
 import sergio.sastre.uitesting.utils.utils.inflateAndWaitForIdle
@@ -8,6 +9,7 @@ import sergio.sastre.uitesting.utils.utils.waitForActivity
 
 class ActivityScenarioForViewRule(
     config: ViewConfigItem? = null,
+    @ColorInt backgroundColor: Int? = null,
 ) : ExternalResource() {
 
     val activityScenario =
@@ -18,7 +20,7 @@ class ActivityScenarioForViewRule(
             config?.fontSize?.also { fontSize -> setFontSize(fontSize) }
             config?.displaySize?.also { displaySize -> setDisplaySize(displaySize) }
             config?.theme?.also { theme -> setTheme(theme) }
-        }.launchConfiguredActivity()
+        }.launchConfiguredActivity(backgroundColor)
 
     val activity: Activity by lazy { activityScenario.waitForActivity() }
 

@@ -9,6 +9,7 @@ import android.os.ParcelFileDescriptor
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.Discouraged
 import androidx.annotation.LayoutRes
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
@@ -53,7 +54,10 @@ fun Activity.inflate(@LayoutRes layoutId: Int, id: Int = android.R.id.content): 
  * All views inflated with the context of this Activity inherit its configuration, like Locale,
  * FontSize, UiMode, etc.
  */
-fun Activity.inflateAndWaitForIdle(@LayoutRes layoutId: Int, id: Int = android.R.id.content): View {
+fun Activity.inflateAndWaitForIdle(
+    @LayoutRes layoutId: Int,
+    id: Int = android.R.id.content,
+): View {
     val root = findViewById<View>(id) as ViewGroup
     return waitForView {
         LayoutInflater.from(this).inflate(layoutId, root, true)
@@ -76,12 +80,16 @@ fun <A : Activity> ActivityScenario<A>.waitForActivity(): A {
 }
 
 /**
- * Setup the view under test and wait till the view is ready and main thread is idle
- * before recording any snapshot
+ * Setup the view under test and wait till the view is ready and main thread is idle. This helps
+ * before recording any snapshot.
  *
  * @param actionToDo: Everything that drives the view to the state we want to snapshot.
  * This also includes inflation
  */
+@Discouraged(
+    message = "Consider using waitForMeasuredView, waitForMeasuredViewHolder or " +
+            "waitForMeasuredDialog instead. This method might become private in the future."
+)
 fun <V> waitForView(actionToDo: () -> V): V =
     getInstrumentation().run {
         var view: V? = null
@@ -113,7 +121,7 @@ fun Instrumentation.waitForExecuteShellCommand(command: String) {
  * Waits for the Ui thread to be Idle and calculates the expected dimensions of the
  * [RecyclerView.ViewHolder].
  * This is necessary to take a screenshot with the expected size of the dialog. For that, we need
- * to provide [RecyclerView.ViewHolder]#measureHeight/measureWidth to the method used to take/verify
+ * to provide [RecyclerView.ViewHolder]'s measuredHeight/measuredWidth to the method used to take/verify
  * the screenshot.
  */
 fun waitForMeasuredViewHolder(
@@ -129,7 +137,7 @@ fun waitForMeasuredViewHolder(
  * Waits for the Ui thread to be Idle and calculates the expected dimensions of the
  * [View].
  * This is necessary to take a screenshot with the expected size of the dialog. For that, we need
- * to provide [View]#measureHeight/measureWidth to the method used to take/verify
+ * to provide [View.getMeasuredHeight]/[View.getMeasuredWidth] to the method used to take/verify
  * the screenshot.
  */
 fun waitForMeasuredView(
@@ -145,7 +153,7 @@ fun waitForMeasuredView(
  * Waits for the Ui thread to be Idle and calculates the expected dimensions of the
  * [Dialog].
  * This is necessary to take a screenshot with the expected size of the dialog. For that, we need
- * to provide [Dialog]#measureHeight/measureWidth to the method used to take/verify
+ * to provide [Dialog]'s measuredHeight/measuredWidth to the method used to take/verify
  * the screenshot.
  */
 fun waitForMeasuredDialog(
