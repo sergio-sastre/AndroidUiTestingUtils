@@ -32,6 +32,9 @@ You can find out why verifying our design under such configurations is important
 
 - [Design a pixel perfect Android app 🎨](https://sergiosastre.hashnode.dev/design-a-pixel-perfect-android-app-with-screenshot-testing)
 
+For examples of usage of this library in combination with Shot and Dropshots, check the following repo:
+- [Android screenshot testing playground](https://github.com/sergio-sastre/Android-screenshot-testing-playground)
+
 In the near future, there are plans to also support, among others:
 
 1. **framework-agnostic** & **shared screenshot testing** i.e. same test running either on device or on JVM
@@ -98,7 +101,6 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:your_compose_version"
 }
 ```
-
 
 # Usage
 
@@ -322,7 +324,7 @@ fun snapViewHolderTest() {
 }
 ```
 
-**Warning**: If the View under test contains system Locale dependent code,
+If the View under test contains system Locale dependent code,
 like `NumberFormat.getInstance(Locale.getDefault())`, the Locale formatting you've set
 via `ActivityScenarioConfigurator.ForView().setLocale("my_locale")` will not work. That's because
 NumberFormat is using the Locale of the Android system, and not that of the Activity we've
@@ -404,7 +406,7 @@ fun snapComposableTest() {
 }
 ```
 
-**Warning**: If the Composable under test contains system Locale dependent code,
+If the Composable under test contains system Locale dependent code,
 like `NumberFormat.getInstance(Locale.getDefault())`, the Locale formatting you've set
 via `ActivityScenarioConfigurator.ForComposable().setLocale("my_locale")` will not work. That's
 because NumberFormat is using the Locale of the Android system, and not that of the Activity we've
@@ -483,10 +485,10 @@ AndroidUiTestingUtils provides methods to easily generate bitmaps from the Activ
 
 Differences between both might be specially noticeable in API 31:
 <p align="center">
-<img width="350" src="../../Downloads/drawToBitmapWithElevation.png">
+<img width="350" src="https://user-images.githubusercontent.com/6097181/211920600-6cfcdde3-1fd6-4b23-84d1-3eae587c811d.png">
 </p>
 
-> Note
+> **Note**</br>
 > If using `PixelCopy` with ViewHolders/Views/Dialogs/Composables, consider launching the container Activity with transparent background for a more realistic screenshot of the UI component.
 > ```kotlin
 > ActivityScenarioConfigurator.ForView() // or .ForComposable()
@@ -544,13 +546,13 @@ compareScreenshot(
 4. `waitForMeasuredView/Dialog/ViewHolder(exactWidth, exactHeight)`: Inflates the layout in the main thread, sets its width and height to those given, and waits till the thread is idle,
       returning the inflated view. Comes in handy with libraries that do not support, to take a screenshot with a given width/height, like Dropshots.</br></br>
 
->**Warning**
+> **Warning**</br>
 > Prefer `waitForMeasuredView` over `waitForView` (which is discouraged), specially if using Dropshots:
 > <p align="center">
-> <img width="800" src="../../Downloads/waitForMeasuredView vs waitForView.png">
+> <img width="750" src="https://user-images.githubusercontent.com/6097181/211920753-35ee8f0b-d661-4623-8619-418c3972f1c2.png">
 > </p>
 
-**Inflate or measure**
+**Inflate or measure**</br>
 5. `activity.inflate(R.layout_of_your_view)`: Use it to inflate android Views with the activity's
    context configuration. In doing so, the configuration becomes effective in the view. It also adds
    the view to the Activity's root.</br></br>
@@ -591,12 +593,12 @@ val uiMode = UiModeTestRule(UiMode.NIGHT)
 activity.rotateTo(Orientation.LANDSCAPE)
 ```
 
-**WARNING**: When using *DisplaySizeTestRule* and *FontSizeTesRule* together in the same test, make
-sure your emulator has enough RAM and VM heap to avoid Exceptions when running the tests. The
-recommended configuration is the following:
-
-- RAM: 4GB
-- VM heap: 1GB
+> **Warning**</br>
+> When using *DisplaySizeTestRule* and *FontSizeTesRule* together in the same test, make
+> sure your emulator has enough RAM and VM heap to avoid Exceptions when running the tests. The
+> recommended configuration is the following:
+> - RAM: 4GB
+> - VM heap: 1GB
 
 # Code attributions
 
@@ -615,7 +617,7 @@ on code written by others:
 
 1. Create an issue in this repo
 2. Fork the
-   repo [Road to effective snapshot testing](https://github.com/sergio-sastre/RoadToEffectiveSnapshotTesting)
+   repo [Android screenshot testing playground](https://github.com/sergio-sastre/Android-screenshot-testing-playground)
 3. In that repo, add an example and test where the bug is reproducible/ and showcasing the new
    feature.
 4. Once pushed, add a link to the PR in the issue created in this repo and add @sergio-sastre as a
@@ -625,7 +627,7 @@ on code written by others:
    needed). Add @sergio-sastre as a reviewer.
 7. Once approved, I will merge the code in both repos, and you will be added as a contributor
    to [Android UI testing utils](https://github.com/sergio-sastre/AndroidUiTestingUtils) as well
-   as [Road to effective snapshot testing](https://github.com/sergio-sastre/RoadToEffectiveSnapshotTesting)
+   as [Android screenshot testing playground](https://github.com/sergio-sastre/Android-screenshot-testing-playground)
    .
 
 I'll try to make the process easier in the future if I see many issues/feature requests incoming :)
