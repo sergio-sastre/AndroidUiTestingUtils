@@ -406,6 +406,32 @@ fun snapComposableTest() {
 }
 ```
 
+If you are using a screenshot library that cannot take a composeTestRule as argument (e.g. Dropshots),
+you can still screenshot the Composable as follows:
+```kotlin
+// with ActivityScenarioForComposableRule
+dropshots.assertSnapshot(
+   view = activityScenarioForComposableRule.activity.waitForComposeView(),
+   name = "your_unique_test_name",
+)
+```
+or
+```kotlin
+// withm ActivityScenarioConfigurator.ForComposable()
+val activityScenario =
+   ActivityScenarioConfigurator.ForComposable()
+        ...
+        .launchConfiguredActivity()
+        .onActivity {
+            ...
+        }
+
+dropshots.assertSnapshot(
+   view = activityScenario.waitForActivity().waitForComposeView(),
+   name = "your_unique_test_name",
+)
+```
+
 If the Composable under test contains system Locale dependent code,
 like `NumberFormat.getInstance(Locale.getDefault())`, the Locale formatting you've set
 via `ActivityScenarioConfigurator.ForComposable().setLocale("my_locale")` will not work. That's
