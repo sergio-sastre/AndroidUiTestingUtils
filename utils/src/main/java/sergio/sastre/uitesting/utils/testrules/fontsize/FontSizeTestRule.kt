@@ -26,6 +26,7 @@ class FontSizeTestRule(
 ) : TestWatcher(), TestRule {
 
     companion object {
+        val TAG = FontSizeTestRule::class.java.simpleName
         fun smallFontScaleTestRule(): FontSizeTestRule = FontSizeTestRule(FontSize.SMALL)
 
         fun normalFontScaleTestRule(): FontSizeTestRule = FontSizeTestRule(FontSize.NORMAL)
@@ -101,7 +102,7 @@ class FontSizeTestRule(
                 if (mustRetry) {
                     retries++
                     scaleSetting.set(expectedFontSize)
-                    Log.d("FontSizeTestRule", "trying to set FontSize to ${expectedFontSize.name}, $retries retry")
+                    Log.d(TAG, "trying to set FontSize to ${expectedFontSize.name}, $retries retry")
                 }
                 if (iterations == retriesCount) {
                     throw timeoutError()
