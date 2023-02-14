@@ -2,6 +2,7 @@ package sergio.sastre.uitesting.inapplocale
 
 import android.app.Activity
 import android.app.Application
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -47,7 +48,13 @@ class InAppLocaleTestRule : TestRule {
             @Throws(Throwable::class)
             override fun evaluate() {
                 try {
-                    setApplicationLocaleAfterActivityOnCreate(testLocale)
+                    // From API 33 we need to ensure that AppCompatDelegate.setApplicationLocales
+                    // is called after onActivityCreated
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        setApplicationLocaleAfterActivityOnCreate(testLocale)
+                    } else {
+                        setApplicationLocaleInLooper(Looper.getMainLooper(), testLocale)
+                    }
                     base.evaluate()
                 } finally {
                     // must run on Main thread to avoid IllegalStateExceptions
@@ -60,40 +67,29 @@ class InAppLocaleTestRule : TestRule {
         }
     }
 
+    private fun setApplicationLocaleInLooper(looper: Looper, locale: Locale?) {
+        Handler(looper).post {
+            initialLocales = getApplicationLocales()
+            Log.d(TAG, "initial in-app locales is $appLocalesLanguageTags")
+            setApplicationLocales(LocaleListCompat.create(locale))
+            Log.d(TAG, "in-app locales set to $appLocalesLanguageTags")
+        }
+    }
+
 
     private fun setApplicationLocaleAfterActivityOnCreate(locale: Locale?) {
         ApplicationProvider.getApplicationContext<Application>().apply {
             registerActivityLifecycleCallbacks(
-                object : Application.ActivityLifecycleCallbacks {
+                object : OnActivityCreatedCallback {
                     override fun onActivityCreated(
                         activity: Activity,
                         savedInstanceState: Bundle?
                     ) {
                         unregisterActivityLifecycleCallbacks(this)
-                        Handler(activity.mainLooper).post {
-                            initialLocales = getApplicationLocales()
-                            Log.d(TAG, "initial in-app locales is $appLocalesLanguageTags")
-                            setApplicationLocales(LocaleListCompat.create(locale))
-                            Log.d(TAG, "in-app locales set to $appLocalesLanguageTags")
-                        }
+                        setApplicationLocaleInLooper(activity.mainLooper, locale)
                     }
-
-                    override fun onActivityStarted(activity: Activity) {}
-
-                    override fun onActivityResumed(activity: Activity) {}
-
-                    override fun onActivityPaused(activity: Activity) {}
-
-                    override fun onActivityStopped(activity: Activity) {}
-
-                    override fun onActivitySaveInstanceState(
-                        activity: Activity,
-                        outState: Bundle
-                    ) {
-                    }
-
-                    override fun onActivityDestroyed(activity: Activity) {}
-                })
+                }
+            )
         }
     }
 }
