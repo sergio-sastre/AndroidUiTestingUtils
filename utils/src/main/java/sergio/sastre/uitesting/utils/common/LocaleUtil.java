@@ -8,21 +8,27 @@ import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import org.lsposed.hiddenapibypass.HiddenApiBypass;
 
 /**
  * Code strongly based on that from fastlane Screengrab, but
  * 1. adding a bugfix for calling the updateConfiguration method, which was added to
- *    the non-SDK interface list since API 28:
- *    https://github.com/fastlane/fastlane/blob/master/screengrab/screengrab-lib/src/main/java/tools.fastlane.screengrab/locale
+ * the non-SDK interface list since API 28:
+ * https://github.com/fastlane/fastlane/blob/master/screengrab/screengrab-lib/src/main/java/tools.fastlane.screengrab/locale
  * 2. Add support for complex Locales like "sr-Latn-RS", "sr-Cyrl-RS" or "zh-Latn-TW-pinyin"
- *
+ * <p>
  * Converting it to Kotlin led to errors while using pseudlocales
  */
 public final class LocaleUtil {
     private static final String TAG = LocaleUtil.class.getSimpleName();
+    private static final String EN_XA = "en_XA";
+    private static final String AR_XB = "ar_XB";
+    private static final Set<String> PSEUDOLOCALES = new HashSet<>(Arrays.asList(EN_XA, AR_XB));
 
     @SuppressWarnings({"JavaReflectionMemberAccess", "deprecation", "RedundantSuppression"})
     @SuppressLint({"PrivateApi"})
@@ -131,15 +137,34 @@ public final class LocaleUtil {
     }
 
     public static Locale localeFromString(String locale) {
+        if (PSEUDOLOCALES.contains(locale)) {
+            return pseudoLocaleFromString(locale);
+        }
+
         Locale localeForTag = Locale.forLanguageTag(locale);
         if (localeForTag.toString().isEmpty()) {
             return localeFromParts(localePartsFrom(locale));
         } else {
-            // Locales passed in ISO form like "en_US" or pseudolocales "en_XA", "ar_XB"
+            // Locales passed in ISO form like "en_US"
             return localeForTag;
         }
     }
 
+    private static Locale pseudoLocaleFromString(String pseudoLocale) {
+        if (pseudoLocale.equals(EN_XA)) {
+            return new Locale("en", "XA");
+        } else if (pseudoLocale.equals(AR_XB)) {
+            return new Locale("ar", "XB");
+        }
+        throw new StringNotParsableAsPseudoLocale(pseudoLocale);
+    }
+
     private LocaleUtil() {
+    }
+
+    private static class StringNotParsableAsPseudoLocale extends RuntimeException {
+        public StringNotParsableAsPseudoLocale(String pseudoLocale) {
+            super(pseudoLocale + " does not correspond to any pseudolocale, namely en_XA or ar_XB");
+        }
     }
 }
