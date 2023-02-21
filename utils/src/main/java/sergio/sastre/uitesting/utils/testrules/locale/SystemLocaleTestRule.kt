@@ -21,7 +21,7 @@ import kotlin.Throws
  * The code was converted to Kotlin, and added the [grantChangeConfigurationIfNeeded] method
  * to enable locale change
  */
-class SystemLocaleTestRule constructor(val testLocale: Locale) : TestRule {
+class SystemLocaleTestRule constructor(private val locale: Locale) : TestRule {
 
     constructor(testLocale: String) : this(LocaleUtil.localeFromString(testLocale))
 
@@ -32,7 +32,7 @@ class SystemLocaleTestRule constructor(val testLocale: Locale) : TestRule {
                 var original: LocaleListCompat? = null
                 try {
                     grantChangeConfigurationIfNeeded()
-                    original = LocaleUtil.changeDeviceLocaleTo(LocaleListCompat(testLocale))
+                    original = LocaleUtil.changeDeviceLocaleTo(LocaleListCompat(locale))
                     base.evaluate()
                 } finally {
                     if (original != null) {
