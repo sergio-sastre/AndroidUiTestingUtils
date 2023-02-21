@@ -11,8 +11,8 @@ android {
         minSdk 23
         targetSdk 33
 
-        versionCode 11
-        versionName "1.2.3"
+        versionCode 12
+        versionName "1.2.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -53,7 +53,7 @@ publishing {
     publications {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
-            artifactId = "AndroidUiTestingUtils-$project.name"
+            artifactId = "AndroidUiTestingUtils"
             version = '1.2.4'
 
             afterEvaluate {

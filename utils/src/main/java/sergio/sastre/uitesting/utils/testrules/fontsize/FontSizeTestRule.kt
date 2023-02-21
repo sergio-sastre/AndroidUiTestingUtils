@@ -2,6 +2,7 @@ package sergio.sastre.uitesting.utils.testrules.fontsize
 
 import android.os.SystemClock
 import android.util.Log
+import androidx.annotation.Discouraged
 import androidx.annotation.IntRange
 
 import org.junit.rules.TestRule
@@ -47,6 +48,11 @@ class FontSizeTestRule(
      * take effect, and could be device dependent. One can use this method to adjust the default
      * time out which is [MAX_RETRIES_TO_WAIT_FOR_SETTING] * [SLEEP_TO_WAIT_FOR_SETTING_MILLIS]
      */
+    @Discouraged(
+        message = "Consider removing this method, since it will be removed in a future version. " +
+                "This was initially built as a workaround for an issue that should not happen anymore. " +
+                "If after all, you still need this, consider opening an issue."
+    )
     fun withTimeOut(@IntRange(from = 0) inMillis: Int): FontSizeTestRule = apply {
         this.timeOutInMillis = inMillis
     }

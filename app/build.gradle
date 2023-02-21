@@ -34,7 +34,6 @@ android {
 
 dependencies {
     implementation project(':utils')
-    implementation project(':inapplocale')
 
     implementation 'com.google.android.material:material:1.8.0'
     testImplementation 'junit:junit:4.13.2'
