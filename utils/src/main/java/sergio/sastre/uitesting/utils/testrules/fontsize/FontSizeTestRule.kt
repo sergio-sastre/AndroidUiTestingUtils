@@ -2,6 +2,7 @@ package sergio.sastre.uitesting.utils.testrules.fontsize
 
 import android.os.SystemClock
 import android.util.Log
+import androidx.annotation.Discouraged
 import androidx.annotation.IntRange
 
 import org.junit.rules.TestRule
@@ -16,9 +17,7 @@ import sergio.sastre.uitesting.utils.testrules.fontsize.FontSizeTestRule.FontSca
 import sergio.sastre.uitesting.utils.testrules.fontsize.FontSizeTestRule.FontScaleStatement.Companion.SLEEP_TO_WAIT_FOR_SETTING_MILLIS
 
 /**
- * A TestRule to change FontSize of the device/emulator. It is done:
- * - API < 25 : modifying resources.configuration
- * - API 25 + : via adb (slower)
+ * A TestRule to change FontSize of the device/emulator. It is done via adb from API 24+
  *
  * Strongly based on code from espresso-support library, from Novoda
  * https://github.com/novoda/espresso-support/tree/master/core/src/main/java/com/novoda/espresso
@@ -28,6 +27,7 @@ class FontSizeTestRule(
 ) : TestWatcher(), TestRule {
 
     companion object {
+        val TAG = FontSizeTestRule::class.java.simpleName
         fun smallFontScaleTestRule(): FontSizeTestRule = FontSizeTestRule(FontSize.SMALL)
 
         fun normalFontScaleTestRule(): FontSizeTestRule = FontSizeTestRule(FontSize.NORMAL)
@@ -48,6 +48,11 @@ class FontSizeTestRule(
      * take effect, and could be device dependent. One can use this method to adjust the default
      * time out which is [MAX_RETRIES_TO_WAIT_FOR_SETTING] * [SLEEP_TO_WAIT_FOR_SETTING_MILLIS]
      */
+    @Discouraged(
+        message = "Consider removing this method, since it will be removed in a future version. " +
+                "This was initially built as a workaround for an issue that should not happen anymore. " +
+                "If after all, you still need this, consider opening an issue."
+    )
     fun withTimeOut(@IntRange(from = 0) inMillis: Int): FontSizeTestRule = apply {
         this.timeOutInMillis = inMillis
     }
@@ -103,7 +108,7 @@ class FontSizeTestRule(
                 if (mustRetry) {
                     retries++
                     scaleSetting.set(expectedFontSize)
-                    Log.d("FontSizeTestRule", "trying to set FontSize to ${expectedFontSize.name}, $retries retry")
+                    Log.d(TAG, "trying to set FontSize to ${expectedFontSize.name}, $retries retry")
                 }
                 if (iterations == retriesCount) {
                     throw timeoutError()

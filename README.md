@@ -61,7 +61,7 @@ Requests.
     - [ActivityScenarios](#activityscenarios)
     - [Pseudolocales](#pseudolocales)
     - [System Locale](#system-locale)
-    - [App Locale](#app-locale)
+    - [In-App Locale](#in-app-locale)
   - [Screnshot testing examples](#screenshot-testing-examples)
     - [Activity](#activity)
     - [Android View](#android-view)
@@ -93,7 +93,7 @@ compileSdkVersion 33
 
 ```groovy
 dependencies {
-    androidTestImplementation('com.github.sergio-sastre:AndroidUiTestingUtils:1.2.3') {
+    androidTestImplementation('com.github.sergio-sastre:AndroidUiTestingUtils:1.2.4') {
         // if necessary, add this to avoid compose version clashes
         exclude group: 'androidx.compose.ui'
     }
@@ -148,26 +148,12 @@ For multi-module apps, do this in the app module.
 <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"
     tools:ignore="ProtectedPermissions" />
 ```
-### App Locale
-To change the App Locale, which is possible via `LocaleTestRule`, you need to add the following dependency in your `app/build.gradle`
+### In-App Locale
+AndroidUiTestingUtils also supports [per-app language preferences](https://developer.android.com/guide/topics/resources/app-languages). In order to change the In-App Locale, you need to use the `InAppLocaleTestRule`. For that it is necessary to add the following dependency in your `app/build.gradle`
 ```kotlin
-androidTestImplementation 'androidx.appcompat:appcompat:1.6.0-alpha04' //or higher version!
+androidTestImplementation 'androidx.appcompat:appcompat:1.6.0-alpha04' // or higher version!
 ```
-**Warning**: `LocaleTestRule` does ONLY work with **ActivityScenarioConfigurator.ForActivity()**, i.e. it
-does not work with **ActivityScenarioForActivityRule**. However, for **Fragments**, **Views** and **Composables** call the
-`setLocale("my_locale")` of their corresponding Fragment/ActivityScenarioConfigurator or the `ConfigItem(locale = "myLocale")` of their corresponding TestRule e.g. to achieve it:
-```kotlin
-ActivityScenarioConfigurator.ForView().setLocale("my_locale")
-```
-or
-
-```kotlin
-@get:Rule
-val rule =
-    ActivityScenarioForViewRule(
-        config = ViewConfigItem(locale = "my_locale")
-    )
-```
+Use this rule to test Activities with in-app Locales that differ from the SystemLocale
 
 ## Screenshot testing examples
 
@@ -207,14 +193,14 @@ fun snapActivityTest() {
 
 In case you don't want to/cannot use the rule, you can use **ActivityScenarioConfigurator.ForActivity()** directly in the test. Currently, this is the only means to set
 1. A TimeOut for the FontSize and DisplaySize TestRules
-2. A LocaleTestRule for per-app language preferences
+2. A InAppLocaleTestRule for per-app language preferences
 
 Apart from that, this would be equivalent:
 
 ```kotlin
 // Sets the Locale of the app under test only, i.e. the per-app language preference feature
 @get:Rule
-val locale = LocaleTestRule("ar")
+val inAppLocale = InAppLocaleTestRule("ar")
 
 // Sets the Locale of the Android system
 @get:Rule
@@ -244,6 +230,14 @@ fun snapActivityTest() {
     activityScenario.close()
 }
 ```
+> **Warning**</br>
+> If using any TestRule with Ndtp [android-testify](https://github.com/ndtp/android-testify), use `launchActivity = false` for them to take effect:
+> ```kotlin
+> @get:Rule
+> val activityTestRule =
+>     ScreenshotRule(CoffeeDrinksComposeActivity::class.java, launchActivity = false)
+>```
+>
 
 ### Android View
 
@@ -601,7 +595,7 @@ are provided:
 ```kotlin
 // Sets the Locale of the app under test only, i.e. the per-app language preference feature
 @get:Rule
-val locale = LocaleTestRule("en")
+val inAppLocale = InAppLocaleTestRule("en")
 
 // Sets the Locale of the Android system
 @get:Rule
@@ -638,6 +632,7 @@ on code written by others:
 - UiModeTestRule -> [AdevintaSpain/Barista](https://github.com/AdevintaSpain/Barista)
 - Orientation change for activities
   -> [Shopify/android-testify](https://github.com/Shopify/android-testify/)
+- MeasureViewHelpers -> a copy of ViewHelpers from Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android)
 
 # Contributing
 

@@ -1,6 +1,5 @@
 package sergio.sastre.uitesting.utils.testrules.locale
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.os.Build
@@ -8,8 +7,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.annotation.Discouraged
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.getApplicationLocales
+import androidx.appcompat.app.AppCompatDelegate.setApplicationLocales
 import androidx.core.os.LocaleListCompat
 import androidx.test.core.app.ApplicationProvider
 import org.junit.rules.TestRule
@@ -39,27 +38,21 @@ import java.util.*
  *    />
  *</service>
  **/
-@Discouraged(
-    message = "Consider using InAppLocaleTestRule instead, this Class will be removed in future versions and behaves exactly the same"
-)
-class LocaleTestRule constructor(val locale: Locale) : TestRule {
+class InAppLocaleTestRule constructor(private val locale: Locale) : TestRule {
 
     companion object {
-        @SuppressLint("DiscouragedApi")
-        private val TAG = LocaleTestRule::class.java.simpleName
+        private val TAG = InAppLocaleTestRule::class.java.simpleName
     }
 
     private lateinit var initialLocales: LocaleListCompat
 
-    @SuppressLint("DiscouragedApi")
     constructor(testLocale: String) : this(LocaleUtil.localeFromString(testLocale))
 
     private val appLocalesLanguageTags
-        get() = AppCompatDelegate.getApplicationLocales().toLanguageTags().ifBlank { "empty" }
+        get() = getApplicationLocales().toLanguageTags().ifBlank { "empty" }
 
     override fun apply(base: Statement, description: Description): Statement {
         return object : Statement() {
-            @SuppressLint("DiscouragedApi")
             @Throws(Throwable::class)
             override fun evaluate() {
                 try {
@@ -71,10 +64,16 @@ class LocaleTestRule constructor(val locale: Locale) : TestRule {
                         setApplicationLocaleInLooper(Looper.getMainLooper(), locale)
                     }
                     base.evaluate()
+                } catch (throwable: Throwable) {
+                    val testName = "${description.testClass.simpleName}\$${description.methodName}"
+                    val errorMessage =
+                        "Test $testName failed on setting inAppLocale to ${locale.toLanguageTag()}"
+                    Log.e(TAG, errorMessage)
+                    throw throwable
                 } finally {
                     // must run on Main thread to avoid IllegalStateExceptions
                     Handler(Looper.getMainLooper()).post {
-                        AppCompatDelegate.setApplicationLocales(initialLocales)
+                        setApplicationLocales(initialLocales)
                         Log.d(TAG, "in-app locales reset to $appLocalesLanguageTags")
                     }
                 }
@@ -82,12 +81,11 @@ class LocaleTestRule constructor(val locale: Locale) : TestRule {
         }
     }
 
-    @SuppressLint("DiscouragedApi")
     private fun setApplicationLocaleInLooper(looper: Looper, locale: Locale?) {
         Handler(looper).post {
-            initialLocales = AppCompatDelegate.getApplicationLocales()
+            initialLocales = getApplicationLocales()
             Log.d(TAG, "initial in-app locales is $appLocalesLanguageTags")
-            AppCompatDelegate.setApplicationLocales(LocaleListCompat.create(locale))
+            setApplicationLocales(LocaleListCompat.create(locale))
             Log.d(TAG, "in-app locales set to $appLocalesLanguageTags")
         }
     }
@@ -97,7 +95,6 @@ class LocaleTestRule constructor(val locale: Locale) : TestRule {
         ApplicationProvider.getApplicationContext<Application>().apply {
             registerActivityLifecycleCallbacks(
                 object : OnActivityCreatedCallback {
-                    @SuppressLint("DiscouragedApi")
                     override fun onActivityCreated(
                         activity: Activity,
                         savedInstanceState: Bundle?

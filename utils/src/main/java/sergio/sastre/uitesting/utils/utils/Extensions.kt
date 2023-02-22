@@ -1,6 +1,7 @@
 package sergio.sastre.uitesting.utils.utils
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.app.Instrumentation
@@ -24,9 +25,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 private fun waitForCompletion(descriptor: ParcelFileDescriptor) {
-    val reader =
-        BufferedReader(InputStreamReader(ParcelFileDescriptor.AutoCloseInputStream(descriptor)))
-    reader.use {
+    BufferedReader(InputStreamReader(ParcelFileDescriptor.AutoCloseInputStream(descriptor))).use {
         it.readText()
     }
 }
@@ -54,6 +53,7 @@ fun Activity.inflate(@LayoutRes layoutId: Int, id: Int = android.R.id.content): 
  * All views inflated with the context of this Activity inherit its configuration, like Locale,
  * FontSize, UiMode, etc.
  */
+@SuppressLint("DiscouragedApi")
 fun Activity.inflateAndWaitForIdle(
     @LayoutRes layoutId: Int,
     id: Int = android.R.id.content,
@@ -93,6 +93,7 @@ fun <A : Activity> ActivityScenario<A>.waitForActivity(): A {
 )
 fun <V> waitForView(actionToDo: () -> V): V =
     getInstrumentation().run {
+        waitForIdleSync()
         var view: V? = null
         runOnMainSync { view = actionToDo() }
         waitForIdleSync()
@@ -125,6 +126,7 @@ fun Instrumentation.waitForExecuteShellCommand(command: String) {
  * to provide [RecyclerView.ViewHolder]'s measuredHeight/measuredWidth to the method used to take/verify
  * the screenshot.
  */
+@SuppressLint("DiscouragedApi")
 fun waitForMeasuredViewHolder(
     exactHeightPx: Int? = null,
     exactWidthPx: Int? = null,
@@ -141,6 +143,7 @@ fun waitForMeasuredViewHolder(
  * to provide [View.getMeasuredHeight]/[View.getMeasuredWidth] to the method used to take/verify
  * the screenshot.
  */
+@SuppressLint("DiscouragedApi")
 fun waitForMeasuredView(
     exactHeightPx: Int? = null,
     exactWidthPx: Int? = null,
@@ -157,6 +160,7 @@ fun waitForMeasuredView(
  * to provide [Dialog]'s measuredHeight/measuredWidth to the method used to take/verify
  * the screenshot.
  */
+@SuppressLint("DiscouragedApi")
 fun waitForMeasuredDialog(
     exactWidthPx: Int? = null,
     exactHeightPx: Int? = null,
@@ -186,6 +190,7 @@ private fun View.setDimensions(
     }
 }
 
+@SuppressLint("DiscouragedApi")
 fun Activity.waitForComposeView(): ComposeView =
     waitForView {
         window
