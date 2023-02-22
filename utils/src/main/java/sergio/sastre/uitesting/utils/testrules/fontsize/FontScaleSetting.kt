@@ -20,22 +20,22 @@ class FontScaleSetting internal constructor() {
 
     fun set(scale: FontSize) {
         try {
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
-                changeFontScaleFromApi25(scale)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                changeFontScaleFromApi24(scale)
             } else {
-                changeFontScalePreApi25(scale)
+                changeFontScalePreApi24(scale)
             }
         } catch (e: Exception) {
             throw saveFontScaleError(scale)
         }
     }
 
-    private fun changeFontScaleFromApi25(scale: FontSize) {
+    private fun changeFontScaleFromApi24(scale: FontSize) {
         getInstrumentation().waitForExecuteShellCommand("settings put system font_scale " + scale.value)
     }
 
     @Suppress("DEPRECATION")
-    private fun changeFontScalePreApi25(scale: FontSize) {
+    private fun changeFontScalePreApi24(scale: FontSize) {
         resources.configuration.fontScale = java.lang.Float.parseFloat(scale.value)
         val metrics = Resources.getSystem().displayMetrics
         metrics.scaledDensity = resources.configuration.fontScale * metrics.density

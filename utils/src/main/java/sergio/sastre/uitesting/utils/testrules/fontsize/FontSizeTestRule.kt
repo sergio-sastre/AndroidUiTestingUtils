@@ -17,7 +17,7 @@ import sergio.sastre.uitesting.utils.testrules.fontsize.FontSizeTestRule.FontSca
 import sergio.sastre.uitesting.utils.testrules.fontsize.FontSizeTestRule.FontScaleStatement.Companion.SLEEP_TO_WAIT_FOR_SETTING_MILLIS
 
 /**
- * A TestRule to change FontSize of the device/emulator. It is done via adb
+ * A TestRule to change FontSize of the device/emulator. It is done via adb from API 24+
  *
  * Strongly based on code from espresso-support library, from Novoda
  * https://github.com/novoda/espresso-support/tree/master/core/src/main/java/com/novoda/espresso
