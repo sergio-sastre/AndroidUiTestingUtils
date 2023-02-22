@@ -61,7 +61,7 @@ Requests.
     - [ActivityScenarios](#activityscenarios)
     - [Pseudolocales](#pseudolocales)
     - [System Locale](#system-locale)
-    - [App Locale](#app-locale)
+    - [In-App Locale](#in-app-locale)
   - [Screnshot testing examples](#screenshot-testing-examples)
     - [Activity](#activity)
     - [Android View](#android-view)
@@ -148,11 +148,12 @@ For multi-module apps, do this in the app module.
 <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"
     tools:ignore="ProtectedPermissions" />
 ```
-### In App Locale
+### In-App Locale
 AndroidUiTestingUtils also supports [per-app language preferences](https://developer.android.com/guide/topics/resources/app-languages). In order to change the In-App Locale, you need to use the `InAppLocaleTestRule`. For that it is necessary to add the following dependency in your `app/build.gradle`
 ```kotlin
 androidTestImplementation 'androidx.appcompat:appcompat:1.6.0-alpha04' // or higher version!
 ```
+Use this rule to test Activities with in-app Locales that differ from the SystemLocale
 
 ## Screenshot testing examples
 
@@ -229,6 +230,14 @@ fun snapActivityTest() {
     activityScenario.close()
 }
 ```
+> **Warning**</br>
+> If using any TestRule with Ndtp [android-testify](https://github.com/ndtp/android-testify), use `launchActivity = false` for them to take effect:
+> ```kotlin
+> @get:Rule
+> val activityTestRule =
+>     ScreenshotRule(CoffeeDrinksComposeActivity::class.java, launchActivity = false)
+>```
+>
 
 ### Android View
 
@@ -623,6 +632,7 @@ on code written by others:
 - UiModeTestRule -> [AdevintaSpain/Barista](https://github.com/AdevintaSpain/Barista)
 - Orientation change for activities
   -> [Shopify/android-testify](https://github.com/Shopify/android-testify/)
+- MeasureViewHelpers -> a copy of ViewHelpers from Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android)
 
 # Contributing
 
