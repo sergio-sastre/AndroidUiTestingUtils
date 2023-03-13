@@ -30,7 +30,7 @@ tests:
 
 🗞️ Moreover, it provides experimental support for **library-agnostic** & **shared screenshot
 testing** i.e. same test running either on device or on JVM.
-Find out more under [Library agnostic screenshot tests](#library-agnostic-screenshot-tests)
+Find out more under [Library agnostic screenshot tests](#library-agnostic-screenshot-tests-beta)
 
 You can find out why verifying our design under such configurations is important in this blog post:
 
