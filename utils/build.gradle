@@ -10,8 +10,7 @@ android {
     defaultConfig {
         minSdk 23
         targetSdk 33
-
-        versionCode 14
+        versionCode 15
         versionName "2.0.0-beta01"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -62,7 +61,7 @@ publishing {
     publications {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
-            artifactId = "AndroidUiTestingUtils-$project.name"
+            artifactId = "$project.name"
             version = '2.0.0-beta01'
 
             afterEvaluate {
