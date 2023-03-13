@@ -130,17 +130,17 @@ Currently, that's only possible with the following screenshot testing libraries 
 
 ```groovy
 dependencies {
-    debugImplementation 'com.github.sergio-sastre:AndroidUiTestingUtils-utils:2.0.0-beta01'
+    debugImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0-beta01'
 
     // Shot support
-    debugImplementation 'com.github.sergio-sastre:AndroidUiTestingUtils-shot:2.0.0-beta01'
+    debugImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:shot:2.0.0-beta01'
 
     // Dropshots support
-    debugImplementation 'com.github.sergio-sastre:AndroidUiTestingUtils-dropshots:2.0.0-beta01'
+    debugImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:dropshots:2.0.0-beta01'
 
     // Paparazzi support
-    debugImplementation 'com.github.sergio-sastre:AndroidUiTestingUtils-sharedtest-paparazzi:2.0.0-beta01'
-    testImplementation 'com.github.sergio-sastre:AndroidUiTestingUtils-paparazzi:2.0.0-beta01'
+    debugImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:sharedtest-paparazzi:2.0.0-beta01'
+    testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:paparazzi:2.0.0-beta01'
 }
 ```
 
