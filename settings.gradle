@@ -9,3 +9,7 @@ dependencyResolutionManagement {
 rootProject.name = "My Application"
 include ':app'
 include ':utils'
+include ':paparazzi'
+include ':shot'
+include ':sharedtest-paparazzi'
+include ':dropshots'

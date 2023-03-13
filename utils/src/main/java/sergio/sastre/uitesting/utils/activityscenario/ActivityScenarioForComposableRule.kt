@@ -20,7 +20,7 @@ class ActivityScenarioForComposableRule(
 
     val composeRule: ComposeTestRule by lazy {
         activityScenario.waitForActivity()
-        emptyComposeRule
+        emptyComposeRule.apply { waitForIdle() }
     }
 
     val activityScenario =
@@ -34,7 +34,10 @@ class ActivityScenarioForComposableRule(
 
     val activity: Activity by lazy { activityScenario.waitForActivity() }
 
-    val composeView: ComposeView by lazy { activity.waitForComposeView() }
+    val composeView: ComposeView by lazy {
+        emptyComposeRule.waitForIdle()
+        activity.waitForComposeView()
+    }
 
     override fun apply(base: Statement?, description: Description?): Statement {
         // we need to call super, otherwise after() will not be called
