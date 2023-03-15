@@ -167,7 +167,7 @@ android {
    For instance, under `src/test`
 
 ```kotlin
-class SharedScreenshotTest(
+class SharedTestRule(
     private val config: screenshotConfig,
 ) : ScreenshotTestRule by PaparazziScreenshotTestRule(config)
 ```
@@ -176,7 +176,7 @@ and then under `src/androidTest`, one of them:
 
 ```kotlin
 // For Shot
-class SharedScreenshotTest(
+class SharedTestRule(
     private val config: screenshotConfig,
 ) : ScreenshotTestRule by ShotScreenshotTestRule(config)
 ```
@@ -185,14 +185,13 @@ or
 
 ```kotlin
 // For Dropshots
-class SharedScreenshotTest(
+class SharedTestRule(
     private val config: screenshotConfig,
 ) : ScreenshotTestRule by DropshotsTestRule(config)
 ```
 
-5. Finally, write your screenshot tests under `src/sharedTest` with the SharedScreenshotTest
-   TestRule.
-   For an example, see [this section](#library-agnostic)
+5. Finally, write your screenshot tests under `src/sharedTest` with the SharedTestRule.
+   For an example, see [this section](#library-agnostic-beta)
 
 <sup>1</sup> Support for Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android),
 and ndpt [android-testify](https://github.com/ndtp/android-testify) is coming soon.
@@ -682,7 +681,7 @@ compareScreenshot(
 ### Library-agnostic (BETA)
 
 For library-agnostic screenshot tests, you need to follow the steps
-in [this section](#library-agnostic-screenshot-tests).
+in [this section](#library-agnostic-screenshot-tests-beta).
 Once done, writing such tests is as easy as this:
 
 ```kotlin
