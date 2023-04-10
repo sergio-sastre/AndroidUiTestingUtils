@@ -1,4 +1,4 @@
-package sergio.sastre.uitesting.utils
+package sergio.sastre.uitesting.utils.crosslibrary.config
 
 import android.graphics.Bitmap
 

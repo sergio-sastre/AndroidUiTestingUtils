@@ -3,7 +3,7 @@ package sergio.sastre.uitesting.paparazzi.config
 import com.android.resources.NightMode
 import com.android.resources.ScreenOrientation
 import sergio.sastre.uitesting.sharedtest.paparazzi.PaparazziConfig
-import sergio.sastre.uitesting.utils.ScreenshotConfig
+import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfig
 import sergio.sastre.uitesting.utils.common.Orientation
 import sergio.sastre.uitesting.utils.common.UiMode
 
@@ -11,7 +11,7 @@ internal class PaparazziScreenshotConfigAdapter(
     private val paparazziConfig: PaparazziConfig
 ) {
 
-    fun applyScreenshotConfig(screenshotConfig: ScreenshotConfig): app.cash.paparazzi.DeviceConfig =
+    fun getDeviceConfigFor(screenshotConfig: ScreenshotConfig): app.cash.paparazzi.DeviceConfig =
         PaparazziSharedTestAdapter(paparazziConfig).asPaparazziDeviceConfig().copy(
             orientation = screenshotConfig.orientation.toScreenOrientation(),
             nightMode = screenshotConfig.uiMode.toNightMode(),
