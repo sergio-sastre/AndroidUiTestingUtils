@@ -11,8 +11,8 @@ android {
     defaultConfig {
         minSdk 23
         targetSdk 33
-        versionCode 16
-        versionName "2.0.0-beta01"
+        versionCode 17
+        versionName "2.0.0-beta02"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -44,7 +44,7 @@ android {
 dependencies {
     implementation project(':utils')
     api 'com.karumi:shot-android:5.14.1'
-    api 'androidx.activity:activity-compose:1.6.1'
+    api 'androidx.activity:activity-compose:1.7.1'
 }
 
 //https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/

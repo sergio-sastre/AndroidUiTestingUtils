@@ -11,8 +11,8 @@ android {
     defaultConfig {
         minSdk 23
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 17
+        versionName "2.0.0-beta02"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -33,7 +33,7 @@ android {
 }
 
 dependencies {
-    api project(':utils')
+    implementation project(':utils')
     api "org.robolectric:robolectric:4.10"
 }
 
