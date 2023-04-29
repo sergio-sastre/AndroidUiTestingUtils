@@ -14,6 +14,8 @@ import sergio.sastre.uitesting.utils.common.UiMode
  *
  * It is strongly based on Adevinta/Barista DayNightRule.
  * https://github.com/AdevintaSpain/Barista/tree/master/library%2Fsrc%2Fmain%2Fjava%2Fcom%2Fadevinta%2Fandroid%2Fbarista%2Frule%2Ftheme
+ *
+ * WARNING: It's not compatible with Robolectric
  */
 class UiModeTestRule(private val mode: UiMode) : TestRule {
 

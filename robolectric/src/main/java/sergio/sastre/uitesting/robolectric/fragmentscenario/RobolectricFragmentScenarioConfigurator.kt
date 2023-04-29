@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package sergio.sastre.uitesting.utils.fragmentscenario
+package sergio.sastre.uitesting.robolectric.fragmentscenario
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.annotation.RestrictTo
+import androidx.annotation.StyleRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentFactory
@@ -27,7 +28,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.test.core.app.ActivityScenario
-import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioConfigurator
+import sergio.sastre.uitesting.robolectric.activityscenario.RobolectricActivityScenarioConfigurator
+import sergio.sastre.uitesting.robolectric.config.RobolectricQualifiersBuilder.setQualifiers
+import sergio.sastre.uitesting.robolectric.config.screen.DeviceScreen
 import sergio.sastre.uitesting.utils.common.DisplaySize
 import sergio.sastre.uitesting.utils.common.FontSize
 import sergio.sastre.uitesting.utils.common.LocaleUtil
@@ -36,7 +39,13 @@ import sergio.sastre.uitesting.utils.common.UiMode
 import java.io.Closeable
 import java.util.*
 
-class FragmentScenarioConfigurator<F : Fragment> constructor(
+/**
+ * Based on FragmentScenario from Google, optimized for Robolectric tests.
+ *
+ * WARNING: If any DeviceScreen is set, do not use together with @Config(qualifiers = "my_qualifiers") to avoid
+ * any misbehaviour
+*/
+class RobolectricFragmentScenarioConfigurator<F : Fragment> constructor(
     @Suppress("MemberVisibilityCanBePrivate") /* synthetic access */
     internal val fragmentClass: Class<F>,
     private val activityScenario: ActivityScenario<out FragmentActivity>
@@ -84,7 +93,7 @@ class FragmentScenarioConfigurator<F : Fragment> constructor(
      *
      * This method cannot be called from the main thread.
      */
-    fun moveToState(newState: Lifecycle.State): FragmentScenarioConfigurator<F> {
+    fun moveToState(newState: Lifecycle.State): RobolectricFragmentScenarioConfigurator<F> {
         if (newState == Lifecycle.State.DESTROYED) {
             activityScenario.onActivity { activity ->
                 val fragment = activity.supportFragmentManager
@@ -119,7 +128,7 @@ class FragmentScenarioConfigurator<F : Fragment> constructor(
      *
      * This method cannot be called from the main thread.
      */
-    fun recreate(): FragmentScenarioConfigurator<F> {
+    fun recreate(): RobolectricFragmentScenarioConfigurator<F> {
         activityScenario.recreate()
         return this
     }
@@ -152,7 +161,7 @@ class FragmentScenarioConfigurator<F : Fragment> constructor(
      *
      * This method cannot be called from the main thread.
      */
-    fun onFragment(action: FragmentAction<F>): FragmentScenarioConfigurator<F> {
+    fun onFragment(action: FragmentAction<F>): RobolectricFragmentScenarioConfigurator<F> {
         activityScenario.onActivity { activity ->
             val fragment = requireNotNull(
                 activity.supportFragmentManager.findFragmentByTag(FRAGMENT_TAG)
@@ -173,43 +182,58 @@ class FragmentScenarioConfigurator<F : Fragment> constructor(
         activityScenario.close()
     }
 
-    companion object {
-        private var fontSize: FontSize? = null
-        private var locale: Locale? = null
-        private var orientation: Orientation? = null
-        private var uiMode: UiMode? = null
-        private var displaySize: DisplaySize? = null
-        private var theme: Int? = null
+    class ForFragment() {
+        data class State(
+            var deviceScreen: DeviceScreen? = null,
+            var fontSize: FontSize? = null,
+            var locale: Locale? = null,
+            var orientation: Orientation? = null,
+            var uiMode: UiMode? = null,
+            var displaySize: DisplaySize? = null,
+
+            @StyleRes
+            var themeId: Int? = null,
+        )
+
+        private var state = State()
+
+        /**
+         * Sets the Robolectric runtime qualifiers corresponding to the given [DeviceScreen]
+         *
+         * WARNING: Do not use together with @Config(qualifiers = "my_qualifiers") to avoid
+         * any misbehaviour
+         */
+        fun setDeviceScreen(deviceScreen: DeviceScreen) {
+            state = state.copy(deviceScreen = deviceScreen)
+        }
 
         fun setInitialOrientation(orientation: Orientation) = apply {
-            this.orientation = orientation
+            state = state.copy(orientation = orientation)
         }
 
         fun setLocale(locale: Locale) = apply {
-            this.locale = locale
+            state = state.copy(locale = locale)
         }
 
         fun setLocale(locale: String) = apply {
-            this.locale = LocaleUtil.localeFromString(locale)
+            state = state.copy(locale = LocaleUtil.localeFromString(locale))
         }
 
         fun setUiMode(uiMode: UiMode) = apply {
-            this.uiMode = uiMode
+            state = state.copy(uiMode = uiMode)
         }
 
         fun setFontSize(fontSize: FontSize) = apply {
-            this.fontSize = fontSize
+            state = state.copy(fontSize = fontSize)
         }
 
         fun setDisplaySize(displaySize: DisplaySize) = apply {
-            this.displaySize = displaySize
+            state = state.copy(displaySize = displaySize)
         }
 
         fun setTheme(theme: Int) = apply {
-            this.theme = theme
+            state = state.copy(themeId = theme)
         }
-
-        private const val FRAGMENT_TAG = "ConfigurableFragmentScenario_Fragment_Tag"
 
         /**
          * Launches a Fragment in the Activity's root view container `android.R.id.content`, with
@@ -227,13 +251,12 @@ class FragmentScenarioConfigurator<F : Fragment> constructor(
          * @param factory a fragment factory to use or null to use default factory
          */
         @JvmOverloads
-        @JvmStatic
         fun <F : Fragment> launchInContainer(
             fragmentClass: Class<F>,
             fragmentArgs: Bundle? = null,
             initialState: Lifecycle.State = Lifecycle.State.RESUMED,
             factory: FragmentFactory? = null
-        ): FragmentScenarioConfigurator<F> = internalLaunch(
+        ): RobolectricFragmentScenarioConfigurator<F> = internalLaunch(
             fragmentClass,
             fragmentArgs,
             initialState,
@@ -246,35 +269,36 @@ class FragmentScenarioConfigurator<F : Fragment> constructor(
             fragmentArgs: Bundle?,
             initialState: Lifecycle.State,
             factory: FragmentFactory?,
-        ): FragmentScenarioConfigurator<F> {
+        ): RobolectricFragmentScenarioConfigurator<F> {
             require(initialState != Lifecycle.State.DESTROYED) {
                 "Cannot set initial Lifecycle state to $initialState for FragmentScenario"
             }
 
-            val activityScenario = ActivityScenarioConfigurator.ForView().apply {
-                orientation?.also { orientation -> setInitialOrientation(orientation) }
-                locale?.also { locale -> setLocale(locale) }
-                uiMode?.also { uiMode -> setUiMode(uiMode)  }
-                fontSize?.also { fontSize -> setFontSize(fontSize) }
-                displaySize?.also { displaySize -> setDisplaySize(displaySize)}
-                theme?.also { theme -> setTheme(theme) }
-            }.launchConfiguredActivity()
+            val activityScenario = RobolectricActivityScenarioConfigurator.ForView()
+                .apply {
+                    setQualifiers(
+                        deviceScreen = state.deviceScreen,
+                        configOrientation = state.orientation,
+                    )
+                }
+                .apply {
+                    state.orientation?.also { orientation -> setInitialOrientation(orientation) }
+                    state.locale?.also { locale -> setLocale(locale) }
+                    state.uiMode?.also { uiMode -> setUiMode(uiMode) }
+                    state.fontSize?.also { fontSize -> setFontSize(fontSize) }
+                    state.displaySize?.also { displaySize -> setDisplaySize(displaySize) }
+                    state.themeId?.also { theme -> setTheme(theme) }
+                }.launchConfiguredActivity()
 
-            orientation = null
-            locale = null
-            uiMode = null
-            fontSize = null
-            displaySize = null
-            theme = null
-
-            val fragmentScenarioConfigurator = FragmentScenarioConfigurator(
+            val fragmentScenarioConfigurator = RobolectricFragmentScenarioConfigurator(
                 fragmentClass,
                 activityScenario,
             )
 
             fragmentScenarioConfigurator.activityScenario.onActivity { activity ->
                 if (factory != null) {
-                    FragmentFactoryHolderViewModel.getInstance(activity).fragmentFactory = factory
+                    FragmentFactoryHolderViewModel.getInstance(activity).fragmentFactory =
+                        factory
                     activity.supportFragmentManager.fragmentFactory = factory
                 }
 
@@ -288,5 +312,9 @@ class FragmentScenarioConfigurator<F : Fragment> constructor(
             }
             return fragmentScenarioConfigurator
         }
+    }
+
+    companion object {
+        private const val FRAGMENT_TAG = "RobolectricConfigurableFragmentScenario_Fragment_Tag"
     }
 }

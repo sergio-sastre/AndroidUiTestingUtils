@@ -80,6 +80,9 @@ fun <A : Activity> ActivityScenario<A>.waitForActivity(): A {
     }
 }
 
+val <A : Activity> ActivityScenario<A>.rootView: View
+    get() = waitForActivity().window.decorView
+
 /**
  * Setup the view under test and wait till the view is ready and main thread is idle. This helps
  * before recording any snapshot.

@@ -1,20 +1,20 @@
 plugins {
     id 'com.android.library'
-    id 'kotlin-android'
+    id 'org.jetbrains.kotlin.android'
     id 'maven-publish'
 }
 
 android {
+    namespace 'sergio.sastre.uitesting.robolectric'
     compileSdk 33
 
     defaultConfig {
         minSdk 23
         targetSdk 33
-        versionCode 16
-        versionName "2.0.0-beta01"
+        versionCode 1
+        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -23,37 +23,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     kotlinOptions {
         jvmTarget = '1.8'
-        freeCompilerArgs += ["-Xjvm-default=all"]
-    }
-
-    buildFeatures {
-        // Enables Jetpack Compose for this module
-        compose true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.4.0'
     }
 }
 
 dependencies {
-    api 'androidx.appcompat:appcompat:1.7.0-alpha02'
-    api 'com.google.android.material:material:1.8.0'
-    api 'androidx.test:core:1.5.0'
-    api 'androidx.core:core-ktx:1.10.0'
-    api 'androidx.test.ext:junit:1.1.5'
-    api 'androidx.test.espresso:espresso-core:3.5.1'
-    api 'androidx.compose.ui:ui-test-junit4:1.4.2'
-    api 'androidx.fragment:fragment-ktx:1.5.7'
-    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
+    api project(':utils')
+    api "org.robolectric:robolectric:4.10"
 }
 
 //https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/
@@ -61,7 +42,7 @@ publishing {
     publications {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
-            artifactId = "utils"
+            artifactId = "robolectric"
             version = '2.0.0-beta02'
 
             afterEvaluate {

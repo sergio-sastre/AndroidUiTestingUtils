@@ -18,6 +18,8 @@ import sergio.sastre.uitesting.utils.testrules.displaysize.DisplaySizeTestRule.D
 
 /**
  * A TestRule to change Display size of the device/emulator via adb
+ *
+ * WARNING: It's not compatible with Robolectric
  */
 class DisplaySizeTestRule(
     private val displaySize: DisplaySize,
