@@ -3,23 +3,23 @@
 <img src="https://androidweekly.net/issues/issue-508/badge">
 </a>
 
-# Android UI testing utils
+# <p align="center">Android UI testing utils</p>
 
-<p align="left">
+<p align="center">
 <img width="130" src="https://user-images.githubusercontent.com/6097181/172724660-778176b0-a6b0-4aad-b6b4-7115ad4fc7f3.png">
 </p>
 
 A set of *TestRules*, *ActivityScenarios* and utils to facilitate UI & screenshot testing under
-certain configurations, independent of the UI testing framework you are using.
+certain configurations, independent of the UI testing libraries you are using.
 <br clear="left"/>
 </br></br>
 For screenshot testing, it supports **Jetpack Compose**, **android Views** (e.g. custom Views,
-ViewHolders, etc.), **Activities** and **Fragments**.
+ViewHolders, etc.), **Activities** and **Fragments**, as well as [**Robolectric**](#robolectric-screenshot-tests-beta)
 </br></br>
-Currently, with this library you can easily change the following configurations in your instrumented
+Currently, with this library you can easily change the following configurations in your UI
 tests:
 
-1. Locale (also Pseudolocales **en_XA** & **ar_XB**)
+1. Locale (also [Pseudolocales](https://developer.android.com/guide/topics/resources/pseudolocales#:~:text=4%20or%20earlier%3A-,On%20the%20device%2C%20open%20the%20Settings%20app%20and%20tap%20Languages,language%20(see%20figure%203)) **en_XA** & **ar_XB**)
     1. App Locale (i.e. per-app language preference)
     2. System Locale
 2. Font size
@@ -28,9 +28,9 @@ tests:
 5. Dark mode /Day-Night mode
 6. Display size
 
-🗞️ Moreover, it provides experimental support for **library-agnostic** & **shared screenshot
+🗞️ Moreover, it provides experimental support for **cross-library** & **shared screenshot
 testing** i.e. same test running either on device or on JVM.
-Find out more under [Library agnostic screenshot tests](#library-agnostic-screenshot-tests-beta)
+Find out more under [cross-library screenshot tests](#cross-library-screenshot-tests-beta)
 
 You can find out why verifying our design under such configurations is important in this blog post:
 
@@ -62,20 +62,22 @@ Requests.
 ## Table of Contents
 
 - [Integration](#integration)
-    - [Library-agnostic screenshot tests (BETA)](#library-agnostic-screenshot-tests-beta)
+    - [In-App Locale](#in-app-locale)
+    - [Robolectric screenshot tests (BETA)](#robolectric-screenshot-tests-beta)
+    - [Cross-library screenshot tests (BETA)](#cross-library-screenshot-tests-beta)
 - [Usage](#usage)
-    - [Configuration](#configuration)
-        - [ActivityScenarios](#activityscenarios)
-        - [Pseudolocales](#pseudolocales)
-        - [System Locale](#system-locale)
-        - [In-App Locale](#in-app-locale)
     - [Screnshot testing examples](#screenshot-testing-examples)
         - [Activity](#activity)
         - [Android View](#android-view)
         - [Jetpack Compose](#jetpack-compose)
         - [Fragment](#fragment)
         - [Bitmap](#bitmap)
-        - [Library agnostic (BETA)](#library-agnostic-beta)
+        - [Robolectric (BETA)](#robolectric-beta)
+          - [Activity](#activity-rng)
+          - [Android View](#android-view-rng)
+          - [Jetpack Compose](#jetpack-compose-rng)
+          - [Fragment](#fragment-rng)
+        - [Cross-library (BETA)](#cross-library-beta)
     - [Utils](#utils)
     - [Reading on screenshot testing](#reading-on-screenshot-testing)
     - [Standard UI testing](#standard-ui-testing)
@@ -111,10 +113,36 @@ dependencies {
 }
 ```
 
-### Library-agnostic screenshot tests (BETA)
+### In-App Locale
+
+AndroidUiTestingUtils also
+supports [per-app language preferences](https://developer.android.com/guide/topics/resources/app-languages)
+. In order to change the In-App Locale, you need to use the `InAppLocaleTestRule`. For that it is
+necessary to add the following dependency in your `build.gradle`
+
+```kotlin
+androidTestImplementation 'androidx.appcompat:appcompat:1.6.0-alpha04' // or higher version!
+```
+
+Use this rule to test Activities with in-app Locales that differ from the System Locale
+
+### Robolectric screenshot tests (BETA)
+Robolectric supports screenshot testing via [Robolectric Native graphics (RNG)](https://github.com/robolectric/robolectric/releases/tag/robolectric-4.10) since 4.10.
+Since `AndroidUiTestingUtils:2.0.0-beta02`, you can configure your robolectric screenshot tests similar to how you'd do it with on-device tests.
+
+For that, add the following dependencies in your `build.gradle`:
+```kotlin
+testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0-beta02'
+testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:robolectric:2.0.0-beta02'
+```
+
+You can find some examples in [this section](#robolectric-beta)
+
+### Cross-library screenshot tests (BETA)
 
 Since `AndroidUiTestingUtils:2.0.0-beta01`, there is support for running the same screenshot test
-for your **Composables** (support for Android Views coming soon) with different libraries.
+for your **Composables** (support for Android Views coming soon) with different libraries, without 
+rewriting.
 Currently, that's only possible with the following screenshot testing libraries <sup>1</sup>:
 
 - [Paparazzi](https://github.com/cashapp/paparazzi)
@@ -122,30 +150,32 @@ Currently, that's only possible with the following screenshot testing libraries 
 - [Dropshots](https://github.com/dropbox/dropshots)
 
 1. First of all, configure all the screenshot testing libraries you want your tests to support, as
-   if you'd write them with those specific libraries.
-   Visit their respective Github pages for more info.
+   if you'd write them with those specific libraries. e.g. Paparazzi supported only in library modules.</br>
+   Visit their respective Github pages for more info.</br></br>
 
 2. After that, include the following dependencies in the `build.gradle` of the module including the
    tests.
 
 ```groovy
 dependencies {
-    debugImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0-beta01'
+    debugImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0-beta02'
 
     // Shot support
-    debugImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:shot:2.0.0-beta01'
+    debugImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:shot:2.0.0-beta02'
 
     // Dropshots support
-    debugImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:dropshots:2.0.0-beta01'
+    debugImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:dropshots:2.0.0-beta02'
 
     // Paparazzi support
-    debugImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:sharedtest-paparazzi:2.0.0-beta01'
-    testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:paparazzi:2.0.0-beta01'
+    debugImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:sharedtest-paparazzi:2.0.0-beta02'
+    testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:paparazzi:2.0.0-beta02'
 }
 ```
 
-3. To enable shared tests (i.e same test running either on the JVM or on a device/emulator), add
-   this in the same `build.gradle`
+3. To enable shared tests (i.e same test running either on the JVM or on a device/emulator), you 
+    have 2 options:
+   1. Create and write your tests in a [share test module as described here](https://blog.danlew.net/2022/08/16/sharing-code-between-test-modules/) or...
+   2. Add this in the `build.gradle` of the module where you'll write shared tests. Then write your screenshot tests under `src/sharedTest`.
 
 ```groovy
 android {
@@ -161,102 +191,31 @@ android {
 }
 ```
 
-4. Create the corresponding ScreenshotTestRules, one under `src/test` and another one
-   under `src/androidTest`. It's important that both have the same class name and constructor, to override their classpath
-   at runtime.
-   For instance, under `src/test`
+4. Create the corresponding `SharedScreenshotTestRule`, for instance:
 
 ```kotlin
-class SharedTestRule(
-    private val config: screenshotConfig,
-) : ScreenshotTestRule by PaparazziScreenshotTestRule(config)
-```
+class CrossLibraryScreenshotTestRule(
+    override val config: ScreenshotConfig,
+) : SharedScreenshotTestRule(config) {
 
-and then under `src/androidTest`, one of them:
+    override fun getJvmScreenshotTestRule(config: ScreenshotConfig): ScreenshotTestRule {
+        // as of beta02 only paparazziScreenshotTestRule, Roborazzi from beta03
+        return paparazziScreenshotTestRule
+    }
 
-```kotlin
-// For Shot
-class SharedTestRule(
-    private val config: screenshotConfig,
-) : ScreenshotTestRule by ShotScreenshotTestRule(config)
-```
-
-or
-
-```kotlin
-// For Dropshots
-class SharedTestRule(
-    private val config: screenshotConfig,
-) : ScreenshotTestRule by DropshotsTestRule(config)
-```
-
-5. Finally, write your screenshot tests under `src/sharedTest` with the SharedTestRule.
-   For an example, see [this section](#library-agnostic-beta)
-
-<sup>1</sup> Support for Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android),
-and ndpt [android-testify](https://github.com/ndtp/android-testify) is coming soon.
-
-# Usage
-
-## Configuration
-
-### ActivityScenarios
-
-Add the following permission and activities to your `androidTest/manifest`
-
-```xml
-<!-- Required for ActivityScenarios only -->
-<application...>
-   <activity
-     android:name="sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioConfigurator$PortraitSnapshotConfiguredActivity" /><activity
-     android:name="sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioConfigurator$LandscapeSnapshotConfiguredActivity"
-     android:screenOrientation="landscape" 
-   />
-    ...
-</application>
-```
-
-### Pseudolocales
-
-To enable pseudolocales **en_XA** & **ar_XB** for your screenshot tests, add this to your
-build.gradle.
-
-```groovy
-android {
-    ...
-    buildTypes {
-        ...
-        debug {
-            pseudoLocalesEnabled true
-        }
+    override fun getInstrumentedScreenshotTestRule(config: ScreenshotConfig): ScreenshotTestRule {
+        // either dropshotsScreenshotTestRule or shotScreenshotTestRule
+        return dropshotsScreenshotTestRule
     }
 }
 ```
 
-### System Locale
+5. Finally, write your tests with the CrossLibraryScreenshotTestRule. For an example, see [this section](#cross-library-beta)
 
-To change the System Locale via SystemLocaleTestRule, you also need to add the following permission to your `androidTest/manifest`
-.
-For multi-module apps, do this in the app module.
+<sup>1</sup> Support for [Roborazzi](https://github.com/takahirom/roborazzi), Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android),
+and ndpt [android-testify](https://github.com/ndtp/android-testify) is coming soon.
 
-```xml
-<!-- Required to change the Locale via SystemLocaleTestRule (e.g. for snapshot testing Activities) -->
-<uses-permission android:name="android.permission.CHANGE_CONFIGURATION"
-    tools:ignore="ProtectedPermissions" />
-```
-
-### In-App Locale
-
-AndroidUiTestingUtils also
-supports [per-app language preferences](https://developer.android.com/guide/topics/resources/app-languages)
-. In order to change the In-App Locale, you need to use the `InAppLocaleTestRule`. For that it is
-necessary to add the following dependency in your `app/build.gradle`
-
-```kotlin
-androidTestImplementation 'androidx.appcompat:appcompat:1.6.0-alpha04' // or higher version!
-```
-
-Use this rule to test Activities with in-app Locales that differ from the SystemLocale
+# Usage
 
 ## Screenshot testing examples
 
@@ -366,7 +325,8 @@ val rule =
             uiMode = UiMode.DAY,
             theme = R.style.Custom_Theme,
             displaySize = DisplaySize.SMALL,
-        )
+        ),
+        backgroundColor = TRANSPARENT,
     )
 
 @Test
@@ -405,7 +365,7 @@ fun snapViewHolderTest() {
             .setUiMode(UiMode.DAY)
             .setTheme(R.style.Custom_Theme)
             .setDisplaySize(DisplaySize.SMALL)
-            .launchConfiguredActivity()
+            .launchConfiguredActivity(TRANSPARENT)
 
     val activity = activityScenario.waitForActivity()
 
@@ -458,7 +418,8 @@ val rule = ActivityScenarioForComposableRule(
             uiMode = UiMode.DAY,
             displaySize = DisplaySize.LARGE,
             orientation = Orientation.PORTRAIT,
-        )
+        ),
+        backgroundColor = TRANSPARENT,
     )
 
 @Test
@@ -496,7 +457,7 @@ fun snapComposableTest() {
         .setInitialOrientation(Orientation.PORTRAIT)
         .setUiMode(UiMode.DAY)
         .setDisplaySize(DisplaySize.LARGE)
-        .launchConfiguredActivity()
+        .launchConfiguredActivity(TRANSPARENT)
         .onActivity {
             it.setContent {
                 AppTheme { // this theme must use isSystemInDarkTheme() internally
@@ -587,7 +548,7 @@ FragmentScenarioConfigurator**. This would be its equivalent:
 ```kotlin
 @Test
 fun snapFragment() {
-    val fragmentScenarioConfigurator =
+    val fragmentScenario =
         FragmentScenarioConfigurator
             .setInitialOrientation(Orientation.LANDSCAPE)
             .setUiMode(UiMode.DAY)
@@ -600,11 +561,11 @@ fun snapFragment() {
             )
 
     compareScreenshot(
-        fragment = fragmentScenarioConfigurator.waitForFragment(),
+        fragment = fragmentScenario.waitForFragment(),
         name = "your_unique_screenshot_name",
     )
 
-    fragmentScenarioConfigurator.close()
+    fragmentScenario.close()
 }
 ```
 
@@ -619,7 +580,7 @@ rendered without considering elevation.
 
 Fortunately, such libraries let you pass the bitmap (i.e.the screenshot) as argument in their
 record/verify methods.
-In doing so, we can draw the views with elevation to a bitmap with `PixelCopy`.
+In doing so, we can draw the views with elevation<sup>1</sup> to a bitmap with `PixelCopy`.
 
 AndroidUiTestingUtils provides methods to easily generate bitmaps from the
 Activities/Fragments/ViewHolders/Views/Dialogs/Composables:
@@ -655,9 +616,10 @@ PixelCopy to draw views that don't fit on the screen. </br>
 | Canvas                                                              |                                  PixelCopy                                   |
 |---------------------------------------------------------------------|:----------------------------------------------------------------------------:|
 | ✅ Can render elements beyond the screen,<br/> e.g. long ScrollViews | ❌ Cannot render elements beyond the screen,<br/> resizing if that's the case | 
-| ❌ Ignores elevation<sup>1</sup> of UI elements while drawing        |        ✅ Considers elevation<sup>1</sup> of UI elements while drawing        |
+| ❌ Ignores elevation<sup>2</sup> of UI elements while drawing        |        ✅ Considers elevation<sup>2</sup> of UI elements while drawing        |
 
-<sup>1</sup> Elevation can be manifested in many ways: a UI layer on top of another or a shadow in a
+<sup>1</sup> Robolectric 4.10 or lower cannot render shadows or elevation with RNG, as stated in [this issue](https://github.com/robolectric/robolectric/issues/8081)
+<sup>2</sup> Elevation can be manifested in many ways: a UI layer on top of another or a shadow in a
 CardView.
 
 And using `PixelCopy` in your screenshot tests is as simple as this (example with Shot):
@@ -678,21 +640,322 @@ compareScreenshot(
 )
 ```
 
-### Library-agnostic (BETA)
+### Robolectric (BETA)
+AndroidUiTesting includes some special `ActivityScenarioConfigurators` and `FragmentScenarioConfigurators` that are additionally safe-thread, 
+what allows unit tests in parallel without unexpected behaviours.
 
-For library-agnostic screenshot tests, you need to follow the steps
-in [this section](#library-agnostic-screenshot-tests-beta).
+It supports *Jetpack Compose**, **android Views** (e.g. custom Views,
+ViewHolders, etc.), **Activities** and **Fragments**.
+
+Check out some examples below.
+It uses [Roborazzi](https://github.com/takahirom/roborazzi) as screenshot testing library.
+
+### Activity (RNG)
+Here with Junit4 test rule
+```kotlin
+@RunWith(RobolectricTestRunner::class)
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+class SnapActivityTest {
+
+    @get:Rule
+    val robolectricActivityScenarioForActivityRule =
+        robolectricActivityScenarioForActivityRule(
+            config = ActivityConfigItem(
+                systemLocale = "en",
+                uiMode = UiMode.NIGHT,
+                theme = R.style.Custom_Theme,
+                orientation = Orientation.PORTRAIT,
+                fontSize = FontSize.NORMAL,
+                displaySize = DisplaySize.NORMAL,
+            ),
+            deviceScreen = DeviceScreen.Phone.PIXEL_4A,
+        )
+
+    @Config(sdk = [30]) // Do not use qualifiers if using `DeviceScreen` in the Rule
+    @Test
+    fun snapActivity() {
+        robolectricActivityScenarioForActivityRule
+            .rootView
+            .captureRoboImage("path/MyActivity.png")
+    }
+}
+```
+or without Junit4 test rules
+```kotlin
+@RunWith(RobolectricTestRunner::class)
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+class SnapActivityTest {
+
+    @Config(sdk = [30]) // Do not use qualifiers if using `setDeviceScreen()
+    @Test
+    fun snapActivity() {
+        val activityScenario =
+            RobolectricActivityScenarioConfigurator.ForActivity()
+                .setDeviceScreen(DeviceScreen.Phone.PIXEL_4A)
+                .setSystemLocale("en")
+                .setUiMode(UiMode.NIGHT)
+                .setOrientation(Orientation.PORTRAIT)
+                .setFontSize(FontSize.NORMAL)
+                .setDisplaySize(DisplaySize.NORMAL)
+                .launch(MyActivity::class.java)
+
+        activityScenario
+            .rootView
+            .captureRoboImage("path/MyActivity.png")
+
+        activityScenario.close()
+    }
+}
+```
+
+### Android View (RNG)
+Here with Junit4 test rule
+```kotlin
+@RunWith(RobolectricTestRunner::class)
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+class SnapViewHolderTest {
+
+    @get:Rule
+    val robolectricActivityScenarioForViewRule =
+        RobolectricActivityScenarioForViewRule(
+            config = ViewConfigItem(
+                locale = "en_XA",
+                uiMode = UiMode.NIGHT,
+                theme = R.style.Custom_Theme,
+                orientation = Orientation.PORTRAIT,
+                fontSize = FontSize.NORMAL,
+                displaySize = DisplaySize.NORMAL,
+            ),
+            deviceScreen = DeviceScreen.Phone.PIXEL_4A,
+            backgroundColor = TRANSPARENT,
+        )
+
+    @Config(sdk = [30]) // Do not use qualifiers if using `DeviceScreen` in the Rule
+    @Test
+    fun snapViewHolder() {
+        val activity = robolectricActivityScenarioForViewRule.activity
+        val layout = robolectricActivityScenarioForViewRule.inflateAndWaitForIdle(R.layout.memorise_row)
+
+        val viewHolder = waitForMeasuredViewHolder {
+            MemoriseViewHolder(
+                container = layout,
+                itemEventListener = null,
+                animationDelay = 0L,
+            ).apply {
+                bind(generateMemoriseItem(rightAligned = false, activity = activity))
+            }
+        }
+
+        viewHolder
+            .itemView
+            .captureRoboImage("path/MemoriseViewHolder.png")
+        }
+    }
+}
+```
+or without Junit4 test rules
+```kotlin
+@RunWith(RobolectricTestRunner::class)
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+class SnapViewHolderTest {
+    
+    @Config(sdk = [30]) // Do not use qualifiers if using `setDeviceScreen()
+    @Test
+    fun snapViewHolder() {
+        val activityScenario = 
+            RobolectricActivityScenarioConfigurator.ForView()
+                .setDeviceScreen(DeviceScreen.Phone.PIXEL_4A)
+                .setLocale("en_XA")
+                .setUiMode(UiMode.NIGHT)
+                .setTheme(R.style.Custom_Theme)
+                .setOrientation(Orientation.PORTRAIT)
+                .setFontSize(FontSize.NORMAL)
+                .setDisplaySize(DisplaySize.NORMAL)
+                .launchConfiguredActivity(TRANSPARENT)
+
+        val activity = activityScenario.waitForActivity()
+        val layout = activity.inflateAndWaitForIdle(R.layout.memorise_row)
+
+        val viewHolder = waitForMeasuredViewHolder {
+            MemoriseViewHolder(
+                container = layout,
+                itemEventListener = null,
+                animationDelay = 0L,
+            ).apply {
+                bind(generateMemoriseItem(rightAligned = false, activity = activity))
+            }
+        }
+
+        viewHolder
+            .itemView
+            .captureRoboImage("path/MemoriseViewHolder.png")
+
+        activityScenario.close()
+    }
+}
+```
+
+### Jetpack Compose (RNG)
+Here with `RobolectricActivityScenarioForComposableRule` test rule
+```kotlin
+@RunWith(RobolectricTestRunner::class)
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+class SnapComposableTest {
+
+    @get:Rule
+    val activityScenarioForComposableRule = 
+        RobolectricActivityScenarioForComposableRule(
+            config = ComposableConfigItem(
+                fontSize = FontSize.SMALL,
+                locale = "ar_XB",
+                uiMode = UiMode.DAY,
+                displaySize = DisplaySize.LARGE,
+                orientation = Orientation.PORTRAIT,
+            ),
+            deviceScreen = DeviceScreen.Phone.PIXEL_4A,
+            backgroundColor = TRANSPARENT,
+        )
+
+    @Config(sdk = [30]) // Do not use qualifiers if using `setDeviceScreen()
+    @Test
+    fun snapComposable() {
+        activityScenarioForComposableRule
+            .activityScenario
+            .onActivity {
+                it.setContent {
+                    AppTheme { // this theme must use isSystemInDarkTheme() internally
+                        yourComposable()
+                    }
+                }
+            }
+
+        activityScenarioForComposableRule
+            .composeRule
+            .onRoot()
+            .captureRoboImage("path/MyComposable.png")
+    }
+}
+```
+or without `RobolectricActivityScenarioForComposableRule` test rule
+
+```kotlin
+@RunWith(RobolectricTestRunner::class)
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+class SnapComposableTest {
+    
+    @get:Rule
+    val composeTestRule = createEmptyComposeRule()
+
+    @Config(sdk = [30]) // Do not use qualifiers if using setDeviceScreen()
+    @Test
+    fun snapComposable() {
+        val activityScenario =
+            RobolectricActivityScenarioConfigurator.ForComposable()
+                .setDeviceScreen(DeviceScreen.Phone.PIXEL_4A)
+                .setFontSize(FontSize.SMALL)
+                .setLocale("ar_XB")
+                .setInitialOrientation(Orientation.PORTRAIT)
+                .setUiMode(UiMode.DAY)
+                .setDisplaySize(DisplaySize.LARGE)
+                .launchConfiguredActivity(TRANSPARENT)
+                .onActivity {
+                    it.setContent {
+                        AppTheme { // this theme must use isSystemInDarkTheme() internally
+                            yourComposable()
+                        }
+                    }
+                }
+
+        activityScenario.waitForActivity()
+                
+        composeTestRule
+            .onRoot()
+            .captureRoboImage("path/MyComposable.png")
+
+        activityScenario.close()
+    }
+}
+```
+### Fragment (RNG)
+Here with Junit4 test rule
+```kotlin
+@RunWith(RobolectricTestRunner::class)
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+class SnapFragmentTest {
+
+    @get:Rule
+    val robolectricFragmentScenarioConfiguratorRule =
+        robolectricFragmentScenarioConfiguratorRule<MyFragment>(
+            fragmentArgs = bundleOf("arg_key" to "arg_value"),
+            config = FragmentConfigItem(
+                locale = "en_XA",
+                uiMode = UiMode.NIGHT,
+                theme = R.style.Custom_Theme,
+                orientation = Orientation.PORTRAIT,
+                fontSize = FontSize.NORMAL,
+                displaySize = DisplaySize.NORMAL,
+            ),
+            deviceScreen = DeviceScreen.Phone.PIXEL_4A,
+        )
+
+    @Config(sdk = [30]) // Do not use qualifiers if using `DeviceScreen` in the Rule
+    @Test
+    fun snapFragment() {
+        robolectricFragmentScenarioConfiguratorRule
+            .fragment
+            .view!!
+            .captureRoboImage("path/MyFragment.png")
+    }
+}
+```
+or without Junit4 test rules
+```kotlin
+@RunWith(RobolectricTestRunner::class)
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+class SnapFragmentTest {
+
+    @Config(sdk = [30]) // Do not use qualifiers if using `setDeviceScreen()
+    @Test
+    fun snapFragment() {
+        val fragmentScenario =
+            RobolectricFragmentScenarioConfigurator.ForFragment()
+                .setDeviceScreen(DeviceScreen.Phone.PIXEL_4A)
+                .setLocale("en_XA")
+                .setUiMode(UiMode.NIGHT)
+                .setTheme(R.style.Custom_Theme)
+                .setOrientation(Orientation.PORTRAIT)
+                .setFontSize(FontSize.NORMAL)
+                .setDisplaySize(DisplaySize.NORMAL)
+                .launchInContainer(
+                    fragmentClass = MyFragment::class.java,
+                    fragmentArgs = bundleOf("arg_key" to "arg_value"),
+                )
+
+        fragmentScenario
+            .waitForFragment()
+            .view!!
+            .captureRoboImage("path/MyActivity.png")
+
+        fragmentScenario.close()
+    }
+}
+```
+
+### Cross-library (BETA)
+
+For cross-library screenshot tests, you need to follow the steps
+in [this section](#cross-library-screenshot-tests-beta).
 Once done, writing such tests is as easy as this:
 
 ```kotlin
 // Only support for composables for now
 @get:Rule
 val screenshotRule =
-    SharedTestRule(
+    CrossLibraryTestRule(
         config = ScreenshotConfig(
             uiMode = UiMode.DAY,
             orientation = Orientation.LANDSCAPE,
-            locale = "en", //only simple locales supported for now. e.g. en-US not supported yet
+            locale = "en", // only simple locales supported for now. e.g. en-US not supported yet
             fontScale = FontSize.NORMAL,
         ),
     )

@@ -10,27 +10,26 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.drawToBitmap
 import androidx.test.core.app.ActivityScenario
 import com.dropbox.dropshots.Dropshots
-import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
-import sergio.sastre.uitesting.utils.BitmapCaptureMethod
-import sergio.sastre.uitesting.utils.LibraryConfig
-import sergio.sastre.uitesting.utils.ScreenshotConfig
-import sergio.sastre.uitesting.utils.ScreenshotTestRule
+import sergio.sastre.uitesting.utils.crosslibrary.config.BitmapCaptureMethod
+import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
+import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfig
 import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioConfigurator
+import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRule
 import sergio.sastre.uitesting.utils.utils.drawToBitmapWithElevation
 import sergio.sastre.uitesting.utils.utils.waitForActivity
 
 class DropshotsScreenshotTestRule(
-    private val screenshotConfig: ScreenshotConfig = ScreenshotConfig(),
-) : ScreenshotTestRule, TestWatcher() {
+    override val config: ScreenshotConfig = ScreenshotConfig(),
+) : ScreenshotTestRule(config) {
 
     private val activityScenario: ActivityScenario<out ComponentActivity> by lazy {
         ActivityScenarioConfigurator.ForComposable()
-            .setLocale(screenshotConfig.locale)
-            .setInitialOrientation(screenshotConfig.orientation)
-            .setUiMode(screenshotConfig.uiMode)
-            .setFontSize(screenshotConfig.fontScale)
+            .setLocale(config.locale)
+            .setInitialOrientation(config.orientation)
+            .setUiMode(config.uiMode)
+            .setFontSize(config.fontScale)
             .launchConfiguredActivity()
     }
 

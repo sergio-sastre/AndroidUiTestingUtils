@@ -11,8 +11,8 @@ android {
     defaultConfig {
         minSdk 23
         targetSdk 33
-        versionCode 16
-        versionName "2.0.0-beta01"
+        versionCode 17
+        versionName "2.0.0-beta02"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -41,7 +41,7 @@ android {
 }
 
 dependencies {
-    api project(':utils')
+    implementation project(':utils')
     api project(':sharedtest-paparazzi')
     api('app.cash.paparazzi:paparazzi:1.2.0')
 }
@@ -52,7 +52,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "paparazzi"
-            version = '2.0.0-beta01'
+            version = '2.0.0-beta02'
 
             afterEvaluate {
                 from components.release

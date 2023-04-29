@@ -21,6 +21,8 @@ import sergio.sastre.uitesting.utils.testrules.fontsize.FontSizeTestRule.FontSca
  *
  * Strongly based on code from espresso-support library, from Novoda
  * https://github.com/novoda/espresso-support/tree/master/core/src/main/java/com/novoda/espresso
+ *
+ * WARNING: It's not compatible with Robolectric
  */
 class FontSizeTestRule(
     private val fontSize: FontSize

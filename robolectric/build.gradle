@@ -1,0 +1,53 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
+}
+
+android {
+    namespace 'sergio.sastre.uitesting.robolectric'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 23
+        targetSdk 33
+        versionCode 17
+        versionName "2.0.0-beta02"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    implementation project(':utils')
+    api "org.robolectric:robolectric:4.10"
+}
+
+//https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = 'com.github.sergio-sastre'
+            artifactId = "robolectric"
+            version = '2.0.0-beta02'
+
+            afterEvaluate {
+                from components.release
+            }
+        }
+    }
+}

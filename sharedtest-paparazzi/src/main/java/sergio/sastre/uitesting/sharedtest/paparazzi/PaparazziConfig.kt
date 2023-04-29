@@ -3,7 +3,7 @@ package sergio.sastre.uitesting.sharedtest.paparazzi
 import sergio.sastre.uitesting.sharedtest.paparazzi.wrapper.DeviceConfig
 import sergio.sastre.uitesting.sharedtest.paparazzi.wrapper.Environment
 import sergio.sastre.uitesting.sharedtest.paparazzi.wrapper.RenderingMode
-import sergio.sastre.uitesting.utils.LibraryConfig
+import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
 
 /**
  * A wrapper for allowed Paparazzi configuration in shared Tests.
