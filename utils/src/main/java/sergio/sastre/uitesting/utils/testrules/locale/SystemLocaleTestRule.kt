@@ -20,6 +20,8 @@ import kotlin.Throws
  *
  * The code was converted to Kotlin, and added the [grantChangeConfigurationIfNeeded] method
  * to enable locale change
+ *
+ * WARNING: It's not compatible with Robolectric
  */
 class SystemLocaleTestRule constructor(private val locale: Locale) : TestRule {
 

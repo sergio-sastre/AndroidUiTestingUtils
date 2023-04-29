@@ -37,6 +37,8 @@ import java.util.*
  *       android:value="false"
  *    />
  *</service>
+ *
+ * WARNING: It's not compatible with Robolectric
  **/
 class InAppLocaleTestRule constructor(private val locale: Locale) : TestRule {
 

@@ -12,8 +12,6 @@ import androidx.annotation.ColorInt
 import androidx.annotation.Discouraged
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.ui.graphics.Color
-import androidx.core.graphics.toColorInt
 import androidx.fragment.app.FragmentActivity
 import androidx.test.core.app.ActivityScenario
 import sergio.sastre.uitesting.utils.common.FontSize
@@ -36,7 +34,6 @@ object ActivityScenarioConfigurator {
 
     @StyleRes
     private var themeId: Int? = null
-
 
     /**
      *  Use this for snapshot testing any view that is not an Activity or Composable, e.g. Dialog,

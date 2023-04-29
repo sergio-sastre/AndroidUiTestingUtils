@@ -4,7 +4,7 @@ import androidx.activity.ComponentActivity
 import androidx.test.core.app.ActivityScenario
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
-import sergio.sastre.uitesting.utils.ScreenshotConfig
+import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfig
 import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioConfigurator
 
 internal class ActivityScenarioForComposableTestWatcher(
