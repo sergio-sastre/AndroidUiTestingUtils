@@ -63,6 +63,7 @@ Requests.
 
 - [Integration](#integration)
     - [In-App Locale](#in-app-locale)
+    - [System Locale](#system-locale)
     - [Robolectric screenshot tests (BETA)](#robolectric-screenshot-tests-beta)
     - [Cross-library screenshot tests (BETA)](#cross-library-screenshot-tests-beta)
 - [Usage](#usage)
@@ -124,7 +125,19 @@ necessary to add the following dependency in your `build.gradle`
 androidTestImplementation 'androidx.appcompat:appcompat:1.6.0-alpha04' // or higher version!
 ```
 
-Use this rule to test Activities with in-app Locales that differ from the System Locale
+Use this rule to test Activities with in-app Locales that differ from the System Locale.
+
+
+### System Locale
+To change the System Locale via SystemLocaleTestRule, you also need to add the following permission to your `androidTest/manifest`
+.
+For multi-module apps, do this in the app module.
+
+```xml
+<!-- Required to change the Locale via SystemLocaleTestRule (e.g. for snapshot testing Activities) -->
+<uses-permission android:name="android.permission.CHANGE_CONFIGURATION"
+    tools:ignore="ProtectedPermissions" />
+```
 
 ### Robolectric screenshot tests (BETA)
 Robolectric supports screenshot testing via [Robolectric Native graphics (RNG)](https://github.com/robolectric/robolectric/releases/tag/robolectric-4.10) since 4.10.
@@ -150,7 +163,7 @@ Currently, that's only possible with the following screenshot testing libraries 
 - [Dropshots](https://github.com/dropbox/dropshots)
 
 1. First of all, configure all the screenshot testing libraries you want your tests to support, as
-   if you'd write them with those specific libraries. e.g. Paparazzi supported only in library modules.</br>
+   if you'd write them with those specific libraries. It's recommended to configure max 1 on-device (i.e. Shot or Dropshots) and max 1 JVM libraries (i.e. Paparazzi) to avoid misbehaviours when running their corresponding plugin tasks.</br>
    Visit their respective Github pages for more info.</br></br>
 
 2. After that, include the following dependencies in the `build.gradle` of the module including the
