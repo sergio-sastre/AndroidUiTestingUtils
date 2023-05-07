@@ -171,17 +171,30 @@ Currently, that's only possible with the following screenshot testing libraries 
 
 ```groovy
 dependencies {
-    debugImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0-beta02'
+    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0-beta02') {
+        exclude group: 'androidx.core'
+    }
 
     // Shot support
-    debugImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:shot:2.0.0-beta02'
+    debugImplementation ('com.github.sergio-sastre.AndroidUiTestingUtils:shot:2.0.0-beta02'){
+        exclude group: 'androidx.core'
+    }
 
     // Dropshots support
-    debugImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:dropshots:2.0.0-beta02'
+    debugImplementation ('com.github.sergio-sastre.AndroidUiTestingUtils:dropshots:2.0.0-beta02'){
+        exclude group: 'androidx.core'
+    }
 
     // Paparazzi support
-    debugImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:sharedtest-paparazzi:2.0.0-beta02'
-    testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:paparazzi:2.0.0-beta02'
+    debugImplementation ('com.github.sergio-sastre.AndroidUiTestingUtils:sharedtest-paparazzi:2.0.0-beta02'){
+        exclude group: 'androidx.core'
+    }
+    testImplementation ('com.github.sergio-sastre.AndroidUiTestingUtils:paparazzi:2.0.0-beta02'){
+        exclude group: 'androidx.core'
+    }
+
+    // 1.10.0, it causes troubles when running tests with Paparazzi
+    implementation 'androidx.core:core-ktx:1.9.0'
 }
 ```
 
