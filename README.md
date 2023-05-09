@@ -149,7 +149,7 @@ testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0-b
 testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:robolectric:2.0.0-beta02'
 ```
 
-You can find some examples in [this section](#robolectric-beta)
+You can find some examples in [this section](#robolectric-beta) as well as executable screenshot tests in the repo [Android screenshot testing playground](https://github.com/sergio-sastre/Android-screenshot-testing-playground) to try it on your own!
 
 ### Cross-library screenshot tests (BETA)
 
@@ -162,8 +162,10 @@ Currently, that's only possible with the following screenshot testing libraries 
 - [Shot](https://github.com/pedrovgs/Shot)
 - [Dropshots](https://github.com/dropbox/dropshots)
 
+If you want to try it out on your own, take a look at the examples in the [Android Screenshot testing playground repo] (https://github.com/sergio-sastre/Android-screenshot-testing-playground/tree/master/lazycolumnscreen/crosslibrary/src/sharedTest/java/com/example/road/to/effective/snapshot/testing/lazycolumnscreen/crosslibrary)
+
 1. First of all, configure all the screenshot testing libraries you want your tests to support, as
-   if you'd write them with those specific libraries. It's recommended to configure max 1 on-device (i.e. Shot or Dropshots) and max 1 JVM libraries (i.e. Paparazzi) to avoid misbehaviours when running their corresponding plugin tasks.</br>
+   if you'd write them with those specific libraries.</br>
    Visit their respective Github pages for more info.</br></br>
 
 2. After that, include the following dependencies in the `build.gradle` of the module including the
@@ -241,6 +243,14 @@ class CrossLibraryScreenshotTestRule(
 <sup>1</sup> Support for [Roborazzi](https://github.com/takahirom/roborazzi), Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android),
 and ndpt [android-testify](https://github.com/ndtp/android-testify) is coming soon.
 
+> **Note**</br>
+> You'll likely configure your screenshot tests to run with 1 on-device (i.e. either Shot or Dropshots) and 1 JVM libraries (i.e. Paparazzi). In that case, this is enough.</br>
+> But if you need to run your tests with many on-device/JVM libraries i.e. Shot locally but Dropshots in the CI, you'll > need some extra configuration to decide which library runs them. You can find an example of how to achieve it via a
+> custom project gradle property passed via command line e.g. `-PscreenshotLibrary=shot`. In that case, check these links for advice on how to configure it:</br>
+> - [build.gradle](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/build.gradle) 
+> - [CrossLibraryScreenshotTestRule.kt](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/src/sharedTest/java/com/example/road/to/effective/snapshot/testing/lazycolumnscreen/crosslibrary/parameterized/CrossLibraryScreenshotTestRule.kt)
+> - [Cross-library screenshot test example](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/src/sharedTest/java/com/example/road/to/effective/snapshot/testing/lazycolumnscreen/crosslibrary/parameterized/CoffeeDrinkListComposableParameterizedTest.kt)
+
 # Usage
 
 ## Screenshot testing examples
@@ -251,7 +261,7 @@ Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-t
 Dropbox [Dropshots](https://github.com/dropbox/dropshots) or with a custom screenshot testing
 solution.
 
-You can find more complete examples with Shot and Dropshots in
+You can find more complete examples with Shot, Dropshots & Roborazzi in
 the [Android screenshot testing playground](https://github.com/sergio-sastre/Android-screenshot-testing-playground)
 repo.
 
