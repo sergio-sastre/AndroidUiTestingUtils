@@ -1,7 +1,9 @@
 package sergio.sastre.uitesting.robolectric.config.screen
 
-import sergio.sastre.uitesting.utils.common.Orientation
-
+/**
+ * DeviceScreen Robolectric configurations taken from:
+ * https://github.com/takahirom/roborazzi/blob/aa840cb0078d69dbcca5f02e339637e741ed54f5/roborazzi/src/main/java/com/github/takahirom/roborazzi/RobolectricDeviceQualifiers.kt
+ */
 data class DeviceScreen(
     val widthDp: Int,
     val heightDp: Int,
@@ -107,6 +109,16 @@ data class DeviceScreen(
 
     object Television {
         @JvmField
+        val ANDROID_TV_4k = DeviceScreen(
+            widthDp = 960,
+            heightDp = 540,
+            size = ScreenSize.XLARGE,
+            aspect = ScreenAspect.LONG,
+            type = ScreenType.TV,
+            density = ScreenDensity.XXXHDPI,
+        )
+
+        @JvmField
         val ANDROID_TV_1080p = DeviceScreen(
             widthDp = 960,
             heightDp = 540,
@@ -129,33 +141,55 @@ data class DeviceScreen(
 
     object Watch {
         val WEAR_OS_SQUARE = DeviceScreen(
-            widthDp = 187,
-            heightDp = 187,
+            widthDp = 180,
+            heightDp = 180,
             size = ScreenSize.SMALL,
             aspect = ScreenAspect.LONG,
-            round = RoundScreen.ROUND,
+            round = RoundScreen.NOTROUND,
             type = ScreenType.WATCH,
-            density = ScreenDensity.HDPI,
+            density = ScreenDensity.XHDPI,
         )
 
         val WEAR_OS_LARGE_ROUND = DeviceScreen(
-            widthDp = 213,
-            heightDp = 213,
+            widthDp = 227,
+            heightDp = 227,
             size = ScreenSize.SMALL,
             aspect = ScreenAspect.LONG,
             round = RoundScreen.ROUND,
             type = ScreenType.WATCH,
-            density = ScreenDensity.HDPI,
+            density = ScreenDensity.XHDPI,
         )
 
         val WEAR_OS_SMALL_ROUND = DeviceScreen(
-            widthDp = 240,
-            heightDp = 218,
+            widthDp = 192,
+            heightDp = 192,
             size = ScreenSize.SMALL,
-            aspect = ScreenAspect.NOTLONG,
+            aspect = ScreenAspect.LONG,
+            round = RoundScreen.ROUND,
+            type = ScreenType.WATCH,
+            density = ScreenDensity.XHDPI,
+        )
+
+        val WEAR_OS_RECTANGULAR = DeviceScreen(
+            widthDp = 201,
+            heightDp = 238,
+            size = ScreenSize.SMALL,
+            aspect = ScreenAspect.LONG,
             round = RoundScreen.NOTROUND,
             type = ScreenType.WATCH,
-            density = ScreenDensity.TVDPI,
+            density = ScreenDensity.XHDPI,
+        )
+    }
+
+    object Car {
+        val ANDROID_AUTO_1024p = DeviceScreen(
+            widthDp = 1024,
+            heightDp = 768,
+            size = ScreenSize.NORMAL,
+            aspect = ScreenAspect.NOTLONG,
+            round = RoundScreen.NOTROUND,
+            type = ScreenType.CAR,
+            density = ScreenDensity.MDPI,
         )
     }
 }
