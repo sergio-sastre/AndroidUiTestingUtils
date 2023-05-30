@@ -35,6 +35,7 @@ class ActivityScenarioForComposableRule(
     val activity: Activity by lazy { activityScenario.waitForActivity() }
 
     val composeView: ComposeView by lazy {
+        val activity = activityScenario.waitForActivity()
         emptyComposeRule.waitForIdle()
         activity.waitForComposeView()
     }

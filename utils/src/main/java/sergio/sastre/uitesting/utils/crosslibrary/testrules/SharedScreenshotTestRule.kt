@@ -15,6 +15,7 @@ abstract class SharedScreenshotTestRule(
         const val PAPARAZZI = "sergio.sastre.uitesting.paparazzi.PaparazziScreenshotTestRule";
         const val SHOT = "sergio.sastre.uitesting.shot.ShotScreenshotTestRule";
         const val DROPSHOTS = "sergio.sastre.uitesting.dropshots.DropshotsScreenshotTestRule";
+        const val ROBORAZZI = "sergio.sastre.uitesting.roborazzi.RoborazziScreenshotTestRule";
     }
 
     val dropshotsScreenshotTestRule
@@ -22,6 +23,9 @@ abstract class SharedScreenshotTestRule(
 
     val paparazziScreenshotTestRule
         get() = getScreenshotTestRuleClassForName(PAPARAZZI, config)
+
+    val roborazziScreenshotTestRule
+        get() = getScreenshotTestRuleClassForName(ROBORAZZI, config)
 
     val shotScreenshotTestRule
         get() = getScreenshotTestRuleClassForName(SHOT, config)
