@@ -15,8 +15,6 @@
  */
 package sergio.sastre.uitesting.utils.crosslibrary.runners;
 
-import static sergio.sastre.uitesting.utils.crosslibrary.runners.PaparazziRuleFinder.usesPaparazzi;
-
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -32,7 +30,28 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
- * A JUnit4 runner for Android tests.
+ * A JUnit4 runner for Cross-Library screenshot tests.
+ *
+ * When running on the JVM, it will work out of the box in 99% of the use cases.
+ * There could be some issues though, if you have Paparazzi dependency/plugin in your module,
+ * but want to use Roborazzi for screenshot tests.
+ *
+ * In such cases, you can enforce this runner to use the correct underlying runner for the
+ * screenshot testing library in use (e.g. Roborazzi needs a RobolectricTestRunner, but Paparazzi doesn't)
+ * by setting the system property "screenshotLibrary" to "paparazzi or "roborazzi" respectively.
+ *
+ * You can do this either programmatically in your test code:
+ *
+ *    System.setProperty("screenshotLibrary","roborazzi")
+ *
+ * or in gradle:
+ *
+ *   testOptions {
+ *      unitTests.all {
+ *         systemProperty "screenshotLibrary", "roborazzi"
+ *      }
+ *   }
+ *
  *
  * <p>This runner offers several features on top of the standard JUnit4 runner,
  *
@@ -48,23 +67,31 @@ import java.util.List;
  *
  * <p>Usage {@code @RunWith(AndroidJUnit4.class)}
  */
-public final class ScreenshotTestAndroidJUnit4 extends Runner implements Filterable, Sortable {
+public final class CrossLibraryScreenshotTestRunner extends Runner implements Filterable, Sortable {
 
-    private static final String TAG = "ScreenshotTestAndroidJUnit4";
+    private static final String TAG = "CrossLibraryScreenshotTest";
 
     private final Runner delegate;
 
-    public ScreenshotTestAndroidJUnit4(Class<?> klass) throws InitializationError {
+    public CrossLibraryScreenshotTestRunner(Class<?> klass) throws InitializationError {
         delegate = loadRunner(klass);
     }
 
-    private static String getRunnerClassName(Class<?> testClass) {
+    private static String getRunnerClassName() {
         String runnerClassName = System.getProperty("android.junit.runner", null);
         if (runnerClassName != null) {
             return runnerClassName;
         }
         if (!System.getProperty("java.runtime.name").toLowerCase().contains("android")) {
-            if (usesPaparazzi(testClass)) {
+            String screenshotLibrary = System.getProperty("screenshotLibrary");
+            if (screenshotLibrary != null) {
+                if (screenshotLibrary.equals("paparazzi")) {
+                    return "org.junit.runners.BlockJUnit4ClassRunner";
+                } else if (screenshotLibrary.equals("roborazzi")) {
+                    return "org.robolectric.RobolectricTestRunner";
+                }
+            }
+            if (hasClass("app.cash.paparazzi.Paparazzi")) {
                 return "org.junit.runners.BlockJUnit4ClassRunner";
             }
             if (hasClass("org.robolectric.RobolectricTestRunner")) {
@@ -83,7 +110,7 @@ public final class ScreenshotTestAndroidJUnit4 extends Runner implements Filtera
     }
 
     private static Runner loadRunner(Class<?> testClass) throws InitializationError {
-        String runnerClassName = getRunnerClassName(testClass);
+        String runnerClassName = getRunnerClassName();
         return loadRunner(testClass, runnerClassName);
     }
 

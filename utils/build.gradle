@@ -10,8 +10,8 @@ android {
     defaultConfig {
         minSdk 23
         targetSdk 33
-        versionCode 17
-        versionName "2.0.0-beta02"
+        versionCode 18
+        versionName "2.0.0-beta03"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -46,12 +46,19 @@ android {
 
 dependencies {
     api 'androidx.appcompat:appcompat:1.7.0-alpha02'
-    api 'com.google.android.material:material:1.8.0'
+    api 'com.google.android.material:material:1.9.0'
     api 'androidx.test:core:1.5.0'
-    api 'androidx.core:core-ktx:1.10.0'
+
+    //noinspection GradleDependency
+    api ('androidx.core:core-ktx:1.9.0') {
+        because '1.10.0 causes troubles with Paparazzi'
+    }
     api 'androidx.test.ext:junit:1.1.5'
     api 'androidx.test.espresso:espresso-core:3.5.1'
-    api 'androidx.compose.ui:ui-test-junit4:1.4.2'
+    //noinspection GradleDependency
+    api ('androidx.compose.ui:ui-test-junit4:1.4.0') {
+        because 'it maches the compose compiler version'
+    }
     api 'androidx.fragment:fragment-ktx:1.5.7'
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
 }
@@ -62,7 +69,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "utils"
-            version = '2.0.0-beta02'
+            version = '2.0.0-beta03'
 
             afterEvaluate {
                 from components.release

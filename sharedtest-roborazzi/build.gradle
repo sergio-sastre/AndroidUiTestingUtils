@@ -5,18 +5,16 @@ plugins {
 }
 
 android {
-    namespace 'sergio.sastre.uitesting.inapplocale'
+    namespace 'sergio.sastre.uitesting.sharedtest.roborazzi'
     compileSdk 33
 
     defaultConfig {
         minSdk 23
         targetSdk 33
-
-        versionCode 11
-        versionName "1.2.3"
+        versionCode 18
+        versionName "2.0.0-beta03"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -38,12 +36,14 @@ dependencies {
     implementation project(':utils')
 }
 
+
+//https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/
 publishing {
     publications {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
-            artifactId = "AndroidUiTestingUtils-$project.name"
-            version = '1.2.4'
+            artifactId = "sharedtest-roborazzi"
+            version = '2.0.0-beta03'
 
             afterEvaluate {
                 from components.release

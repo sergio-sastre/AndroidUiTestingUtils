@@ -1,9 +1,5 @@
-package sergio.sastre.uitesting.robolectric.config.screen
+package sergio.sastre.uitesting.sharedtest.roborazzi.wrapper.screen
 
-/**
- * DeviceScreen Robolectric configurations taken from:
- * https://github.com/takahirom/roborazzi/blob/aa840cb0078d69dbcca5f02e339637e741ed54f5/roborazzi/src/main/java/com/github/takahirom/roborazzi/RobolectricDeviceQualifiers.kt
- */
 data class DeviceScreen(
     val widthDp: Int,
     val heightDp: Int,
@@ -13,8 +9,7 @@ data class DeviceScreen(
     val defaultOrientation: ScreenOrientation = ScreenOrientation.PORTRAIT,
     val round: RoundScreen? = null,
     val type: ScreenType? = null,
-) {
-
+){
     object Phone {
         @JvmField
         val NEXUS_ONE = DeviceScreen(
@@ -109,7 +104,7 @@ data class DeviceScreen(
 
     object Television {
         @JvmField
-        val ANDROID_TV_4k = DeviceScreen(
+        val TV_4k = DeviceScreen(
             widthDp = 960,
             heightDp = 540,
             size = ScreenSize.XLARGE,
@@ -119,7 +114,7 @@ data class DeviceScreen(
         )
 
         @JvmField
-        val ANDROID_TV_1080p = DeviceScreen(
+        val TV_1080p = DeviceScreen(
             widthDp = 960,
             heightDp = 540,
             size = ScreenSize.NORMAL,
@@ -129,7 +124,7 @@ data class DeviceScreen(
         )
 
         @JvmField
-        val ANDROID_TV_720p = DeviceScreen(
+        val TV_720p = DeviceScreen(
             widthDp = 962,
             heightDp = 541,
             size = ScreenSize.NORMAL,
@@ -182,7 +177,7 @@ data class DeviceScreen(
     }
 
     object Car {
-        val ANDROID_AUTO_1024p = DeviceScreen(
+        val AUTOMOTIVE_1024p = DeviceScreen(
             widthDp = 1024,
             heightDp = 768,
             size = ScreenSize.NORMAL,
@@ -190,6 +185,7 @@ data class DeviceScreen(
             round = RoundScreen.NOTROUND,
             type = ScreenType.CAR,
             density = ScreenDensity.MDPI,
+            defaultOrientation = ScreenOrientation.LANDSCAPE,
         )
     }
 }

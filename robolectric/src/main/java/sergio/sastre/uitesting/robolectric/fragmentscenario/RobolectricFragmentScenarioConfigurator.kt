@@ -203,7 +203,7 @@ class RobolectricFragmentScenarioConfigurator<F : Fragment> constructor(
          * WARNING: Do not use together with @Config(qualifiers = "my_qualifiers") to avoid
          * any misbehaviour
          */
-        fun setDeviceScreen(deviceScreen: DeviceScreen) {
+        fun setDeviceScreen(deviceScreen: DeviceScreen) = apply {
             state = state.copy(deviceScreen = deviceScreen)
         }
 

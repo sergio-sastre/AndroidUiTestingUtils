@@ -16,7 +16,7 @@ internal class PaparazziScreenshotConfigAdapter(
             orientation = screenshotConfig.orientation.toScreenOrientation(),
             nightMode = screenshotConfig.uiMode.toNightMode(),
             fontScale = screenshotConfig.fontScale.value.toFloat(),
-            locale = screenshotConfig.locale,
+            locale = screenshotConfig.locale.toBC47Locale(),
         ).adjustDimensionsToOrientation()
 
     private fun app.cash.paparazzi.DeviceConfig.adjustDimensionsToOrientation()
@@ -45,6 +45,14 @@ internal class PaparazziScreenshotConfigAdapter(
             Orientation.PORTRAIT -> ScreenOrientation.PORTRAIT
             Orientation.LANDSCAPE -> ScreenOrientation.LANDSCAPE
         }
+
+    private fun String.toBC47Locale(): String {
+        return if (this.contains("-")) {
+            "b+${this.replace(oldChar = '-', newChar = '+')}"
+        } else {
+            this
+        }
+    }
 
     private fun UiMode.toNightMode(): NightMode =
         when (this) {

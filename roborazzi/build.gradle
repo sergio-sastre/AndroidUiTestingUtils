@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace 'sergio.sastre.uitesting.shot'
+    namespace 'sergio.sastre.uitesting.roborazzi'
     compileSdk 33
 
     defaultConfig {
@@ -43,7 +43,13 @@ android {
 
 dependencies {
     implementation project(':utils')
-    api 'com.karumi:shot-android:5.14.1'
+    implementation project(':robolectric')
+    implementation project(':sharedtest-roborazzi')
+
+    api 'io.github.takahirom.roborazzi:roborazzi:1.2.0-rc-1'
+    api 'androidx.test.espresso:espresso-core:3.5.1'
+    api 'org.hamcrest:hamcrest:2.2'
+
     api 'androidx.activity:activity-compose:1.7.1'
 }
 
@@ -52,7 +58,7 @@ publishing {
     publications {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
-            artifactId = "shot"
+            artifactId = "roborazzi"
             version = '2.0.0-beta03'
 
             afterEvaluate {
