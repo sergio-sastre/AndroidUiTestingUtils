@@ -1,6 +1,7 @@
 package sergio.sastre.uitesting.shot
 
 import android.graphics.Bitmap
+import android.os.Build
 import android.view.View
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
@@ -22,14 +23,25 @@ class ShotScreenshotTestRule(
     override val config: ScreenshotConfig,
 ) : ScreenshotTestRule(config), ScreenshotTest {
 
-    private val activityScenario = ActivityScenarioForComposableRule(
-        config = ComposableConfigItem(
-            orientation = config.orientation,
-            uiMode = config.uiMode,
-            locale = config.locale,
-            fontSize = config.fontScale,
+    override val ignoredViews: List<Int>
+        get() = shotConfig.ignoredViews
+
+    override fun prepareUIForScreenshot() {
+        shotConfig.prepareUIForScreenshot()
+    }
+
+    private val activityScenarioRule: ActivityScenarioForComposableRule by lazy {
+        ActivityScenarioForComposableRule(
+            config = ComposableConfigItem(
+                orientation = config.orientation,
+                uiMode = config.uiMode,
+                locale = config.locale,
+                fontSize = config.fontScale,
+                displaySize = config.displaySize,
+            ),
+            backgroundColor = shotConfig.backgroundColor,
         )
-    )
+    }
 
     private var shotConfig: ShotConfig = ShotConfig()
 
@@ -42,11 +54,11 @@ class ShotScreenshotTestRule(
     }
 
     override fun apply(base: Statement?, description: Description?): Statement =
-        activityScenario.apply(base, description)
+        activityScenarioRule.apply(base, description)
 
     private fun takeSnapshot(name: String?, composable: @Composable () -> Unit) {
         val existingComposeView =
-            activityScenario.activityScenario
+            activityScenarioRule.activityScenario
                 .onActivity {
                     it.setContent {
                         composable.invoke()
@@ -60,17 +72,22 @@ class ShotScreenshotTestRule(
                 takeSnapshotWithCanvas(bitmapCaptureMethod.config, existingComposeView, name)
             is BitmapCaptureMethod.PixelCopy ->
                 takeSnapshotWithPixelCopy(bitmapCaptureMethod.config, existingComposeView, name)
-            null -> takeSnapshotOfView(existingComposeView, name)
+            null -> takeSnapshotWithComposeRuleIfPossible(existingComposeView, name)
         }
     }
 
-    private fun takeSnapshotOfView(view: View, name: String?) {
-        compareScreenshot(
-            view = view,
-            heightInPx = view.measuredHeight,
-            widthInPx = view.measuredWidth,
-            name = name,
-        )
+    private fun takeSnapshotWithComposeRuleIfPossible(
+        view: View,
+        name: String?,
+    ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            compareScreenshot(
+                rule = activityScenarioRule.composeRule,
+                name = name,
+            )
+        } else {
+            takeSnapshotWithCanvas(Bitmap.Config.ARGB_8888, view, name)
+        }
     }
 
     private fun takeSnapshotWithPixelCopy(
