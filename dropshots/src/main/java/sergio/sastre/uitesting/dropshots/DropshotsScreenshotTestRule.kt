@@ -30,11 +30,18 @@ class DropshotsScreenshotTestRule(
             .setInitialOrientation(config.orientation)
             .setUiMode(config.uiMode)
             .setFontSize(config.fontScale)
-            .launchConfiguredActivity()
+            .setDisplaySize(config.displaySize)
+            .launchConfiguredActivity(dropshotsConfig.backgroundColor)
     }
 
-    private val dropshotsRule: Dropshots by lazy {
-        Dropshots(resultValidator = dropshotsConfig.resultValidator)
+    private val dropshotsRule: DropshotsAPI29Fix by lazy {
+        DropshotsAPI29Fix(
+            Dropshots(
+                resultValidator = dropshotsConfig.resultValidator,
+                imageComparator = dropshotsConfig.imageComparator,
+                recordScreenshots = dropshotsConfig.recordScreenshots,
+            )
+        )
     }
 
     private var dropshotsConfig: DropshotsConfig = DropshotsConfig()
@@ -64,7 +71,7 @@ class DropshotsScreenshotTestRule(
                 .findViewById<ViewGroup>(android.R.id.content)
                 .getChildAt(0) as ComposeView
 
-        when(val bitmapCaptureMethod = dropshotsConfig.bitmapCaptureMethod){
+        when (val bitmapCaptureMethod = dropshotsConfig.bitmapCaptureMethod) {
             is BitmapCaptureMethod.Canvas ->
                 takeSnapshotWithCanvas(bitmapCaptureMethod.config, existingComposeView, name)
             is BitmapCaptureMethod.PixelCopy ->
