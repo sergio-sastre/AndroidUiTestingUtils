@@ -1,20 +1,20 @@
 plugins {
     id 'com.android.library'
-    id 'kotlin-android'
+    id 'org.jetbrains.kotlin.android'
     id 'maven-publish'
 }
 
 android {
+    namespace 'sergio.sastre.uitesting.roborazzi'
     compileSdk 33
 
     defaultConfig {
         minSdk 23
         targetSdk 33
-        versionCode 17
-        versionName "2.0.0-beta02"
+        versionCode 1
+        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -23,15 +23,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     kotlinOptions {
         jvmTarget = '1.8'
-        freeCompilerArgs += ["-Xjvm-default=all"]
     }
 
     buildFeatures {
@@ -45,22 +42,15 @@ android {
 }
 
 dependencies {
-    api 'androidx.appcompat:appcompat:1.7.0-alpha02'
-    api 'com.google.android.material:material:1.9.0'
-    api 'androidx.test:core:1.5.0'
+    implementation project(':utils')
+    implementation project(':robolectric')
+    implementation project(':sharedtest-roborazzi')
 
-    //noinspection GradleDependency
-    api ('androidx.core:core-ktx:1.9.0') {
-        because '1.10.0 causes troubles with Paparazzi'
-    }
-    api 'androidx.test.ext:junit:1.1.5'
+    api 'io.github.takahirom.roborazzi:roborazzi:1.2.0-rc-1'
     api 'androidx.test.espresso:espresso-core:3.5.1'
-    //noinspection GradleDependency
-    api ('androidx.compose.ui:ui-test-junit4:1.4.0') {
-        because 'it maches the compose compiler version'
-    }
-    api 'androidx.fragment:fragment-ktx:1.5.7'
-    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
+    api 'org.hamcrest:hamcrest:2.2'
+
+    api 'androidx.activity:activity-compose:1.7.1'
 }
 
 //https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/
@@ -68,7 +58,7 @@ publishing {
     publications {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
-            artifactId = "utils"
+            artifactId = "roborazzi"
             version = '2.0.0-beta03'
 
             afterEvaluate {

@@ -15,8 +15,6 @@
  */
 package sergio.sastre.uitesting.utils.crosslibrary.runners;
 
-import static sergio.sastre.uitesting.utils.crosslibrary.runners.PaparazziRuleFinder.usesPaparazzi;
-
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -26,13 +24,34 @@ import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
- * A JUnit4 runner for Android tests.
+ * A JUnit4 runner for Parameterized Cross-library screenshot tests.
+ *
+ * When running on the JVM, it will work out of the box in 99% of the use cases.
+ * There could be some issues though, if you have Paparazzi dependency/plugin in your module,
+ * but want to use Roborazzi for screenshot tests.
+ *
+ * In such cases, you can enforce this runner to use the correct underlying runner for the
+ * screenshot testing library in use (e.g. Roborazzi needs the
+ * ParameterizedRobolectricSharedTestRunner, but Paparazzi doesn't) by setting the
+ * system property "screenshotLibrary" to "paparazzi or "roborazzi" respectively.
+ *
+ * You can do this either programmatically in your test code:
+ *
+ *    System.setProperty("screenshotLibrary","roborazzi")
+ *
+ * or in gradle:
+ *
+ *   testOptions {
+ *      unitTests.all {
+ *         systemProperty "screenshotLibrary", "roborazzi"
+ *      }
+ *   }
+ *
  *
  * <p>This runner offers several features on top of the standard JUnit4 runner,
  *
@@ -48,30 +67,39 @@ import java.util.List;
  *
  * <p>Usage {@code @RunWith(AndroidJUnit4.class)}
  */
-public final class ParameterizedScreenshotTestAndroidJUnit4 extends Runner implements Filterable, Sortable {
+public final class ParameterizedCrossLibraryScreenshotTestRunner extends Runner implements Filterable, Sortable {
 
-    private static final String TAG = "ScreenshotTestAndroidJUnit4";
+    private static final String TAG = "ParameterizedCrossLibraryScreenshotTest";
 
     private final Runner delegate;
 
-    public ParameterizedScreenshotTestAndroidJUnit4(Class<?> klass) throws InitializationError {
+    public ParameterizedCrossLibraryScreenshotTestRunner(Class<?> klass) throws InitializationError {
         delegate = loadRunner(klass);
     }
 
-    private static String getRunnerClassName(Class<?> testClass) {
+    private static String getRunnerClassName() {
         String runnerClassName = System.getProperty("android.junit.runner", null);
         if (runnerClassName != null) {
             return runnerClassName;
         }
         if (!System.getProperty("java.runtime.name").toLowerCase().contains("android")) {
-            if (usesPaparazzi(testClass)) {
+            String screenshotLibrary = System.getProperty("screenshotLibrary");
+            if (screenshotLibrary != null) {
+                if (screenshotLibrary.equals("paparazzi")) {
+                    return "org.junit.runners.Parameterized";
+                } else if (screenshotLibrary.equals("roborazzi")) {
+                    return "sergio.sastre.uitesting.robolectric.runner.ParameterizedRobolectricSharedTestRunner";
+                }
+            }
+            if (hasClass("app.cash.paparazzi.Paparazzi")) {
                 return "org.junit.runners.Parameterized";
             }
-            if (hasClass("org.robolectric.ParameterizedRobolectricTestRunner")) {
-                return "org.robolectric.ParameterizedRobolectricTestRunner";
+            if (hasClass("sergio.sastre.uitesting.robolectric.runner.ParameterizedRobolectricSharedTestRunner")) {
+                return "sergio.sastre.uitesting.robolectric.runner.ParameterizedRobolectricSharedTestRunner";
             }
         }
-        // define the AndroidJunit4 runner in gradle
+        // WARNING: A instrumentationTestRunner that inherits from AndroidJunit4 runner must be
+        // defined in gradle for this to work
         return "org.junit.runners.Parameterized";
     }
 
@@ -84,7 +112,7 @@ public final class ParameterizedScreenshotTestAndroidJUnit4 extends Runner imple
     }
 
     private static Runner loadRunner(Class<?> testClass) throws InitializationError {
-        String runnerClassName = getRunnerClassName(testClass);
+        String runnerClassName = getRunnerClassName();
         return loadRunner(testClass, runnerClassName);
     }
 
