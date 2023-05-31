@@ -171,12 +171,10 @@ Currently, that's only possible with the following screenshot testing libraries 
 - [Roborazzi](https://github.com/takahirom/roborazzi)
 
 1. First of all, configure all the screenshot testing libraries you want your tests to support, as
-   if you'd write them with those specific libraries. It's recommended to configure max 1
-   on-device (i.e. Shot or Dropshots) and max 1 JVM libraries (i.e. Paparazzi) to avoid
-   misbehaviours when running their corresponding plugin tasks. If necessary, it's possible to
-   configure more
-   though<sup>2</sup>.</br>
-   Visit their respective Github pages for more info.</br></br>
+   if you'd write them with those specific libraries. Visit their respective Github pages for more info.</br></br>
+   It's recommended to configure max 1 on-device (i.e. Shot or Dropshots) and max 1 JVM library (i.e. Paparazzi) to avoid
+   misbehaviours when running their corresponding plugin gradle tasks. If necessary, it's possible to
+   configure more though<sup>2</sup>.</br>
 
 2. After that, include the following dependencies in the `build.gradle` of the module including the
    tests. Additionally, enable robolectric native graphics if using Roborazzi.
@@ -258,15 +256,15 @@ class CrossLibraryScreenshotTestRule(
    see [this section](#cross-library-beta).
 
 <sup>1</sup> Support for
-Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android),
-, ndpt [android-testify](https://github.com/ndtp/android-testify) and QuickBird
-Studios [snappy](https://github.com/QuickBirdEng/kotlin-snapshot-testing) is on the
-roadmap.</br></br>
-<sup>2</sup> You'll likely configure your screenshot tests to run with 1 on-device (i.e. either Shot or Dropshots) and 1 JVM libraries (i.e. Paparazzi). In that case, this is enough.</br>
-But if you need to run your tests with many on-device/JVM libraries i.e. Shot locally but Dropshots in the CI, you'll need some extra configuration to decide which library runs them. You can find an example of how to achieve it via a custom project gradle property passed via command line e.g. `-PscreenshotLibrary=shot`. In that case, check these links for advice on how to configure it:</br>
- - [build.gradle](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/build.gradle) 
- - [CrossLibraryScreenshotTestRule.kt](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/src/sharedTest/java/com/example/road/to/effective/snapshot/testing/lazycolumnscreen/crosslibrary/parameterized/CrossLibraryScreenshotTestRule.kt)
- - [Cross-library screenshot test example](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/src/sharedTest/java/com/example/road/to/effective/snapshot/testing/lazycolumnscreen/crosslibrary/parameterized/CoffeeDrinkListComposableParameterizedTest.kt)
+Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android), ndpt [android-testify](https://github.com/ndtp/android-testify) and QuickBird Studios [snappy](https://github.com/QuickBirdEng/kotlin-snapshot-testing) is on the roadmap.</br></br>
+<sup>2</sup> You'll likely configure your screenshot tests to run with 1 on-device (i.e. either Shot or Dropshots) and 1 JVM library (i.e. Paparazzi). In that case, this is enough.</br>
+But if you need to run your tests with many on-device/JVM libraries i.e. Shot locally but Dropshots in the CI, you'll need some extra configuration to decide which library runs them. You can find an example of how to achieve it via a custom project gradle property passed via command line e.g. `-PscreenshotLibrary=shot`. In that case, check these links for advice on how to configure the gradle file and the `SharedScreenshotTestRule`:</br>
+ - [build.gradle](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/build.gradle)
+ - [CrossLibraryScreenshotTestRule.kt](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/src/sharedTest/java/com/example/road/to/effective/snapshot/testing/lazycolumnscreen/crosslibrary/utils/CrossLibraryScreenshotTestRule.kt)
+
+And the corresponding executable examples:
+ - [Cross-library screenshot test example](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/src/sharedTest/java/com/example/road/to/effective/snapshot/testing/lazycolumnscreen/crosslibrary/CoffeeDrinkAppBarComposableTest.kt)
+ - [Parameterized Cross-library screenshot test example](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/src/sharedTest/java/com/example/road/to/effective/snapshot/testing/lazycolumnscreen/crosslibrary/parameterized/CoffeeDrinkListComposableParameterizedTest.kt)
 
 # Usage
 
