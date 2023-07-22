@@ -640,7 +640,10 @@ Activities/Fragments/ViewHolders/Views/Dialogs/Composables:
 1. `drawToBitmap(config = Bitmap.Config.ARGB_8888)` -> uses `Canvas` under the hood
 2. `drawToBitmapWithElevation(config = Bitmap.Config.ARGB_8888)` -> uses `PixelCopy` under the hood
 
-Differences between both might be specially noticeable in API 31:
+and one extra to fully screenshot a scrollable view:
+3. `drawFullScrollableToBitmap(config = Bitmap.Config.ARGB_8888)` -> uses `Canvas` under the hood
+
+Differences between Bitmaps generated via `Canvas` and `Pixel Copy` might be specially noticeable in API 31:
 <p align="center">
 <img width="350" src="https://user-images.githubusercontent.com/6097181/211920600-6cfcdde3-1fd6-4b23-84d1-3eae587c811d.png">
 </p>

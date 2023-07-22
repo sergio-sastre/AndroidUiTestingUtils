@@ -206,8 +206,10 @@ fun Dialog.drawToBitmapWithElevation(
  *
  * That's why Canvas is used instead.
  */
-fun View.drawFullScrollableToBitmap(): Bitmap =
-    waitForMeasuredView { this }.drawToBitmap()
+fun View.drawFullScrollableToBitmap(
+    config: Bitmap.Config = Bitmap.Config.ARGB_8888,
+): Bitmap =
+    waitForMeasuredView { this }.drawToBitmap(config)
 
 /**
  * Generates a bitmap of the [View] by using PixelCopy, which considers elevation on API 26+,
