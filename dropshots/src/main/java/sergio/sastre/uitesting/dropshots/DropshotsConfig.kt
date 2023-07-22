@@ -12,6 +12,5 @@ class DropshotsConfig(
     val resultValidator: ResultValidator = CountValidator(0),
     val imageComparator: ImageComparator = SimpleImageComparator(maxDistance = 0.004f),
     val bitmapCaptureMethod: BitmapCaptureMethod? = null,
-    val recordScreenshots: Boolean = false,
     @ColorInt val backgroundColor: Int? = null,
 ) : LibraryConfig

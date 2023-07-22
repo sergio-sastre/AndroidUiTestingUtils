@@ -39,7 +39,6 @@ class DropshotsScreenshotTestRule(
             Dropshots(
                 resultValidator = dropshotsConfig.resultValidator,
                 imageComparator = dropshotsConfig.imageComparator,
-                recordScreenshots = dropshotsConfig.recordScreenshots,
             )
         )
     }
