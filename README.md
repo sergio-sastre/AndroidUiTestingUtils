@@ -105,7 +105,7 @@ compileSdkVersion 33
 
 ```groovy
 dependencies {
-    androidTestImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0-beta03') {
+    androidTestImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0-beta04') {
         // if necessary, add this to avoid compose version clashes
         exclude group: 'androidx.compose.ui'
     }
@@ -151,8 +151,8 @@ similar to how you'd do it with on-device tests.
 For that, add the following dependencies in your `build.gradle`:
 
 ```kotlin
-testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0-beta03'
-testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:robolectric:2.0.0-beta03'
+testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0-beta04'
+testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:robolectric:2.0.0-beta04'
 ```
 
 You can find some examples in [this section](#robolectric-beta) as well as executable screenshot tests in the repo [Android screenshot testing playground](https://github.com/sergio-sastre/Android-screenshot-testing-playground) to try it on your own!
@@ -194,24 +194,25 @@ android {
 }
 
 dependencies {
-    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0-beta03')
+    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0-beta04')
 
     // NOTE: From here down, add only those for the libraries you're planning to use
 
     // For Shot support
-    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:shot:2.0.0-beta03')
+    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:shot:2.0.0-beta04')
 
     // For Dropshots support
-    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:dropshots:2.0.0-beta03')
+    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:dropshots:2.0.0-beta04')
 
-    // For Paparazzi support
-    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:sharedtest-paparazzi:2.0.0-beta03')
-    testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:paparazzi:2.0.0-beta03')
+    // For Paparazzi support 
+    // Use :paparazzi:2.0.0-beta03 if still using AGP 7.x instead of 8.x
+    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:sharedtest-paparazzi:2.0.0-beta04')
+    testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:paparazzi:2.0.0-beta04')
 
     // For Roborazzi support
-    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:sharedtest-roborazzi:2.0.0-beta03')
-    testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:robolectric:2.0.0-beta03')
-    testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:roborazzi:2.0.0-beta03')
+    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:sharedtest-roborazzi:2.0.0-beta04')
+    testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:robolectric:2.0.0-beta04')
+    testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:roborazzi:2.0.0-beta04')
 }
 ```
 
