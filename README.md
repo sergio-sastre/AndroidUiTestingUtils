@@ -205,7 +205,7 @@ dependencies {
     debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:dropshots:2.0.0-beta04')
 
     // For Paparazzi support 
-    // Use :paparazzi:2.0.0-beta03 if still using AGP 7.x instead of 8.x
+    // Use beta03 or before if still using AGP 7.x instead of AGP 8.x
     debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:sharedtest-paparazzi:2.0.0-beta04')
     testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:paparazzi:2.0.0-beta04')
 
