@@ -93,12 +93,10 @@ internal class PaparazziSharedTestAdapter(
             null -> SessionParams.RenderingMode.V_SCROLL
         }
 
-    fun asEnvironment(): Environment =
-        if (paparazziConfig.environment == null) {
-            detectEnvironment()
-        } else {
-            val environment = paparazziConfig.environment!!
-            Environment(
+    fun asEnvironment(): Environment {
+        val environment = detectEnvironment()
+        return if (paparazziConfig.environment != null) {
+            environment.copy(
                 platformDir = environment.platformDir,
                 appTestDir = environment.appTestDir,
                 resDir = environment.resDir,
@@ -107,5 +105,8 @@ internal class PaparazziSharedTestAdapter(
                 compileSdkVersion = environment.compileSdkVersion,
                 resourcePackageNames = environment.resourcePackageNames,
             )
+        } else {
+            environment
         }
+    }
 }

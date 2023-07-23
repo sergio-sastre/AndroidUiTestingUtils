@@ -14,14 +14,14 @@ import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
 import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfig
 import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioForComposableRule
 import sergio.sastre.uitesting.utils.activityscenario.ComposableConfigItem
-import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRule
+import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRuleForComposable
 import sergio.sastre.uitesting.utils.utils.drawToBitmapWithElevation
 import sergio.sastre.uitesting.utils.utils.waitForActivity
 import sergio.sastre.uitesting.utils.utils.waitForComposeView
 
-class ShotScreenshotTestRule(
+class ShotScreenshotTestRuleForComposable(
     override val config: ScreenshotConfig,
-) : ScreenshotTestRule(config), ScreenshotTest {
+) : ScreenshotTestRuleForComposable(config), ScreenshotTest {
 
     override val ignoredViews: List<Int>
         get() = shotConfig.ignoredViews
@@ -108,7 +108,7 @@ class ShotScreenshotTestRule(
         )
     }
 
-    override fun configure(config: LibraryConfig): ScreenshotTestRule = apply {
+    override fun configure(config: LibraryConfig): ScreenshotTestRuleForComposable = apply {
         if (config is ShotConfig) {
             shotConfig = config
         }

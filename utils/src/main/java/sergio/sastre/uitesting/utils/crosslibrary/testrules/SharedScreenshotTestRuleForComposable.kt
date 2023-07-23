@@ -7,15 +7,15 @@ import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
 import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfig
 import java.util.*
 
-abstract class SharedScreenshotTestRule(
+abstract class SharedScreenshotTestRuleForComposable(
     override val config: ScreenshotConfig,
-) : ScreenshotTestRule(config) {
+) : ScreenshotTestRuleForComposable(config) {
 
     companion object ScreenshotTestRuleClassPath {
-        const val PAPARAZZI = "sergio.sastre.uitesting.paparazzi.PaparazziScreenshotTestRule";
-        const val SHOT = "sergio.sastre.uitesting.shot.ShotScreenshotTestRule";
-        const val DROPSHOTS = "sergio.sastre.uitesting.dropshots.DropshotsScreenshotTestRule";
-        const val ROBORAZZI = "sergio.sastre.uitesting.roborazzi.RoborazziScreenshotTestRule";
+        const val PAPARAZZI = "sergio.sastre.uitesting.paparazzi.PaparazziScreenshotTestRuleForComposable";
+        const val SHOT = "sergio.sastre.uitesting.shot.ShotScreenshotTestRuleForComposable";
+        const val DROPSHOTS = "sergio.sastre.uitesting.dropshots.DropshotsScreenshotTestRuleForComposable";
+        const val ROBORAZZI = "sergio.sastre.uitesting.roborazzi.RoborazziScreenshotTestRuleForComposable";
     }
 
     val dropshotsScreenshotTestRule
@@ -33,13 +33,13 @@ abstract class SharedScreenshotTestRule(
     fun getScreenshotTestRuleClassForName(
         className: String,
         config: ScreenshotConfig,
-    ): ScreenshotTestRule {
+    ): ScreenshotTestRuleForComposable {
         return Class.forName(className)
             .getConstructor(ScreenshotConfig::class.java)
-            .newInstance(config) as ScreenshotTestRule
+            .newInstance(config) as ScreenshotTestRuleForComposable
     }
 
-    private val factory: ScreenshotTestRule by lazy {
+    private val factory: ScreenshotTestRuleForComposable by lazy {
         if (isRunningOnJvm()) {
             getJvmScreenshotTestRule(config)
         } else {
@@ -47,9 +47,9 @@ abstract class SharedScreenshotTestRule(
         }
     }
 
-    abstract fun getJvmScreenshotTestRule(config: ScreenshotConfig): ScreenshotTestRule
+    abstract fun getJvmScreenshotTestRule(config: ScreenshotConfig): ScreenshotTestRuleForComposable
 
-    abstract fun getInstrumentedScreenshotTestRule(config: ScreenshotConfig): ScreenshotTestRule
+    abstract fun getInstrumentedScreenshotTestRule(config: ScreenshotConfig): ScreenshotTestRuleForComposable
 
     private fun isRunningOnJvm(): Boolean =
         System.getProperty("java.runtime.name")
@@ -60,7 +60,7 @@ abstract class SharedScreenshotTestRule(
         return factory.apply(base, description)
     }
 
-    override fun configure(config: LibraryConfig): ScreenshotTestRule {
+    override fun configure(config: LibraryConfig): ScreenshotTestRuleForComposable {
         return factory.configure(config)
     }
 

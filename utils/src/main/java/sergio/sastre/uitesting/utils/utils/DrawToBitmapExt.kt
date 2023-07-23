@@ -197,6 +197,21 @@ fun Dialog.drawToBitmapWithElevation(
     window!!.decorView.drawToBitmapWithElevation(window!!, config)
 
 /**
+ * Forces the Scrollable View to be remeasured & waits for the Ui thread to be Idle.
+ * Then, it draws a bitmap via Canvas out of it.
+ *
+ * This is necessary to take a screenshot with the expected size of the scrollable view.
+ * The scrollable view is likely to expand beyond the window size. Therefore, do drawing a bitmap with
+ * elevation via PixelCopy would distort the image.
+ *
+ * That's why Canvas is used instead.
+ */
+fun View.drawFullScrollableToBitmap(
+    config: Bitmap.Config = Bitmap.Config.ARGB_8888,
+): Bitmap =
+    waitForMeasuredView { this }.drawToBitmap(config)
+
+/**
  * Generates a bitmap of the [View] by using PixelCopy, which considers elevation on API 26+,
  * defaults to Canvas on lower APIs.
  *

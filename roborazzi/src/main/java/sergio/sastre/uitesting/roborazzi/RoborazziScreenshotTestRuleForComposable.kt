@@ -2,6 +2,7 @@ package sergio.sastre.uitesting.roborazzi
 
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.test.onRoot
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
@@ -11,15 +12,14 @@ import sergio.sastre.uitesting.sharedtest.roborazzi.RoborazziConfig
 import sergio.sastre.uitesting.utils.activityscenario.ComposableConfigItem
 import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
 import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfig
-import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRule
+import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRuleForComposable
 import sergio.sastre.uitesting.utils.utils.waitForActivity
-import sergio.sastre.uitesting.utils.utils.waitForComposeView
 
-class RoborazziScreenshotTestRule(
+class RoborazziScreenshotTestRuleForComposable(
     override val config: ScreenshotConfig = ScreenshotConfig(),
-) : ScreenshotTestRule(config) {
+) : ScreenshotTestRuleForComposable(config) {
 
-    private val activityScenario: RobolectricActivityScenarioForComposableRule by lazy {
+    private val activityScenarioRule: RobolectricActivityScenarioForComposableRule by lazy {
         RobolectricActivityScenarioForComposableRule(
             config = ComposableConfigItem(
                 orientation = config.orientation,
@@ -40,28 +40,28 @@ class RoborazziScreenshotTestRule(
     private var roborazziConfig: RoborazziConfig = RoborazziConfig()
 
     override fun apply(base: Statement?, description: Description?): Statement =
-        activityScenario.apply(base, description)
+        activityScenarioRule.apply(base, description)
 
     override fun snapshot(composable: @Composable () -> Unit) {
         snapshot(null, composable)
     }
 
     override fun snapshot(name: String?, composable: @Composable () -> Unit) {
-        val existingComposeView =
-            activityScenario.activityScenario
-                .onActivity {
-                    it.setContent { composable.invoke() }
-                }
-                .waitForActivity()
-                .waitForComposeView()
+        activityScenarioRule.activityScenario
+            .onActivity {
+                it.setContent { composable.invoke() }
+            }
+            .waitForActivity()
 
-        existingComposeView.captureRoboImage(
-            filePath = "${roborazziConfig.filePath}$name.png",
-            roborazziOptions = roborazziAdapter.asRoborazziOptions(),
-        )
+        activityScenarioRule.composeRule
+            .onRoot()
+            .captureRoboImage(
+                filePath = "${roborazziConfig.filePath}$name.png",
+                roborazziOptions = roborazziAdapter.asRoborazziOptions(),
+            )
     }
 
-    override fun configure(config: LibraryConfig): ScreenshotTestRule = apply {
+    override fun configure(config: LibraryConfig): ScreenshotTestRuleForComposable = apply {
         if (config is RoborazziConfig) {
             roborazziConfig = config
         }

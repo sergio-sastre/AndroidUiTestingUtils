@@ -11,8 +11,8 @@ android {
     defaultConfig {
         minSdk 23
         targetSdk 33
-        versionCode 18
-        versionName "2.0.0-beta03"
+        versionCode 19
+        versionName "2.0.0-beta04"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -46,7 +46,7 @@ dependencies {
     implementation project(':robolectric')
     implementation project(':sharedtest-roborazzi')
 
-    api 'io.github.takahirom.roborazzi:roborazzi:1.2.0-rc-1'
+    api 'io.github.takahirom.roborazzi:roborazzi:1.4.0-alpha-5'
     api 'androidx.test.espresso:espresso-core:3.5.1'
     api 'org.hamcrest:hamcrest:2.2'
 
@@ -59,7 +59,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "roborazzi"
-            version = '2.0.0-beta03'
+            version = '2.0.0-beta04'
 
             afterEvaluate {
                 from components.release
