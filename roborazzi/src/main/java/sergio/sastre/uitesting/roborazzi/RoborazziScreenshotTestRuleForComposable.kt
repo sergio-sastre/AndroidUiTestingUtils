@@ -12,13 +12,12 @@ import sergio.sastre.uitesting.sharedtest.roborazzi.RoborazziConfig
 import sergio.sastre.uitesting.utils.activityscenario.ComposableConfigItem
 import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
 import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfig
-import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRule
+import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRuleForComposable
 import sergio.sastre.uitesting.utils.utils.waitForActivity
-import sergio.sastre.uitesting.utils.utils.waitForComposeView
 
-class RoborazziScreenshotTestRule(
+class RoborazziScreenshotTestRuleForComposable(
     override val config: ScreenshotConfig = ScreenshotConfig(),
-) : ScreenshotTestRule(config) {
+) : ScreenshotTestRuleForComposable(config) {
 
     private val activityScenarioRule: RobolectricActivityScenarioForComposableRule by lazy {
         RobolectricActivityScenarioForComposableRule(
@@ -62,7 +61,7 @@ class RoborazziScreenshotTestRule(
             )
     }
 
-    override fun configure(config: LibraryConfig): ScreenshotTestRule = apply {
+    override fun configure(config: LibraryConfig): ScreenshotTestRuleForComposable = apply {
         if (config is RoborazziConfig) {
             roborazziConfig = config
         }

@@ -11,11 +11,11 @@ import androidx.compose.runtime.Composable
 import sergio.sastre.uitesting.paparazzi.config.PaparazziTestRuleGenerator
 import sergio.sastre.uitesting.sharedtest.paparazzi.PaparazziConfig
 import sergio.sastre.uitesting.utils.common.DisplaySize
-import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRule
+import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRuleForComposable
 
-class PaparazziScreenshotTestRule(
+class PaparazziScreenshotTestRuleForComposable(
     override val config: ScreenshotConfig = ScreenshotConfig(),
-) : ScreenshotTestRule(config) {
+) : ScreenshotTestRuleForComposable(config) {
 
     private var paparazziConfig = PaparazziConfig()
 
@@ -45,7 +45,7 @@ class PaparazziScreenshotTestRule(
         paparazziTestRule.snapshot { composable() }
     }
 
-    override fun configure(config: LibraryConfig): ScreenshotTestRule = apply {
+    override fun configure(config: LibraryConfig): ScreenshotTestRuleForComposable = apply {
         if (config is PaparazziConfig) {
             paparazziConfig = config
         }

@@ -16,13 +16,13 @@ import sergio.sastre.uitesting.utils.crosslibrary.config.BitmapCaptureMethod
 import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
 import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfig
 import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioConfigurator
-import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRule
+import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRuleForComposable
 import sergio.sastre.uitesting.utils.utils.drawToBitmapWithElevation
 import sergio.sastre.uitesting.utils.utils.waitForActivity
 
-class DropshotsScreenshotTestRule(
+class DropshotsScreenshotTestRuleForComposable(
     override val config: ScreenshotConfig = ScreenshotConfig(),
-) : ScreenshotTestRule(config) {
+) : ScreenshotTestRuleForComposable(config) {
 
     private val activityScenario: ActivityScenario<out ComponentActivity> by lazy {
         ActivityScenarioConfigurator.ForComposable()
@@ -100,7 +100,7 @@ class DropshotsScreenshotTestRule(
         )
     }
 
-    override fun configure(config: LibraryConfig): ScreenshotTestRule = apply {
+    override fun configure(config: LibraryConfig): ScreenshotTestRuleForComposable = apply {
         if (config is DropshotsConfig) {
             dropshotsConfig = config
         }
