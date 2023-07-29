@@ -1,36 +1,24 @@
 package sergio.sastre.uitesting.paparazzi
 
-import android.content.Context
-import android.content.res.Configuration
 import app.cash.paparazzi.Paparazzi
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
-import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfig
+import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfigForComposable
 import androidx.compose.runtime.Composable
 import sergio.sastre.uitesting.paparazzi.config.PaparazziTestRuleGenerator
 import sergio.sastre.uitesting.sharedtest.paparazzi.PaparazziConfig
-import sergio.sastre.uitesting.utils.common.DisplaySize
 import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRuleForComposable
 
 class PaparazziScreenshotTestRuleForComposable(
-    override val config: ScreenshotConfig = ScreenshotConfig(),
+    override val config: ScreenshotConfigForComposable = ScreenshotConfigForComposable(),
 ) : ScreenshotTestRuleForComposable(config) {
 
     private var paparazziConfig = PaparazziConfig()
 
     private val paparazziTestRule: Paparazzi by lazy {
-        PaparazziTestRuleGenerator(config, paparazziConfig).generatePaparazziTestRule()
+        PaparazziTestRuleGenerator(paparazziConfig).generatePaparazziTestRule(config)
     }
-
-    @Suppress("DEPRECATION")
-    private fun Context.setDisplaySize(displaySize: DisplaySize) =
-        this.apply {
-            val density = resources.configuration.densityDpi
-            val config = Configuration(resources.configuration)
-            config.densityDpi = (density * displaySize.value.toFloat()).toInt()
-            resources.updateConfiguration(config, resources.displayMetrics)
-        }
 
     override fun apply(base: Statement, description: Description): Statement =
         paparazziTestRule.apply(base, description)

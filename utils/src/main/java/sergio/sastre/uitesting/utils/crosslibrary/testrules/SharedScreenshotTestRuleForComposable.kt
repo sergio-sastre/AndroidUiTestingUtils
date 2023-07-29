@@ -4,11 +4,11 @@ import androidx.compose.runtime.Composable
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
-import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfig
+import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfigForComposable
 import java.util.*
 
 abstract class SharedScreenshotTestRuleForComposable(
-    override val config: ScreenshotConfig,
+    override val config: ScreenshotConfigForComposable,
 ) : ScreenshotTestRuleForComposable(config) {
 
     companion object ScreenshotTestRuleClassPath {
@@ -32,10 +32,10 @@ abstract class SharedScreenshotTestRuleForComposable(
 
     fun getScreenshotTestRuleClassForName(
         className: String,
-        config: ScreenshotConfig,
+        config: ScreenshotConfigForComposable,
     ): ScreenshotTestRuleForComposable {
         return Class.forName(className)
-            .getConstructor(ScreenshotConfig::class.java)
+            .getConstructor(ScreenshotConfigForComposable::class.java)
             .newInstance(config) as ScreenshotTestRuleForComposable
     }
 
@@ -47,9 +47,9 @@ abstract class SharedScreenshotTestRuleForComposable(
         }
     }
 
-    abstract fun getJvmScreenshotTestRule(config: ScreenshotConfig): ScreenshotTestRuleForComposable
+    abstract fun getJvmScreenshotTestRule(config: ScreenshotConfigForComposable): ScreenshotTestRuleForComposable
 
-    abstract fun getInstrumentedScreenshotTestRule(config: ScreenshotConfig): ScreenshotTestRuleForComposable
+    abstract fun getInstrumentedScreenshotTestRule(config: ScreenshotConfigForComposable): ScreenshotTestRuleForComposable
 
     private fun isRunningOnJvm(): Boolean =
         System.getProperty("java.runtime.name")

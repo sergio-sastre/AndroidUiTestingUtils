@@ -1,12 +1,15 @@
 package sergio.sastre.uitesting.utils.crosslibrary.config
 
+import androidx.annotation.StyleRes
+import sergio.sastre.uitesting.utils.activityscenario.ComposableConfigItem
+import sergio.sastre.uitesting.utils.activityscenario.ViewConfigItem
 import sergio.sastre.uitesting.utils.common.DisplaySize
 import sergio.sastre.uitesting.utils.common.FontSize
 import sergio.sastre.uitesting.utils.common.Orientation
 import sergio.sastre.uitesting.utils.common.UiMode
 
 /**
- * Configuration that all screenshot libraries support for library-agnostic screenshot tests.
+ * Configuration that all screenshot libraries support for cross-library screenshot tests.
  *
  * Warning: The locale should be in IEFT BCP 47 format:
  * language-extlang-script-region-variant-extension-privateuse
@@ -17,10 +20,21 @@ import sergio.sastre.uitesting.utils.common.UiMode
  * ca-ES-valencia // for Catalan spoken in Valencia
  *
  */
-class ScreenshotConfig(
+data class ScreenshotConfigForView(
     val orientation: Orientation = Orientation.PORTRAIT,
     val uiMode: UiMode = UiMode.DAY,
-    val fontScale: FontSize = FontSize.NORMAL,
     val locale: String = "en",
+    val fontSize: FontSize = FontSize.NORMAL,
     val displaySize: DisplaySize = DisplaySize.NORMAL,
-)
+    @StyleRes val theme: Int? = null,
+) {
+    fun toViewConfig(): ViewConfigItem =
+        ViewConfigItem(
+            orientation = orientation,
+            uiMode = uiMode,
+            locale = locale,
+            fontSize = fontSize,
+            displaySize = displaySize,
+            theme = theme,
+        )
+}

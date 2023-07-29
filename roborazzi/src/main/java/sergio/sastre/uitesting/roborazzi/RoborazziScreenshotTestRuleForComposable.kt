@@ -9,25 +9,18 @@ import org.junit.runners.model.Statement
 import sergio.sastre.uitesting.robolectric.activityscenario.RobolectricActivityScenarioForComposableRule
 import sergio.sastre.uitesting.roborazzi.config.RoborazziSharedTestAdapter
 import sergio.sastre.uitesting.sharedtest.roborazzi.RoborazziConfig
-import sergio.sastre.uitesting.utils.activityscenario.ComposableConfigItem
 import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
-import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfig
+import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfigForComposable
 import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRuleForComposable
 import sergio.sastre.uitesting.utils.utils.waitForActivity
 
 class RoborazziScreenshotTestRuleForComposable(
-    override val config: ScreenshotConfig = ScreenshotConfig(),
+    override val config: ScreenshotConfigForComposable = ScreenshotConfigForComposable(),
 ) : ScreenshotTestRuleForComposable(config) {
 
     private val activityScenarioRule: RobolectricActivityScenarioForComposableRule by lazy {
         RobolectricActivityScenarioForComposableRule(
-            config = ComposableConfigItem(
-                orientation = config.orientation,
-                uiMode = config.uiMode,
-                locale = config.locale,
-                fontSize = config.fontScale,
-                displaySize = config.displaySize,
-            ),
+            config = config.toComposableConfig(),
             deviceScreen = roborazziAdapter.asDeviceScreen(),
             backgroundColor = roborazziConfig.backgroundColor,
         )
@@ -53,7 +46,8 @@ class RoborazziScreenshotTestRuleForComposable(
             }
             .waitForActivity()
 
-        activityScenarioRule.composeRule
+        activityScenarioRule
+            .composeRule
             .onRoot()
             .captureRoboImage(
                 filePath = "${roborazziConfig.filePath}$name.png",

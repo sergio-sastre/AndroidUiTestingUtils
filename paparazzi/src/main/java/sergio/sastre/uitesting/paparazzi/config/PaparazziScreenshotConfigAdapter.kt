@@ -4,20 +4,29 @@ import com.android.resources.NightMode
 import com.android.resources.ScreenOrientation
 import com.android.resources.ScreenOrientation.*
 import sergio.sastre.uitesting.sharedtest.paparazzi.PaparazziConfig
-import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfig
+import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfigForComposable
 import sergio.sastre.uitesting.utils.common.Orientation
 import sergio.sastre.uitesting.utils.common.UiMode
+import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfigForView
 
 internal class PaparazziScreenshotConfigAdapter(
     private val paparazziConfig: PaparazziConfig
 ) {
 
-    fun getDeviceConfigFor(screenshotConfig: ScreenshotConfig): app.cash.paparazzi.DeviceConfig =
+    fun getDeviceConfigFor(screenshotConfigForComposable: ScreenshotConfigForComposable): app.cash.paparazzi.DeviceConfig =
         PaparazziSharedTestAdapter(paparazziConfig).asPaparazziDeviceConfig().copy(
-            orientation = screenshotConfig.orientation.toScreenOrientation(),
-            nightMode = screenshotConfig.uiMode.toNightMode(),
-            fontScale = screenshotConfig.fontScale.value.toFloat(),
-            locale = screenshotConfig.locale.toBC47Locale(),
+            orientation = screenshotConfigForComposable.orientation.toScreenOrientation(),
+            nightMode = screenshotConfigForComposable.uiMode.toNightMode(),
+            fontScale = screenshotConfigForComposable.fontScale.value.toFloat(),
+            locale = screenshotConfigForComposable.locale.toBC47Locale(),
+        ).adjustDimensionsToOrientation()
+
+    fun getDeviceConfigFor(screenshotConfigForView: ScreenshotConfigForView): app.cash.paparazzi.DeviceConfig =
+        PaparazziSharedTestAdapter(paparazziConfig).asPaparazziDeviceConfig().copy(
+            orientation = screenshotConfigForView.orientation.toScreenOrientation(),
+            nightMode = screenshotConfigForView.uiMode.toNightMode(),
+            fontScale = screenshotConfigForView.fontSize.value.toFloat(),
+            locale = screenshotConfigForView.locale.toBC47Locale(),
         ).adjustDimensionsToOrientation()
 
     private fun app.cash.paparazzi.DeviceConfig.adjustDimensionsToOrientation()
