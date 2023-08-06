@@ -33,6 +33,8 @@ class RoborazziScreenshotTestRuleForView(
 
     private var roborazziConfig: RoborazziConfig = RoborazziConfig()
 
+    private val filePathGenerator: FilePathGenerator = FilePathGenerator()
+
     override fun apply(base: Statement?, description: Description?): Statement =
         activityScenarioRule.apply(base, description)
 
@@ -55,7 +57,7 @@ class RoborazziScreenshotTestRuleForView(
         dialog
             .drawToBitmap()
             .captureRoboImage(
-                filePath = "${roborazziConfig.filePath}$name.png",
+                filePath = filePathGenerator.invoke(roborazziConfig.filePath, name),
                 roborazziOptions = roborazziAdapter.asRoborazziOptions(),
             )
     }
@@ -63,7 +65,7 @@ class RoborazziScreenshotTestRuleForView(
     override fun snapshotView(name: String?, view: View) {
         view
             .captureRoboImage(
-                filePath = "${roborazziConfig.filePath}$name.png",
+                filePath = filePathGenerator.invoke(roborazziConfig.filePath, name),
                 roborazziOptions = roborazziAdapter.asRoborazziOptions(),
             )
     }
@@ -72,7 +74,7 @@ class RoborazziScreenshotTestRuleForView(
         viewHolder
             .itemView
             .captureRoboImage(
-                filePath = "${roborazziConfig.filePath}$name.png",
+                filePath = filePathGenerator.invoke(roborazziConfig.filePath, name),
                 roborazziOptions = roborazziAdapter.asRoborazziOptions(),
             )
     }

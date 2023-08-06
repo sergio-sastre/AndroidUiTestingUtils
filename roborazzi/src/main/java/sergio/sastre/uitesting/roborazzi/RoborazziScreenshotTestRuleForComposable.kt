@@ -13,6 +13,7 @@ import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
 import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfigForComposable
 import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRuleForComposable
 import sergio.sastre.uitesting.utils.utils.waitForActivity
+import java.io.File
 
 class RoborazziScreenshotTestRuleForComposable(
     override val config: ScreenshotConfigForComposable = ScreenshotConfigForComposable(),
@@ -32,6 +33,8 @@ class RoborazziScreenshotTestRuleForComposable(
 
     private var roborazziConfig: RoborazziConfig = RoborazziConfig()
 
+    private val filePathGenerator: FilePathGenerator = FilePathGenerator()
+
     override fun apply(base: Statement?, description: Description?): Statement =
         activityScenarioRule.apply(base, description)
 
@@ -50,7 +53,7 @@ class RoborazziScreenshotTestRuleForComposable(
             .composeRule
             .onRoot()
             .captureRoboImage(
-                filePath = "${roborazziConfig.filePath}$name.png",
+                filePath = filePathGenerator.invoke(roborazziConfig.filePath, name),
                 roborazziOptions = roborazziAdapter.asRoborazziOptions(),
             )
     }

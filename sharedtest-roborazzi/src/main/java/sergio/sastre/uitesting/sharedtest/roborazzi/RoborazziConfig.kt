@@ -13,6 +13,6 @@ data class RoborazziConfig(
 ) : LibraryConfig {
 
     companion object {
-        const val DEFAULT_ROBORAZZI_OUTPUT_DIR_PATH = "build/outputs/roborazzi/"
+        const val DEFAULT_ROBORAZZI_OUTPUT_DIR_PATH = "build/outputs/roborazzi"
     }
 }
