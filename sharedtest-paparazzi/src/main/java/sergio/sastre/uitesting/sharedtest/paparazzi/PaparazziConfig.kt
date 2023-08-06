@@ -22,7 +22,13 @@ import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
 class PaparazziConfig(
     val maxPercentageDiff: Double = 0.1,
     val deviceConfig: DeviceConfig = DeviceConfig.NEXUS_5,
-    val softButtons: Boolean = false,
+    val deviceSystemUiVisibility: DeviceSystemUiVisibility = DeviceSystemUiVisibility(),
     val renderingMode: RenderingMode? = null,
     val environment: Environment? = null,
+    val snapshotViewOffsetMillis: Long = 0L,
 ) : LibraryConfig
+
+data class DeviceSystemUiVisibility(
+    val softButtons: Boolean = false,
+    val systemUi: Boolean = false,
+)

@@ -1,7 +1,7 @@
 package sergio.sastre.uitesting.utils.crosslibrary.config
 
-import androidx.annotation.StyleRes
-import sergio.sastre.uitesting.utils.activityscenario.ComposableConfigItem
+import android.annotation.SuppressLint
+import androidx.test.platform.app.InstrumentationRegistry
 import sergio.sastre.uitesting.utils.activityscenario.ViewConfigItem
 import sergio.sastre.uitesting.utils.common.DisplaySize
 import sergio.sastre.uitesting.utils.common.FontSize
@@ -13,6 +13,9 @@ import sergio.sastre.uitesting.utils.common.UiMode
  *
  * Warning: The locale should be in IEFT BCP 47 format:
  * language-extlang-script-region-variant-extension-privateuse
+ *
+ * Warning: The Theme should be in in string form, as accepted by Paparazzi, for instance:
+ * "Theme.Custom" or "android:Theme.Material.NoActionBar.Fullscreen"
  *
  * For instance:
  * sr-Cyrl-RS // for Serbian written in Cyrillic
@@ -26,8 +29,9 @@ data class ScreenshotConfigForView(
     val locale: String = "en",
     val fontSize: FontSize = FontSize.NORMAL,
     val displaySize: DisplaySize = DisplaySize.NORMAL,
-    @StyleRes val theme: Int? = null,
+    val theme: String? = null,
 ) {
+    @SuppressLint("DiscouragedApi")
     fun toViewConfig(): ViewConfigItem =
         ViewConfigItem(
             orientation = orientation,
@@ -35,6 +39,17 @@ data class ScreenshotConfigForView(
             locale = locale,
             fontSize = fontSize,
             displaySize = displaySize,
-            theme = theme,
+            theme = theme
+                ?.let {
+                    val styleRes = "${context.packageName}:style/${it.replace("_",".")}"
+                    context.resources.getIdentifier(
+                        styleRes,
+                        "style",
+                        context.packageName
+                    )
+                }
         )
+
+    private val context
+        get() = InstrumentationRegistry.getInstrumentation().targetContext
 }

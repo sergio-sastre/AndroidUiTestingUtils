@@ -17,8 +17,10 @@ internal class PaparazziTestRuleGenerator(
     ): Paparazzi =
         Paparazzi(
             deviceConfig = configAdapter.getDeviceConfigFor(screenshotConfigForComposable).copy(
-                softButtons = paparazziConfig.softButtons,
+                softButtons = paparazziConfig.deviceSystemUiVisibility.softButtons,
             ),
+            showSystemUi =  paparazziConfig.deviceSystemUiVisibility.systemUi,
+            supportsRtl = true,
             renderingMode = sharedTestAdapter.asRenderingMode(),
             maxPercentDifference = paparazziConfig.maxPercentageDiff,
             environment = sharedTestAdapter.asEnvironment(),
@@ -27,17 +29,16 @@ internal class PaparazziTestRuleGenerator(
     fun generatePaparazziTestRule(
         screenshotConfigForView: ScreenshotConfigForView,
     ): Paparazzi {
-        // TODO
-        //val theme = screenshotConfigForView.theme ?: "android:Theme.Material.NoActionBar.Fullscreen"
         return Paparazzi(
             deviceConfig = configAdapter.getDeviceConfigFor(screenshotConfigForView).copy(
-                softButtons = paparazziConfig.softButtons,
+                softButtons = paparazziConfig.deviceSystemUiVisibility.softButtons,
             ),
-            //theme = ,
+            showSystemUi =  paparazziConfig.deviceSystemUiVisibility.systemUi,
+            supportsRtl = true,
+            theme = screenshotConfigForView.theme ?: "android:Theme.Material.NoActionBar.Fullscreen",
             renderingMode = sharedTestAdapter.asRenderingMode(),
             maxPercentDifference = paparazziConfig.maxPercentageDiff,
             environment = sharedTestAdapter.asEnvironment(),
         )
     }
-
 }

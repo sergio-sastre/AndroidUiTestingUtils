@@ -95,18 +95,27 @@ internal class PaparazziSharedTestAdapter(
 
     fun asEnvironment(): Environment {
         val environment = detectEnvironment()
-        return if (paparazziConfig.environment != null) {
-            environment.copy(
-                platformDir = environment.platformDir,
-                appTestDir = environment.appTestDir,
-                resDir = environment.resDir,
-                assetsDir = environment.assetsDir,
-                packageName = environment.packageName,
-                compileSdkVersion = environment.compileSdkVersion,
-                resourcePackageNames = environment.resourcePackageNames,
-            )
-        } else {
-            environment
-        }
+        val configEnvironment = paparazziConfig.environment
+        return environment.copy(
+            platformDir = configEnvironment?.platformDir ?: environment.platformDir,
+            appTestDir = configEnvironment?.appTestDir ?: environment.appTestDir,
+            resDir = configEnvironment?.resDir ?: environment.resDir,
+            assetsDir = configEnvironment?.assetsDir ?: environment.assetsDir,
+            packageName = configEnvironment?.packageName ?: environment.packageName,
+            compileSdkVersion = configEnvironment?.compileSdkVersion
+                ?: environment.compileSdkVersion,
+            resourcePackageNames = configEnvironment?.resourcePackageNames
+                ?: environment.resourcePackageNames,
+            localResourceDirs = configEnvironment?.localResourceDirs
+                ?: environment.localResourceDirs,
+            moduleResourceDirs = configEnvironment?.moduleResourceDirs
+                ?: environment.moduleResourceDirs,
+            libraryResourceDirs = configEnvironment?.libraryResourceDirs
+                ?: environment.libraryResourceDirs,
+            allModuleAssetDirs = configEnvironment?.allModuleAssetDirs
+                ?: environment.allModuleAssetDirs,
+            libraryAssetDirs = configEnvironment?.libraryAssetDirs
+                ?: environment.libraryAssetDirs,
+        )
     }
 }

@@ -5,6 +5,8 @@ import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import app.cash.paparazzi.Paparazzi
+import org.junit.runner.Description
+import org.junit.runners.model.Statement
 import sergio.sastre.uitesting.paparazzi.config.PaparazziTestRuleGenerator
 import sergio.sastre.uitesting.sharedtest.paparazzi.PaparazziConfig
 import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
@@ -18,41 +20,52 @@ class PaparazziScreenshotTestRuleForView(
     private var paparazziConfig = PaparazziConfig()
 
     private val paparazziTestRule: Paparazzi by lazy {
-        PaparazziTestRuleGenerator(config, paparazziConfig).generatePaparazziTestRule()
+        PaparazziTestRuleGenerator(paparazziConfig).generatePaparazziTestRule(config)
     }
+
+    override fun apply(base: Statement, description: Description): Statement =
+        paparazziTestRule.apply(base, description)
 
     override val context: Context
-        get() = TODO("Not yet implemented")
+        get() = paparazziTestRule.context
 
-    override fun inflate(layoutId: Int): View {
-        TODO("Not yet implemented")
-    }
+    override fun inflate(layoutId: Int): View =
+        paparazziTestRule.inflate(layoutId)
 
-    override fun waitForMeasuredView(actionToDo: () -> View): View {
-        TODO("Not yet implemented")
-    }
+    override fun waitForMeasuredView(actionToDo: () -> View): View = actionToDo()
 
-    override fun waitForMeasuredDialog(actionToDo: () -> Dialog): Dialog {
-        TODO("Not yet implemented")
-    }
+    override fun waitForMeasuredDialog(actionToDo: () -> Dialog): Dialog = actionToDo()
 
-    override fun waitForMeasuredViewHolder(actionToDo: () -> RecyclerView.ViewHolder): RecyclerView.ViewHolder {
-        TODO("Not yet implemented")
-    }
+    override fun waitForMeasuredViewHolder(actionToDo: () -> RecyclerView.ViewHolder): RecyclerView.ViewHolder =
+        actionToDo()
 
     override fun snapshotDialog(name: String?, dialog: Dialog) {
-        TODO("Not yet implemented")
+        paparazziTestRule.snapshot(
+            name = name,
+            view = dialog.window!!.decorView,
+            offsetMillis = paparazziConfig.snapshotViewOffsetMillis,
+        )
     }
 
     override fun snapshotView(name: String?, view: View) {
-        TODO("Not yet implemented")
+        paparazziTestRule.snapshot(
+            name = name,
+            view = view,
+            offsetMillis = paparazziConfig.snapshotViewOffsetMillis,
+        )
     }
 
     override fun snapshotViewHolder(name: String?, viewHolder: RecyclerView.ViewHolder) {
-        TODO("Not yet implemented")
+        paparazziTestRule.snapshot(
+            name = name,
+            view = viewHolder.itemView,
+            offsetMillis = paparazziConfig.snapshotViewOffsetMillis,
+        )
     }
 
-    override fun configure(config: LibraryConfig): ScreenshotTestRuleForView {
-        TODO("Not yet implemented")
+    override fun configure(config: LibraryConfig): ScreenshotTestRuleForView = apply {
+        if (config is PaparazziConfig) {
+            paparazziConfig = config
+        }
     }
 }
