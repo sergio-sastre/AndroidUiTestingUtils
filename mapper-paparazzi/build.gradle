@@ -1,0 +1,52 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
+}
+
+android {
+    namespace 'sergio.sastre.uitesting.mapper.paparazzi'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 23
+        targetSdk 33
+        versionCode 20
+        versionName "2.0.0-rc1"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    implementation project(':utils')
+}
+
+//https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = 'com.github.sergio-sastre'
+            artifactId = "mapper-paparazzi"
+            version = '2.0.0-rc1'
+
+            afterEvaluate {
+                from components.release
+            }
+        }
+    }
+}
