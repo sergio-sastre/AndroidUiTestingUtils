@@ -44,9 +44,9 @@ android {
 dependencies {
     implementation project(':utils')
     implementation project(':robolectric')
-    implementation project(':sharedtest-roborazzi')
+    implementation project(':mapper-roborazzi')
 
-    api 'io.github.takahirom.roborazzi:roborazzi:1.4.0-alpha-5'
+    api 'io.github.takahirom.roborazzi:roborazzi:1.5.0-alpha-3'
     api 'androidx.test.espresso:espresso-core:3.5.1'
     api 'org.hamcrest:hamcrest:2.2'
 

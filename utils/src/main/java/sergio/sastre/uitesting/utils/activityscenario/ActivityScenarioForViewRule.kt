@@ -1,6 +1,7 @@
 package sergio.sastre.uitesting.utils.activityscenario
 
 import android.app.Activity
+import android.view.View
 import androidx.annotation.ColorInt
 import androidx.annotation.LayoutRes
 import org.junit.rules.ExternalResource
@@ -24,7 +25,7 @@ class ActivityScenarioForViewRule(
 
     val activity: Activity by lazy { activityScenario.waitForActivity() }
 
-    fun inflateAndWaitForIdle(@LayoutRes layoutId: Int, id: Int = android.R.id.content) =
+    fun inflateAndWaitForIdle(@LayoutRes layoutId: Int, id: Int = android.R.id.content): View =
         activity.inflateAndWaitForIdle(layoutId, id)
 
     override fun after() {
