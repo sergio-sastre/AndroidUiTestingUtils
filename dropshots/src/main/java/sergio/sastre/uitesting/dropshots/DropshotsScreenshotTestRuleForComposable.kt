@@ -2,36 +2,28 @@ package sergio.sastre.uitesting.dropshots
 
 import android.graphics.Bitmap
 import android.view.View
-import android.view.ViewGroup
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.drawToBitmap
-import androidx.test.core.app.ActivityScenario
 import com.dropbox.dropshots.Dropshots
+import org.junit.rules.RuleChain
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import sergio.sastre.uitesting.utils.crosslibrary.config.BitmapCaptureMethod
 import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
-import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfig
-import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioConfigurator
+import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfigForComposable
+import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioForComposableRule
 import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRuleForComposable
 import sergio.sastre.uitesting.utils.utils.drawToBitmapWithElevation
-import sergio.sastre.uitesting.utils.utils.waitForActivity
 
 class DropshotsScreenshotTestRuleForComposable(
-    override val config: ScreenshotConfig = ScreenshotConfig(),
+    override val config: ScreenshotConfigForComposable = ScreenshotConfigForComposable(),
 ) : ScreenshotTestRuleForComposable(config) {
 
-    private val activityScenario: ActivityScenario<out ComponentActivity> by lazy {
-        ActivityScenarioConfigurator.ForComposable()
-            .setLocale(config.locale)
-            .setInitialOrientation(config.orientation)
-            .setUiMode(config.uiMode)
-            .setFontSize(config.fontScale)
-            .setDisplaySize(config.displaySize)
-            .launchConfiguredActivity(dropshotsConfig.backgroundColor)
+    private val activityScenarioForComposableRule by lazy {
+        ActivityScenarioForComposableRule(
+            config = config.toComposableConfig(),
+            backgroundColor = dropshotsConfig.backgroundColor,
+        )
     }
 
     private val dropshotsRule: DropshotsAPI29Fix by lazy {
@@ -53,50 +45,48 @@ class DropshotsScreenshotTestRuleForComposable(
         takeSnapshot(name, composable)
     }
 
-    override fun apply(base: Statement, description: Description): Statement =
-        dropshotsRule.apply(base, description)
+    override fun apply(
+        base: Statement,
+        description: Description,
+    ): Statement =
+        RuleChain
+            .outerRule(dropshotsRule)
+            .around(activityScenarioForComposableRule)
+            .apply(base, description)
 
     private fun takeSnapshot(name: String?, composable: @Composable () -> Unit) {
-        val activity =
-            activityScenario
-                .onActivity {
-                    it.setContent {
-                        composable.invoke()
-                    }
-                }.waitForActivity()
-
-        val existingComposeView =
-            activity.window.decorView
-                .findViewById<ViewGroup>(android.R.id.content)
-                .getChildAt(0) as ComposeView
+        val composeView =
+            activityScenarioForComposableRule
+                .setContent(composable)
+                .composeView
 
         when (val bitmapCaptureMethod = dropshotsConfig.bitmapCaptureMethod) {
             is BitmapCaptureMethod.Canvas ->
-                takeSnapshotWithCanvas(bitmapCaptureMethod.config, existingComposeView, name)
+                takeSnapshotWithCanvas(bitmapCaptureMethod.config, composeView, name)
             is BitmapCaptureMethod.PixelCopy ->
-                takeSnapshotWithPixelCopy(bitmapCaptureMethod.config, existingComposeView, name)
-            null -> takeSnapshotOfView(existingComposeView, name)
+                takeSnapshotWithPixelCopy(bitmapCaptureMethod.config, composeView, name)
+            null -> takeSnapshotOfView(composeView, name)
         }
     }
 
     private fun takeSnapshotOfView(view: View, name: String?) {
         dropshotsRule.assertSnapshot(
             view = view,
-            name = name.orEmpty(),
+            name = name ?: view::class.java.name,
         )
     }
 
     private fun takeSnapshotWithPixelCopy(bitmapConfig: Bitmap.Config, view: View, name: String?) {
         dropshotsRule.assertSnapshot(
             bitmap = view.drawToBitmapWithElevation(config = bitmapConfig),
-            name = name.orEmpty(),
+            name = name ?: view::class.java.name,
         )
     }
 
     private fun takeSnapshotWithCanvas(bitmapConfig: Bitmap.Config, view: View, name: String?) {
         dropshotsRule.assertSnapshot(
             bitmap = view.drawToBitmap(config = bitmapConfig),
-            name = name.orEmpty(),
+            name = name ?: view::class.java.name,
         )
     }
 
@@ -104,10 +94,5 @@ class DropshotsScreenshotTestRuleForComposable(
         if (config is DropshotsConfig) {
             dropshotsConfig = config
         }
-    }
-
-    override fun finished(description: Description?) {
-        super.finished(description)
-        activityScenario.close()
     }
 }
