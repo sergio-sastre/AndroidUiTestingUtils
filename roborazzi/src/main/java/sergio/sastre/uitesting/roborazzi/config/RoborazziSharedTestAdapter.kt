@@ -1,6 +1,8 @@
 package sergio.sastre.uitesting.roborazzi.config
 
 import com.github.takahirom.roborazzi.RoborazziOptions
+import com.github.takahirom.roborazzi.RoborazziOptions.CaptureType.Dump.Companion.AccessibilityExplanation
+import com.github.takahirom.roborazzi.RoborazziOptions.CaptureType.Dump.Companion.DefaultExplanation
 import sergio.sastre.uitesting.robolectric.config.screen.DeviceScreen
 import sergio.sastre.uitesting.robolectric.config.screen.RoundScreen
 import sergio.sastre.uitesting.robolectric.config.screen.ScreenAspect
@@ -8,14 +10,15 @@ import sergio.sastre.uitesting.robolectric.config.screen.ScreenDensity
 import sergio.sastre.uitesting.robolectric.config.screen.ScreenOrientation
 import sergio.sastre.uitesting.robolectric.config.screen.ScreenSize
 import sergio.sastre.uitesting.robolectric.config.screen.ScreenType
-import sergio.sastre.uitesting.sharedtest.roborazzi.RoborazziConfig
-import sergio.sastre.uitesting.sharedtest.roborazzi.wrapper.CaptureType as WrapperCaptureType
-import sergio.sastre.uitesting.sharedtest.roborazzi.wrapper.screen.RoundScreen as WrapperRoundScreen
-import sergio.sastre.uitesting.sharedtest.roborazzi.wrapper.screen.ScreenDensity as WrapperDensity
-import sergio.sastre.uitesting.sharedtest.roborazzi.wrapper.screen.ScreenSize as WrapperScreenSize
-import sergio.sastre.uitesting.sharedtest.roborazzi.wrapper.screen.ScreenType as WrapperScreenType
-import sergio.sastre.uitesting.sharedtest.roborazzi.wrapper.screen.ScreenAspect as WrapperScreenAspect
-import sergio.sastre.uitesting.sharedtest.roborazzi.wrapper.screen.ScreenOrientation as WrapperScreenOrientation
+import sergio.sastre.uitesting.mapper.roborazzi.RoborazziConfig
+import sergio.sastre.uitesting.mapper.roborazzi.wrapper.DumpExplanation
+import sergio.sastre.uitesting.mapper.roborazzi.wrapper.CaptureType as WrapperCaptureType
+import sergio.sastre.uitesting.mapper.roborazzi.wrapper.screen.RoundScreen as WrapperRoundScreen
+import sergio.sastre.uitesting.mapper.roborazzi.wrapper.screen.ScreenDensity as WrapperDensity
+import sergio.sastre.uitesting.mapper.roborazzi.wrapper.screen.ScreenSize as WrapperScreenSize
+import sergio.sastre.uitesting.mapper.roborazzi.wrapper.screen.ScreenType as WrapperScreenType
+import sergio.sastre.uitesting.mapper.roborazzi.wrapper.screen.ScreenAspect as WrapperScreenAspect
+import sergio.sastre.uitesting.mapper.roborazzi.wrapper.screen.ScreenOrientation as WrapperScreenOrientation
 
 internal class RoborazziSharedTestAdapter(
     private val roborazziConfig: RoborazziConfig,
@@ -42,13 +45,22 @@ internal class RoborazziSharedTestAdapter(
         roborazziConfig.roborazziOptions.let {
             val adaptedCaptureType: RoborazziOptions.CaptureType =
                 when (it.captureType) {
-                    WrapperCaptureType.Dump -> RoborazziOptions.CaptureType.Dump()
-                    WrapperCaptureType.Screenshot -> RoborazziOptions.CaptureType.Screenshot()
+                    is WrapperCaptureType.Dump -> {
+                        val dumpExplanation = when((it.captureType as WrapperCaptureType.Dump).explanation){
+                            DumpExplanation.AccessibilityExplanation -> AccessibilityExplanation
+                            DumpExplanation.DefaultExplanation -> DefaultExplanation
+                        }
+                        RoborazziOptions.CaptureType.Dump(explanation = dumpExplanation)
+                    }
+                    is WrapperCaptureType.Screenshot -> RoborazziOptions.CaptureType.Screenshot()
                 }
+
             val adaptedCompareOptions: RoborazziOptions.CompareOptions =
                 RoborazziOptions.CompareOptions(
-                    changeThreshold = it.compareChangeThreshold
+                    outputDirectoryPath = it.compareOptions.outputDirectoryPath,
+                    changeThreshold = it.compareOptions.changeThreshold,
                 )
+
             return RoborazziOptions(
                 captureType = adaptedCaptureType,
                 compareOptions = adaptedCompareOptions

@@ -3,7 +3,7 @@ package sergio.sastre.uitesting.roborazzi
 import java.io.File
 
 class FilePathGenerator{
-    fun invoke(parent: String, fileName: String?): String {
+    operator fun invoke(parent: String, fileName: String?): String {
         val childFileName = fileName ?: randomName()
         val file = File(parent, "$childFileName.png")
         return file.path

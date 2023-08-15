@@ -8,11 +8,10 @@ import androidx.core.view.drawToBitmap
 import com.karumi.shot.ScreenshotTest
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
+import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioForComposableRule
 import sergio.sastre.uitesting.utils.crosslibrary.config.BitmapCaptureMethod
 import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
 import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfigForComposable
-import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioForComposableRule
-import sergio.sastre.uitesting.utils.activityscenario.ComposableConfigItem
 import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRuleForComposable
 import sergio.sastre.uitesting.utils.utils.drawToBitmapWithElevation
 

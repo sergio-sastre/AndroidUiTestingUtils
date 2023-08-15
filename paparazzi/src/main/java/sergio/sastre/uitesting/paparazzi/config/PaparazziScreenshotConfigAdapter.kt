@@ -3,18 +3,17 @@ package sergio.sastre.uitesting.paparazzi.config
 import com.android.resources.NightMode
 import com.android.resources.ScreenOrientation
 import com.android.resources.ScreenOrientation.*
-import sergio.sastre.uitesting.sharedtest.paparazzi.PaparazziConfig
-import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfigForComposable
+import sergio.sastre.uitesting.mapper.paparazzi.PaparazziConfig
 import sergio.sastre.uitesting.utils.common.Orientation
 import sergio.sastre.uitesting.utils.common.UiMode
+import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfigForComposable
 import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfigForView
 
 internal class PaparazziScreenshotConfigAdapter(
     private val paparazziConfig: PaparazziConfig
 ) {
-
     fun getDeviceConfigFor(screenshotConfigForComposable: ScreenshotConfigForComposable): app.cash.paparazzi.DeviceConfig =
-        PaparazziSharedTestAdapter(paparazziConfig).asPaparazziDeviceConfig().copy(
+        PaparazziWrapperConfigAdapter(paparazziConfig).asPaparazziDeviceConfig().copy(
             orientation = screenshotConfigForComposable.orientation.toScreenOrientation(),
             nightMode = screenshotConfigForComposable.uiMode.toNightMode(),
             fontScale = screenshotConfigForComposable.fontScale.value.toFloat(),
@@ -22,13 +21,19 @@ internal class PaparazziScreenshotConfigAdapter(
         ).adjustDimensionsToOrientation()
 
     fun getDeviceConfigFor(screenshotConfigForView: ScreenshotConfigForView): app.cash.paparazzi.DeviceConfig =
-        PaparazziSharedTestAdapter(paparazziConfig).asPaparazziDeviceConfig().copy(
+        PaparazziWrapperConfigAdapter(paparazziConfig).asPaparazziDeviceConfig().copy(
             orientation = screenshotConfigForView.orientation.toScreenOrientation(),
             nightMode = screenshotConfigForView.uiMode.toNightMode(),
             fontScale = screenshotConfigForView.fontSize.value.toFloat(),
             locale = screenshotConfigForView.locale.toBC47Locale(),
         ).adjustDimensionsToOrientation()
 
+    /**
+     * Paparazzi has sometimes problems with measuring views. Therefore, this uses a default
+     * configuration that renders most views properly.
+     *
+     * Set the RenderingMode explicitly if that is not desired.
+     */
     private fun app.cash.paparazzi.DeviceConfig.adjustDimensionsToOrientation()
             : app.cash.paparazzi.DeviceConfig {
         // If a Paparazzi rendering mode applies,

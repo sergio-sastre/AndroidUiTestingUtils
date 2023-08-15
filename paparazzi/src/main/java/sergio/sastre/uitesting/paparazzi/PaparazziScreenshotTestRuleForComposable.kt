@@ -3,11 +3,11 @@ package sergio.sastre.uitesting.paparazzi
 import app.cash.paparazzi.Paparazzi
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
+import androidx.compose.runtime.Composable
+import sergio.sastre.uitesting.paparazzi.config.PaparazziForComposableTestRuleBuilder
+import sergio.sastre.uitesting.mapper.paparazzi.PaparazziConfig
 import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
 import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfigForComposable
-import androidx.compose.runtime.Composable
-import sergio.sastre.uitesting.paparazzi.config.PaparazziTestRuleGenerator
-import sergio.sastre.uitesting.sharedtest.paparazzi.PaparazziConfig
 import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRuleForComposable
 
 class PaparazziScreenshotTestRuleForComposable(
@@ -17,7 +17,10 @@ class PaparazziScreenshotTestRuleForComposable(
     private var paparazziConfig = PaparazziConfig()
 
     private val paparazziTestRule: Paparazzi by lazy {
-        PaparazziTestRuleGenerator(paparazziConfig).generatePaparazziTestRule(config)
+        PaparazziForComposableTestRuleBuilder()
+            .applyPaparazziConfig(paparazziConfig)
+            .applyScreenshotConfig(config)
+            .build()
     }
 
     override fun apply(base: Statement, description: Description): Statement =

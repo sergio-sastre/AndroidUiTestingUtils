@@ -1,6 +1,5 @@
 package sergio.sastre.uitesting.roborazzi
 
-import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.onRoot
 import com.github.takahirom.roborazzi.captureRoboImage
@@ -8,12 +7,10 @@ import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import sergio.sastre.uitesting.robolectric.activityscenario.RobolectricActivityScenarioForComposableRule
 import sergio.sastre.uitesting.roborazzi.config.RoborazziSharedTestAdapter
-import sergio.sastre.uitesting.sharedtest.roborazzi.RoborazziConfig
+import sergio.sastre.uitesting.mapper.roborazzi.RoborazziConfig
 import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
 import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfigForComposable
 import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRuleForComposable
-import sergio.sastre.uitesting.utils.utils.waitForActivity
-import java.io.File
 
 class RoborazziScreenshotTestRuleForComposable(
     override val config: ScreenshotConfigForComposable = ScreenshotConfigForComposable(),
@@ -43,17 +40,12 @@ class RoborazziScreenshotTestRuleForComposable(
     }
 
     override fun snapshot(name: String?, composable: @Composable () -> Unit) {
-        activityScenarioRule.activityScenario
-            .onActivity {
-                it.setContent { composable.invoke() }
-            }
-            .waitForActivity()
-
         activityScenarioRule
+            .setContent { composable() }
             .composeRule
             .onRoot()
             .captureRoboImage(
-                filePath = filePathGenerator.invoke(roborazziConfig.filePath, name),
+                filePath = filePathGenerator(roborazziConfig.filePath, name),
                 roborazziOptions = roborazziAdapter.asRoborazziOptions(),
             )
     }
