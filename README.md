@@ -13,11 +13,16 @@ A set of *TestRules*, *ActivityScenarios* and utils to facilitate UI & screensho
 certain configurations, independent of the UI testing libraries you are using.
 <br clear="left"/>
 </br></br>
-For screenshot testing, it supports **Jetpack Compose**, **android Views** (e.g. custom Views,
-ViewHolders, etc.), **Activities** and **Fragments**, as well as [**Robolectric**](#robolectric-screenshot-tests)
-</br></br>
-Currently, with this library you can easily change the following configurations in your UI
-tests:
+For screenshot testing, it supports:
+ - **Jetpack Compose**
+ - **android Views** (e.g. custom Views, ViewHolders, etc.)
+ - **Activities**
+ - **Fragments**
+ - [**Robolectric**](#robolectric-screenshot-tests)
+ - [**Cross-library** & **Shared screenshot testing**](#cross-library-screenshot-tests) i.e. same test running either on device or on JVM.
+</br>
+
+This library enables you to easily change the following configurations in your UI tests:
 
 1. Locale (also [Pseudolocales](https://developer.android.com/guide/topics/resources/pseudolocales#:~:text=4%20or%20earlier%3A-,On%20the%20device%2C%20open%20the%20Settings%20app%20and%20tap%20Languages,language%20(see%20figure%203)) **en_XA** & **ar_XB**)
     1. App Locale (i.e. per-app language preference)
@@ -28,19 +33,20 @@ tests:
 5. Dark mode / Day-Night mode
 6. Display size
 
-🗞️ Moreover, it provides support for **cross-library** & **shared screenshot
-testing** i.e. same test running either on device or on JVM.
-Find out more under [cross-library screenshot tests](#cross-library-screenshot-tests)
-
-You can find out why verifying our design under such configurations is important in this blog post:
+Wondering why verifying our design under these configurations is important? I've got you covered:
 
 🎨 [Design a pixel perfect Android app](https://sergiosastre.hashnode.dev/design-a-pixel-perfect-android-app-with-screenshot-testing)
 </br></br>
-For examples of usage of this library in combination with Shot and Dropshots, check the following
+
+## Executable examples
+For examples of usage of this library in combination with Shot, Dropshots & Roborazzi, check the following
 repo:
 
 📸 [Android screenshot testing playground](https://github.com/sergio-sastre/Android-screenshot-testing-playground)
 </br></br>
+
+
+## Future development
 In the near future, there are plans to also support, among others:
 
 1. Dynamic colors (via TestRule)
@@ -151,8 +157,7 @@ For multi-module apps, do this in the app module.
 Robolectric supports screenshot testing
 via [Robolectric Native graphics (RNG)](https://github.com/robolectric/robolectric/releases/tag/robolectric-4.10)
 since 4.10.
-Since `AndroidUiTestingUtils:2.0.0-beta02`, you can configure your robolectric screenshot tests
-similar to how you'd do it with on-device tests.
+Configure your robolectric screenshot tests similar to how you'd do it with on-device tests!
 
 For that, add the following dependencies in your `build.gradle`:
 
@@ -171,7 +176,7 @@ You can find some examples in [this section](#robolectric) as well as executable
 ### Cross-library screenshot tests
 
 This library provides support for running the **very same screenshot tests
-for your Composables or Android Views across different libraries**, without any rewriting!
+for your Composables or Android Views across different libraries**, without rewriting them!
 Currently, it provides out-of-the-box support for the following screenshot testing libraries <sup>1</sup>:
 
 - [Paparazzi](https://github.com/cashapp/paparazzi)
@@ -179,35 +184,21 @@ Currently, it provides out-of-the-box support for the following screenshot testi
 - [Dropshots](https://github.com/dropbox/dropshots)
 - [Roborazzi](https://github.com/takahirom/roborazzi)
 
-You can also add support for your own solution / another library by implementing `ScreenshotTestRuleForComposable` or `ScreenshotTestRuleForView` with it and using it in `ScreenshotLibraryTestRuleForComposable` or `ScreenshotLibraryTestRuleForView` respectively, as we'll see below.
+You can also add support for your own solution / another library by implementing `ScreenshotTestRuleForComposable` or `ScreenshotTestRuleForView` interfaces and use that implementation in `ScreenshotLibraryTestRuleForComposable` or `ScreenshotLibraryTestRuleForView` respectively, as we'll see below.
 
 <sup>1</sup> Support for Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android), ndpt [android-testify](https://github.com/ndtp/android-testify) and QuickBird Studios [snappy](https://github.com/QuickBirdEng/kotlin-snapshot-testing) is on the roadmap.</br></br>
 
 #### Basic configuration
+This section covers the basics: how to configure cross-library screenshot test that will run with the library of your choice. The main benefit is, that to switch to another library you won't need to rewrite all your tests!</br>
+It's possible to configure more though<sup>1</sup>. For shared screenshot tests (i.e. on-device + JVM), check [the next section](#shared-tests)</br></br>
 
 1. First of all, configure all the screenshot testing libraries you want your tests to support, as
-   if you'd write them with those specific libraries. Visit their respective Github pages for more info.</br></br>
-   The easiest setup is to configure max 1 on-device (e.g. Shot or Dropshots) or/and max 1 JVM library (e.g. Paparazzi or Roborazzi) to avoid
-   misbehaviours when running their corresponding plugin gradle tasks. If necessary, it's possible to
-   configure more though<sup>1</sup>. For shared screenshot tests (i.e. on-device + JVM), also check [the next section](#shared-tests)</br></br>
+   if you'd write them with those specific libraries. Visit their respective Github pages for more info.
 
 2. After that, include the following dependencies in the `build.gradle` of the module that will include your cross-library screenshot
-   tests. Additionally, enable robolectric native graphics if using Roborazzi.
+   tests.
 
-```groovy
-android {
-    testOptions {
-        ...
-        unitTests {
-            ...
-            all {
-                // NOTE: Only necessary if adding Roborazzi
-                systemProperty 'robolectric.graphicsMode', 'NATIVE'
-            }
-        }
-    }
-}
-
+```
 dependencies {
     debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0-rc1')
 
@@ -229,6 +220,22 @@ dependencies {
     testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:roborazzi:2.0.0-rc1')
 }
 ```
+ If using Roborazzi, enable robolectric native graphics throug gradle as well
+
+```groovy
+android {
+    testOptions {
+        ...
+        unitTests {
+            ...
+            all {
+                // NOTE: Only necessary if adding Roborazzi
+                systemProperty 'robolectric.graphicsMode', 'NATIVE'
+            }
+        }
+    }
+}
+```
 
 3. Create the corresponding `ScreenshotLibraryTestRuleForComposable` or `ScreenshotLibraryTestRuleForView`, for instance:
 
@@ -237,7 +244,7 @@ class MyLibraryScreenshotTestRule(
     override val config: ScreenshotConfigForComposable,
 ) : ScreenshotLibraryTestRuleForComposable(config) {
 
-    override fun getScreenshotLibraryTestRule(config: ScreenshotConfig): ScreenshotTestRule {
+    override fun getScreenshotLibraryTestRule(config: ScreenshotConfigForComposable): ScreenshotTestRule {
         // The TestRule that uses the desired library. Could also be 
         // roborazziScreenshotTestRule, dropshotsScreenshotTestRule...
         // or even your own rule
@@ -246,25 +253,22 @@ class MyLibraryScreenshotTestRule(
 }
 ```
 
-4. Finally, write your tests with the `MyLibraryScreenshotTestRule`. Put them under the corresponding folder, i.e `unitTest` (e.g. Roborazzi & Paparazzi) or `androidTest`(e.g. Dropshots & Shot)
+4. Finally, write your tests with that `MyLibraryScreenshotTestRule`. Put them under the corresponding folder, i.e `unitTest` (e.g. Roborazzi & Paparazzi) or `androidTest`(e.g. Dropshots & Shot). For an example, see [this section](#cross-library).</br></br>
 
-And the corresponding executable examples:
+Want to try it out? Check out these executable examples:
 - [Cross-library screenshot test example](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/src/sharedTest/java/com/example/road/to/effective/snapshot/testing/lazycolumnscreen/crosslibrary/CoffeeDrinkAppBarComposableTest.kt)
 - [Parameterized Cross-library screenshot test example](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/src/sharedTest/java/com/example/road/to/effective/snapshot/testing/lazycolumnscreen/crosslibrary/parameterized/CoffeeDrinkListComposableParameterizedTest.kt)
 
-<sup>1</sup> You'll likely configure your screenshot tests to run with 1 on-device (i.e. either Shot or Dropshots) and 1 JVM library (i.e. Paparazzi). In that case, this is enough.</br>
-But if you need to run your tests with many on-device/JVM libraries i.e. Shot locally but Dropshots in the CI, you'll need some extra configuration to decide which library runs them. You can find an example of how to achieve it via a custom project gradle property passed via command line e.g. `-PscreenshotLibrary=shot`. In that case, check these links for advice on how to configure the gradle file and the `SharedScreenshotTestRule`:</br>
+<sup>1</sup> It's very likely you'll configure your screenshot tests to run with maximum 1 on-device (i.e. either Shot or Dropshots) and/or 1 JVM library (i.e. Paparazzi). In that case, this or the [shared tests section](#shared-tests) are enough.</br>
+But if you wish to configure many on-device or many JVM libraries at the same time, and dynamically pick the one your screenshot tests run with, you'll need some extra configuration. For that you can use a custom gradle property passed via command line e.g. `-PscreenshotLibrary=shot`. Check these links for advice on how to configure the gradle file and the `SharedScreenshotTestRule` to get it working:</br>
 - [build.gradle](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/build.gradle)
 - [CrossLibraryScreenshotTestRule.kt](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/src/sharedTest/java/com/example/road/to/effective/snapshot/testing/lazycolumnscreen/crosslibrary/utils/CrossLibraryScreenshotTestRule.kt)
 
 
 #### Shared tests
-If instead of using just one library at once, you want to enable shared tests (i.e same test running either on the JVM or on a device/emulator).
-
-You have 2 options to share resources between unitTests and AndroidTests:
+If instead of using just one library at once, you want to enable shared tests (i.e same test running either on the JVM or on a device/emulator),you have 2 options to share resources between unitTests and AndroidTests:
 1. Create and write your tests in a [share test module as described here](https://blog.danlew.net/2022/08/16/sharing-code-between-test-modules/) or...
-2. Add this in the `build.gradle` of the module where you'll write shared tests. Then write your
-   screenshot tests under `src/sharedTest`.
+2. Add this in the `build.gradle` of the module where you'll write shared tests and then write your screenshot tests under `src/sharedTest`.
 
 ```groovy
 android {
@@ -280,26 +284,27 @@ android {
 }
 ```
 
-Then follow steps 1. & 2. as in the [Basic configuration](#basic-configuration) section. After that:
+Now follow steps 1. & 2. as in the [Basic configuration](#basic-configuration) section. After that:
+
 3. Create the corresponding `SharedScreenshotLibraryTestRuleForComposable` or `SharedScreenshotLibraryTestRuleForView`, for instance:
 
 ```kotlin
 class CrossLibraryScreenshotTestRule(
     override val config: ScreenshotConfigForComposable,
-) : SharedScreenshotLibraryTestRule(config) {
+) : SharedScreenshotLibraryTestRuleForComposable(config) {
 
-    override fun getJvmScreenshotTestRule(config: ScreenshotConfig): ScreenshotTestRule {
+    override fun getJvmScreenshotTestRule(config: ScreenshotConfigForComposable): ScreenshotTestRule {
         return paparazziScreenshotTestRule // or roborazziScreenshotTestRule, or your own rule
     }
 
-    override fun getInstrumentedScreenshotTestRule(config: ScreenshotConfig): ScreenshotTestRule {
+    override fun getInstrumentedScreenshotTestRule(config: ScreenshotConfigForComosable): ScreenshotTestRule {
         return dropshotsScreenshotTestRule // or shotScreenshotTestRule, or your own rule
     }
 }
 ```
 
-4. Finally, write your tests with the CrossLibraryScreenshotTestRule. Depending on the approach you chose to share tests, you must put them either in the `shared test module` we've created for that purpose (option 1), or under the `sharedTest` folder we've just defined (option 2). For an example,
-   see [this section](#cross-library).
+4. Finally, write your tests with the `CrossLibraryScreenshotTestRule`. For an example, see [this section](#cross-library).</br></br>
+   Depending on the approach you chose to share tests, you must put them either in the `shared test module` we've created for that purpose (option 1), or under the `sharedTest` folder we've just defined (option 2). 
 
 # Usage
 
@@ -1047,15 +1052,14 @@ class SnapFragmentTest {
 ```
 
 ### Cross-library
-Supports Android Views as well as Composables since `AndroidUiTestingUtils:2.0.0-rc1`.
+Supports Android Views as well as Composables.
 
-For cross-library screenshot tests, you need to follow the steps
-in [this section](#cross-library-screenshot-tests).
-Once done, writing such tests is as easy as this:
+To configrue cross-library screenshot tests, you need to follow the steps in [this section](#cross-library-screenshot-tests).
+Once done, write your tests like this:
 
 1. Define a ScreenshotTestRule with the default configuration, which can be overriden in your tests
 ```kotlin
-fun defaultCrossLibraryScreenshotTestRule(config: ScreenshotConfig): ScreenshotTestRule =
+fun defaultCrossLibraryScreenshotTestRule(config: ScreenshotConfigForComposable): ScreenshotTestRule =
     CrossLibraryTestRule(config)
         // Optional: Define special configurations for each library you're using  
         .configure(
@@ -1079,7 +1083,7 @@ class MyCrossLibraryScreenshotTest {
     @get:Rule
     val screenshotRule =
         defaultCrossLibraryScreenshotTestRule(
-            config = ScreenshotConfig(
+            config = ScreenshotConfigForComposable(
                 uiMode = UiMode.DAY,
                 orientation = Orientation.LANDSCAPE,
                 locale = "en",
@@ -1130,6 +1134,7 @@ class MyParameterizedCrossLibraryScreenshotTest(
     }
 }
 ```
+
 > **Warning**</br>
 > You must define a `testInstrumentationRunner` in build.gradle of type `androidx.test.runner.AndroidJUnitRunner` for Parameterized Cross-Library screenshot tests to work.
 > For instance, `com.karumi.shot.ShotTestRunner`if using Shot.
