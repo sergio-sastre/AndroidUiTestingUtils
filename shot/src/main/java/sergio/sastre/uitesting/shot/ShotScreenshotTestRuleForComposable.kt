@@ -36,11 +36,21 @@ class ShotScreenshotTestRuleForComposable(
     private var shotConfig: ShotConfig = ShotConfig()
 
     override fun snapshot(composable: @Composable () -> Unit) {
-        takeSnapshot(null, composable)
+        snapshot(null, composable)
     }
 
     override fun snapshot(name: String?, composable: @Composable () -> Unit) {
-        takeSnapshot(name, composable)
+        val composeView =
+            activityScenarioRule
+                .setContent(composable)
+                .composeView
+
+        ScreenshotTaker(this).compareSnapshot(
+            composeTestRule = activityScenarioRule.composeRule,
+            view = composeView,
+            bitmapCaptureMethod = shotConfig.bitmapCaptureMethod,
+            name = name,
+        )
     }
 
     override fun apply(base: Statement?, description: Description?): Statement =
@@ -65,13 +75,12 @@ class ShotScreenshotTestRuleForComposable(
         view: View,
         name: String?,
     ) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            compareScreenshot(
+        when (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            true -> compareScreenshot(
                 rule = activityScenarioRule.composeRule,
                 name = name,
             )
-        } else {
-            takeSnapshotWithCanvas(Bitmap.Config.ARGB_8888, view, name)
+            false -> takeSnapshotWithCanvas(Bitmap.Config.ARGB_8888, view, name)
         }
     }
 

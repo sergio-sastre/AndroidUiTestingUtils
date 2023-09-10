@@ -11,8 +11,8 @@ android {
     defaultConfig {
         minSdk 23
         targetSdk 33
-        versionCode 20
-        versionName "2.0.0-rc1"
+        versionCode 21
+        versionName "2.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -44,7 +44,7 @@ android {
 dependencies {
     implementation project(':utils')
     implementation 'androidx.test:rules:1.5.0'
-    api 'com.dropbox.dropshots:dropshots:0.4.0'
+    api 'com.dropbox.dropshots:dropshots:0.4.1'
     api 'androidx.activity:activity-compose:1.7.1'
 }
 
@@ -54,7 +54,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "dropshots"
-            version = '2.0.0-rc1'
+            version = '2.0.0'
 
             afterEvaluate {
                 from components.release

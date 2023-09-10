@@ -13,4 +13,5 @@ class DropshotsConfig(
     val imageComparator: ImageComparator = SimpleImageComparator(maxDistance = 0.004f),
     val bitmapCaptureMethod: BitmapCaptureMethod? = null,
     @ColorInt val backgroundColor: Int? = null,
+    val filePath: String? = null,
 ) : LibraryConfig
