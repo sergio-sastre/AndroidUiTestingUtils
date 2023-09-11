@@ -2,21 +2,19 @@ package sergio.sastre.uitesting.dropshots
 
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Bitmap
 import android.view.View
-import androidx.core.view.drawToBitmap
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.dropbox.dropshots.Dropshots
 import org.junit.rules.RuleChain
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioForViewRule
-import sergio.sastre.uitesting.utils.crosslibrary.config.BitmapCaptureMethod
 import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
 import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfigForView
 import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRuleForView
-import sergio.sastre.uitesting.utils.utils.drawToBitmap
-import sergio.sastre.uitesting.utils.utils.drawToBitmapWithElevation
+import sergio.sastre.uitesting.utils.utils.waitForMeasuredView as androidUiTestingUtilsMeasuredView
+import sergio.sastre.uitesting.utils.utils.waitForMeasuredViewHolder as androidUiTestingUtilsMeasuredViewHolder
+import sergio.sastre.uitesting.utils.utils.waitForMeasuredDialog as androidUiTestingUtilsMeasuredDialog
 
 class DropshotsScreenshotTestRuleForView(
     override val config: ScreenshotConfigForView = ScreenshotConfigForView(),
@@ -29,8 +27,8 @@ class DropshotsScreenshotTestRuleForView(
         )
     }
 
-    private val dropshotsRule: DropshotsAPI29Fix by lazy {
-        DropshotsAPI29Fix(
+    private val dropshotsRule: ScreenshotTaker by lazy {
+        ScreenshotTaker(
             Dropshots(
                 resultValidator = dropshotsConfig.resultValidator,
                 imageComparator = dropshotsConfig.imageComparator,
@@ -49,60 +47,8 @@ class DropshotsScreenshotTestRuleForView(
             .around(activityScenarioForViewRule)
             .apply(base, description)
 
-    private fun takeSnapshot(name: String?, view: View) {
-        when (val bitmapCaptureMethod = dropshotsConfig.bitmapCaptureMethod) {
-            is BitmapCaptureMethod.Canvas ->
-                takeSnapshotWithCanvas(bitmapCaptureMethod.config, view, name)
-            is BitmapCaptureMethod.PixelCopy ->
-                takeSnapshotWithPixelCopy(bitmapCaptureMethod.config, view, name)
-            null -> takeSnapshotOfView(view, name)
-        }
-    }
-
-    private fun takeSnapshot(name: String?, dialog: Dialog) {
-        when (val bitmapCaptureMethod = dropshotsConfig.bitmapCaptureMethod) {
-            is BitmapCaptureMethod.Canvas ->
-                takeSnapshotWithCanvas(bitmapCaptureMethod.config, dialog, name)
-            is BitmapCaptureMethod.PixelCopy ->
-                takeSnapshotWithPixelCopy(bitmapCaptureMethod.config, dialog, name)
-            null -> takeSnapshotOfView(dialog.window!!.decorView, name)
-        }
-    }
-
-    private fun takeSnapshotOfView(view: View, name: String?) {
-        dropshotsRule.assertSnapshot(
-            view = view,
-            name = name ?: view::class.java.name,
-        )
-    }
-
-    private fun takeSnapshotWithPixelCopy(bitmapConfig: Bitmap.Config, view: View, name: String?) {
-        dropshotsRule.assertSnapshot(
-            bitmap = view.drawToBitmapWithElevation(config = bitmapConfig),
-            name = name ?: view::class.java.name,
-        )
-    }
-
-    private fun takeSnapshotWithPixelCopy(bitmapConfig: Bitmap.Config, dialog: Dialog, name: String?) {
-        dropshotsRule.assertSnapshot(
-            bitmap = dialog.drawToBitmapWithElevation(config = bitmapConfig),
-            name = name ?: dialog::class.java.name,
-        )
-    }
-
-    private fun takeSnapshotWithCanvas(bitmapConfig: Bitmap.Config, dialog: Dialog, name: String?) {
-        dropshotsRule.assertSnapshot(
-            bitmap = dialog.drawToBitmap(config = bitmapConfig),
-            name = name ?: dialog::class.java.name,
-        )
-    }
-
-    private fun takeSnapshotWithCanvas(bitmapConfig: Bitmap.Config, view: View, name: String?) {
-        dropshotsRule.assertSnapshot(
-            bitmap = view.drawToBitmap(config = bitmapConfig),
-            name = name ?: view::class.java.name,
-        )
-    }
+    private val Dialog.view
+        get() = window!!.decorView
 
     override val context: Context
         get() = activityScenarioForViewRule.activity
@@ -110,32 +56,40 @@ class DropshotsScreenshotTestRuleForView(
     override fun inflate(layoutId: Int): View =
         activityScenarioForViewRule.inflateAndWaitForIdle(layoutId)
 
-
     override fun waitForMeasuredView(actionToDo: () -> View): View =
-        sergio.sastre.uitesting.utils.utils.waitForMeasuredView {
-            actionToDo()
-        }
+        androidUiTestingUtilsMeasuredView { actionToDo() }
 
     override fun waitForMeasuredDialog(actionToDo: () -> Dialog): Dialog =
-        sergio.sastre.uitesting.utils.utils.waitForMeasuredDialog {
-            actionToDo()
-        }
+        androidUiTestingUtilsMeasuredDialog { actionToDo() }
 
     override fun waitForMeasuredViewHolder(actionToDo: () -> ViewHolder): ViewHolder =
-        sergio.sastre.uitesting.utils.utils.waitForMeasuredViewHolder {
-            actionToDo()
-        }
+        androidUiTestingUtilsMeasuredViewHolder { actionToDo() }
 
     override fun snapshotDialog(name: String?, dialog: Dialog) {
-        takeSnapshot(name, dialog)
+        dropshotsRule.assertSnapshot(
+            dialog = dialog,
+            bitmapCaptureMethod = dropshotsConfig.bitmapCaptureMethod,
+            name = name,
+            filePath = dropshotsConfig.filePath,
+        )
     }
 
     override fun snapshotView(name: String?, view: View) {
-        takeSnapshot(name, view)
+        dropshotsRule.assertSnapshot(
+            view = view,
+            bitmapCaptureMethod = dropshotsConfig.bitmapCaptureMethod,
+            name = name,
+            filePath = dropshotsConfig.filePath,
+        )
     }
 
     override fun snapshotViewHolder(name: String?, viewHolder: ViewHolder) {
-        takeSnapshot(name, viewHolder.itemView)
+        dropshotsRule.assertSnapshot(
+            view = viewHolder.itemView,
+            bitmapCaptureMethod = dropshotsConfig.bitmapCaptureMethod,
+            name = name,
+            filePath = dropshotsConfig.filePath,
+        )
     }
 
     override fun configure(config: LibraryConfig): ScreenshotTestRuleForView = apply {

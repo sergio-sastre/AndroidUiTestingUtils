@@ -1,19 +1,14 @@
 package sergio.sastre.uitesting.dropshots
 
-import android.graphics.Bitmap
-import android.view.View
 import androidx.compose.runtime.Composable
-import androidx.core.view.drawToBitmap
 import com.dropbox.dropshots.Dropshots
 import org.junit.rules.RuleChain
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
-import sergio.sastre.uitesting.utils.crosslibrary.config.BitmapCaptureMethod
 import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
 import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfigForComposable
 import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioForComposableRule
 import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRuleForComposable
-import sergio.sastre.uitesting.utils.utils.drawToBitmapWithElevation
 
 class DropshotsScreenshotTestRuleForComposable(
     override val config: ScreenshotConfigForComposable = ScreenshotConfigForComposable(),
@@ -26,8 +21,8 @@ class DropshotsScreenshotTestRuleForComposable(
         )
     }
 
-    private val dropshotsRule: DropshotsAPI29Fix by lazy {
-        DropshotsAPI29Fix(
+    private val dropshotsRule: ScreenshotTaker by lazy {
+        ScreenshotTaker(
             Dropshots(
                 resultValidator = dropshotsConfig.resultValidator,
                 imageComparator = dropshotsConfig.imageComparator,
@@ -60,33 +55,11 @@ class DropshotsScreenshotTestRuleForComposable(
                 .setContent(composable)
                 .composeView
 
-        when (val bitmapCaptureMethod = dropshotsConfig.bitmapCaptureMethod) {
-            is BitmapCaptureMethod.Canvas ->
-                takeSnapshotWithCanvas(bitmapCaptureMethod.config, composeView, name)
-            is BitmapCaptureMethod.PixelCopy ->
-                takeSnapshotWithPixelCopy(bitmapCaptureMethod.config, composeView, name)
-            null -> takeSnapshotOfView(composeView, name)
-        }
-    }
-
-    private fun takeSnapshotOfView(view: View, name: String?) {
         dropshotsRule.assertSnapshot(
-            view = view,
-            name = name ?: view::class.java.name,
-        )
-    }
-
-    private fun takeSnapshotWithPixelCopy(bitmapConfig: Bitmap.Config, view: View, name: String?) {
-        dropshotsRule.assertSnapshot(
-            bitmap = view.drawToBitmapWithElevation(config = bitmapConfig),
-            name = name ?: view::class.java.name,
-        )
-    }
-
-    private fun takeSnapshotWithCanvas(bitmapConfig: Bitmap.Config, view: View, name: String?) {
-        dropshotsRule.assertSnapshot(
-            bitmap = view.drawToBitmap(config = bitmapConfig),
-            name = name ?: view::class.java.name,
+            view= composeView,
+            bitmapCaptureMethod = dropshotsConfig.bitmapCaptureMethod,
+            name = name,
+            filePath = dropshotsConfig.filePath,
         )
     }
 

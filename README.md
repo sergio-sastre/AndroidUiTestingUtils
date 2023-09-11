@@ -108,7 +108,7 @@ allprojects {
 
 ```groovy
 dependencies {
-    androidTestImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0-rc1') {
+    androidTestImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0') {
         // if necessary, add this to avoid compose version clashes
         exclude group: 'androidx.compose.ui'
     }
@@ -162,8 +162,8 @@ Configure your robolectric screenshot tests similar to how you'd do it with on-d
 For that, add the following dependencies in your `build.gradle`:
 
 ```kotlin
-testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0-rc1'
-testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:robolectric:2.0.0-rc1'
+testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0'
+testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:robolectric:2.0.0'
 ```
 
 If you get any error due to "Activity not found" in your application module, add the following to your `debug/manifest`
@@ -190,7 +190,7 @@ You can also add support for your own solution / another library by implementing
 
 #### Basic configuration
 This section covers the basics: how to configure cross-library screenshot test that will run with the library of your choice. The main benefit is, that to switch to another library you won't need to rewrite all your tests!</br>
-It's possible to configure more though<sup>1</sup>. For shared screenshot tests (i.e. on-device + JVM), check [the next section](#shared-tests)</br></br>
+It's possible to configure several libraries though<sup>1</sup>. For shared screenshot tests (i.e. on-device + JVM), check [the next section](#shared-tests)</br></br>
 
 1. First of all, configure all the screenshot testing libraries you want your tests to support, as
    if you'd write them with those specific libraries. Visit their respective Github pages for more info.
@@ -200,27 +200,27 @@ It's possible to configure more though<sup>1</sup>. For shared screenshot tests 
 
 ```
 dependencies {
-    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0-rc1')
+    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0')
 
     // NOTE: From here down, add only those for the libraries you're planning to use
 
     // For Shot support
-    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:shot:2.0.0-rc1')
+    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:shot:2.0.0')
 
     // For Dropshots support
-    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:dropshots:2.0.0-rc1')
+    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:dropshots:2.0.0')
 
     // For Paparazzi support, AGP 8.0.0+ required
-    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:mapper-paparazzi:2.0.0-rc1')
-    testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:paparazzi:2.0.0-rc1')
+    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:mapper-paparazzi:2.0.0')
+    testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:paparazzi:2.0.0')
 
     // For Roborazzi support
-    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:mapper-roborazzi:2.0.0-rc1')
-    testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:robolectric:2.0.0-rc1')
-    testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:roborazzi:2.0.0-rc1')
+    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:mapper-roborazzi:2.0.0')
+    testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:robolectric:2.0.0')
+    testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:roborazzi:2.0.0')
 }
 ```
- If using Roborazzi, enable robolectric native graphics throug gradle as well
+ If using Roborazzi, enable robolectric native graphics through gradle as well
 
 ```groovy
 android {
@@ -266,9 +266,8 @@ But if you wish to configure many on-device or many JVM libraries at the same ti
 
 
 #### Shared tests
-If instead of using just one library at once, you want to enable shared tests (i.e same test running either on the JVM or on a device/emulator),you have 2 options to share resources between unitTests and AndroidTests:
-1. Create and write your tests in a [share test module as described here](https://blog.danlew.net/2022/08/16/sharing-code-between-test-modules/) or...
-2. Add this in the `build.gradle` of the module where you'll write shared tests and then write your screenshot tests under `src/sharedTest`.
+If instead of using just one screenshot testing library at once, you want to enable shared tests (i.e same test running either on the JVM or on a device/emulator),you have to share resources between unitTests and AndroidTests.</br>
+The easiest way is to add this in the `build.gradle` of the module where you'll write shared tests and then write your screenshot tests under `src/sharedTest`,
 
 ```groovy
 android {
@@ -283,6 +282,8 @@ android {
     }
 }
 ```
+> **Warning**</br>
+> Android Studio will show errors if sharedTests are defined in an application module. Consider creating an extra library module for testing the UI of your application module.
 
 Now follow steps 1. & 2. as in the [Basic configuration](#basic-configuration) section. After that:
 

@@ -1,16 +1,24 @@
 package sergio.sastre.uitesting.roborazzi
 
+import com.github.takahirom.roborazzi.DefaultFileNameGenerator
+import com.github.takahirom.roborazzi.InternalRoborazziApi
 import java.io.File
 
-class FilePathGenerator{
+internal class FilePathGenerator {
+
     operator fun invoke(parent: String, fileName: String?): String {
-        val childFileName = fileName ?: randomName()
-        val file = File(parent, "$childFileName.png")
-        return file.path
+        val fileNameWithExtension =
+            when (fileName != null) {
+                true -> "$fileName.png"
+                false -> generateFilePath()
+            }
+
+        return File(parent, fileNameWithExtension).path
     }
 
-    private fun randomName(): String {
-        val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
-        return List(8) { allowedChars.random() }.joinToString("")
+    @OptIn(InternalRoborazziApi::class)
+    private fun generateFilePath(): String {
+        val defaultFileName = DefaultFileNameGenerator.generateFilePath("png")
+        return defaultFileName.split("/").lastOrNull() ?: defaultFileName
     }
 }
