@@ -177,6 +177,11 @@ You can find some examples in [this section](#robolectric) as well as executable
 
 This library provides support for running the **very same screenshot tests
 for your Composables or Android Views across different libraries**, without rewriting them!
+
+I wrote about why you might need it and how AndroidUiTestingUtils supports this in these 2 blog posts:
+- 🌎 [A World Beyond Libraries: Cross-Library screenshot tests on Android](https://sergiosastre.hashnode.dev/a-world-beyond-libraries-cross-library-screenshot-tests-on-android)
+- 📚 [Write Once, Test Everywhere: Cross-Library Screenshot Testing with AndroidUiTestingUtils 2.0.0](https://sergiosastre.hashnode.dev/write-once-test-everywhere-cross-library-screenshot-testing-with-androiduitestingutils)
+
 Currently, it provides out-of-the-box support for the following screenshot testing libraries <sup>1</sup>:
 
 - [Paparazzi](https://github.com/cashapp/paparazzi)
