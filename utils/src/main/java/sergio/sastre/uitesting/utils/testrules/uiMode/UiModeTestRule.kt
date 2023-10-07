@@ -27,26 +27,22 @@ class UiModeTestRule(private val mode: UiMode) : TestRule {
 
     companion object {
         private val TAG = UiModeTestRule::class.java.simpleName
+        private val DEFAULT_UI_MODE = UiMode.DAY.appCompatDelegateInt
     }
 
-    private val systemUiMode
-        get() = getInstrumentation().targetContext.resources?.configuration?.uiMode ?: defaultUiMode
+    private var initialUiMode = DEFAULT_UI_MODE
 
-    private val defaultUiMode = UiMode.DAY.appCompatDelegateInt
-
-    private var initialUiMode = defaultUiMode
+    private val uiModeSetting = when (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        true -> UiModeSettingFromApi29()
+        false -> UiModeSettingBeforeApi29()
+    }
 
     override fun apply(base: Statement, description: Description): Statement {
         return object : Statement() {
             @Throws(Throwable::class)
             override fun evaluate() {
-                initialUiMode = systemUiMode
                 try {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        changeUiModeFromApi29(mode)
-                    } else {
-                        changeUiModeBeforeApi29(mode)
-                    }
+                    uiModeSetting.changeUiMode(mode)
                     base.evaluate()
                 } catch (throwable: Throwable) {
                     val testName = "${description.testClass.simpleName}\$${description.methodName}"
@@ -55,44 +51,48 @@ class UiModeTestRule(private val mode: UiMode) : TestRule {
                     Log.e(TAG, errorMessage)
                     throw throwable
                 } finally {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        resetUiModeFromApi29(initialUiMode)
-                    } else {
-                        resetUiModeBeforeApi29(initialUiMode)
-                    }
+                    uiModeSetting.resetUiMode(initialUiMode)
                 }
             }
         }
     }
 
-    private fun changeUiModeBeforeApi29(uiMode: UiMode) {
-        Handler(Looper.getMainLooper()).post {
-            initialUiMode = AppCompatDelegate.getDefaultNightMode()
-            AppCompatDelegate.setDefaultNightMode(uiMode.appCompatDelegateInt)
+    private inner class UiModeSettingBeforeApi29 : UiModeSetting {
+        override fun changeUiMode(uiMode: UiMode) {
+            Handler(Looper.getMainLooper()).post {
+                initialUiMode = AppCompatDelegate.getDefaultNightMode()
+                AppCompatDelegate.setDefaultNightMode(uiMode.appCompatDelegateInt)
+            }
+        }
+
+        override fun resetUiMode(uiModeInt: Int) {
+            Handler(Looper.getMainLooper()).post {
+                AppCompatDelegate.setDefaultNightMode(uiModeInt)
+            }
         }
     }
 
-    private fun resetUiModeBeforeApi29(uiModeInt: Int) {
-        Handler(Looper.getMainLooper()).post {
-            AppCompatDelegate.setDefaultNightMode(uiModeInt)
-        }
-    }
+    private inner class UiModeSettingFromApi29 : UiModeSetting {
+        private val systemUiMode
+            get() = getInstrumentation().targetContext.resources?.configuration?.uiMode
+                ?: DEFAULT_UI_MODE
 
-    private fun changeUiModeFromApi29(uiMode: UiMode) {
-        initialUiMode = systemUiMode.and(Configuration.UI_MODE_NIGHT_MASK)
-        val uiModeValue = when (uiMode) {
-            UiMode.NIGHT -> "yes"
-            UiMode.DAY -> "no"
+        override fun changeUiMode(uiMode: UiMode) {
+            initialUiMode = systemUiMode.and(Configuration.UI_MODE_NIGHT_MASK)
+            val uiModeValue = when (uiMode) {
+                UiMode.NIGHT -> "yes"
+                UiMode.DAY -> "no"
+            }
+            getInstrumentation().waitForExecuteShellCommand("cmd uimode night $uiModeValue")
         }
-        getInstrumentation().waitForExecuteShellCommand("cmd uimode night $uiModeValue")
-    }
 
-    private fun resetUiModeFromApi29(uiModeInt: Int?){
-        val uiModeValue = when (uiModeInt) {
-            Configuration.UI_MODE_NIGHT_YES -> "yes"
-            Configuration.UI_MODE_NIGHT_NO -> "no"
-            else -> "auto"
+        override fun resetUiMode(uiModeInt: Int) {
+            val uiModeValue = when (uiModeInt) {
+                Configuration.UI_MODE_NIGHT_YES -> "yes"
+                Configuration.UI_MODE_NIGHT_NO -> "no"
+                else -> "auto"
+            }
+            getInstrumentation().waitForExecuteShellCommand("cmd uimode night $uiModeValue")
         }
-        getInstrumentation().waitForExecuteShellCommand("cmd uimode night $uiModeValue")
     }
 }
