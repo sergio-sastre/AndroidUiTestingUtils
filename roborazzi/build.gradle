@@ -46,11 +46,11 @@ dependencies {
     implementation project(':robolectric')
     implementation project(':mapper-roborazzi')
 
-    api 'io.github.takahirom.roborazzi:roborazzi:1.5.0-rc-1'
+    api 'io.github.takahirom.roborazzi:roborazzi:1.6.0-rc-1'
     api 'androidx.test.espresso:espresso-core:3.5.1'
     api 'org.hamcrest:hamcrest:2.2'
 
-    api 'androidx.activity:activity-compose:1.7.1'
+    api 'androidx.activity:activity-compose:1.8.0'
 }
 
 //https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/

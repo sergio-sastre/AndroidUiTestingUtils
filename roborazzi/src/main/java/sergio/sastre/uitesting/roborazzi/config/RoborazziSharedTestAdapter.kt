@@ -1,8 +1,9 @@
 package sergio.sastre.uitesting.roborazzi.config
 
+import com.github.takahirom.roborazzi.Dump
+import com.github.takahirom.roborazzi.Dump.Companion.AccessibilityExplanation
+import com.github.takahirom.roborazzi.Dump.Companion.DefaultExplanation
 import com.github.takahirom.roborazzi.RoborazziOptions
-import com.github.takahirom.roborazzi.RoborazziOptions.CaptureType.Dump.Companion.AccessibilityExplanation
-import com.github.takahirom.roborazzi.RoborazziOptions.CaptureType.Dump.Companion.DefaultExplanation
 import sergio.sastre.uitesting.robolectric.config.screen.DeviceScreen
 import sergio.sastre.uitesting.robolectric.config.screen.RoundScreen
 import sergio.sastre.uitesting.robolectric.config.screen.ScreenAspect
