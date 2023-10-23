@@ -13,6 +13,7 @@ data class DeviceScreen(
     val defaultOrientation: ScreenOrientation = ScreenOrientation.PORTRAIT,
     val round: RoundScreen? = null,
     val type: ScreenType? = null,
+    val name: String = ""
 ) {
 
     object Phone {
@@ -23,6 +24,7 @@ data class DeviceScreen(
             size = ScreenSize.NORMAL,
             aspect = ScreenAspect.LONG,
             density = ScreenDensity.HDPI,
+            name = "NEXUS_ONE"
         )
 
         @JvmField
@@ -32,6 +34,7 @@ data class DeviceScreen(
             size = ScreenSize.NORMAL,
             aspect = ScreenAspect.NOTLONG,
             density = ScreenDensity.XHDPI,
+            name = "NEXUS_4"
         )
 
         @JvmField
@@ -41,6 +44,7 @@ data class DeviceScreen(
             size = ScreenSize.LARGE,
             aspect = ScreenAspect.NOTLONG,
             density = ScreenDensity.XHDPI,
+            name = "NEXUS_7"
         )
 
         @JvmField
@@ -50,6 +54,7 @@ data class DeviceScreen(
             size = ScreenSize.XLARGE,
             aspect = ScreenAspect.NOTLONG,
             density = ScreenDensity.XHDPI,
+            name = "NEXUS_9"
         )
 
         @JvmField
@@ -59,6 +64,7 @@ data class DeviceScreen(
             size = ScreenSize.XLARGE,
             aspect = ScreenAspect.NOTLONG,
             density = ScreenDensity.XHDPI,
+            name = "PIXEL_C"
         )
 
         @JvmField
@@ -68,6 +74,7 @@ data class DeviceScreen(
             size = ScreenSize.NORMAL,
             aspect = ScreenAspect.NOTLONG,
             density = ScreenDensity.DPI_560,
+            name = "PIXEL_XL"
         )
 
         @JvmField
@@ -77,6 +84,7 @@ data class DeviceScreen(
             size = ScreenSize.NORMAL,
             aspect = ScreenAspect.LONG,
             density = ScreenDensity.DPI_440,
+            name = "PIXEL_4"
         )
 
         @JvmField
@@ -86,6 +94,7 @@ data class DeviceScreen(
             size = ScreenSize.NORMAL,
             aspect = ScreenAspect.LONG,
             density = ScreenDensity.DPI_560,
+            name = "PIXEL_4_XL"
         )
 
         @JvmField
@@ -95,6 +104,7 @@ data class DeviceScreen(
             size = ScreenSize.NORMAL,
             aspect = ScreenAspect.LONG,
             density = ScreenDensity.DPI_440,
+            name = "PIXEL_4A"
         )
 
         @JvmField
@@ -104,6 +114,71 @@ data class DeviceScreen(
             size = ScreenSize.XLARGE,
             aspect = ScreenAspect.LONG,
             density = ScreenDensity.DPI_440,
+            name = "PIXEL_5"
+        )
+
+        @JvmField
+        val SMALL_PHONE = DeviceScreen(
+            widthDp = 360,
+            heightDp = 640,
+            size = ScreenSize.NORMAL,
+            aspect = ScreenAspect.LONG,
+            density = ScreenDensity.XHDPI,
+            name = "SMALL_PHONE"
+        )
+
+        @JvmField
+        val MEDIUM_PHONE = DeviceScreen(
+            widthDp = 411,
+            heightDp = 914,
+            size = ScreenSize.NORMAL,
+            aspect = ScreenAspect.LONG,
+            density = ScreenDensity.DPI_420,
+            name = "MEDIUM_PHONE"
+        )
+    }
+
+    object Tablet {
+        @JvmField
+        val MEDIUM_TABLET = DeviceScreen(
+            widthDp = 1280,
+            heightDp = 800,
+            size = ScreenSize.XLARGE,
+            aspect = ScreenAspect.NOTLONG,
+            density = ScreenDensity.XHDPI,
+            name = "MEDIUM_TABLET"
+        )
+    }
+
+    object Desktop {
+        @JvmField
+        val SMALL_DESKTOP = DeviceScreen(
+            widthDp = 1366,
+            heightDp = 768,
+            size = ScreenSize.XLARGE,
+            aspect = ScreenAspect.LONG,
+            density = ScreenDensity.MDPI,
+            name = "SMALL_DESKTOP"
+        )
+
+        @JvmField
+        val MEDIUM_DESKTOP = DeviceScreen(
+            widthDp = 1920,
+            heightDp = 1080,
+            size = ScreenSize.XLARGE,
+            aspect = ScreenAspect.LONG,
+            density = ScreenDensity.XHDPI,
+            name = "MEDIUM_DESKTOP"
+        )
+
+        @JvmField
+        val LARGE_DESKTOP = DeviceScreen(
+            widthDp = 1920,
+            heightDp = 1080,
+            size = ScreenSize.XLARGE,
+            aspect = ScreenAspect.LONG,
+            density = ScreenDensity.MDPI,
+            name = "LARGE_DESKTOP"
         )
     }
 
@@ -116,6 +191,7 @@ data class DeviceScreen(
             aspect = ScreenAspect.LONG,
             type = ScreenType.TV,
             density = ScreenDensity.XXXHDPI,
+            name = "ANDROID_TV_4k"
         )
 
         @JvmField
@@ -126,6 +202,7 @@ data class DeviceScreen(
             aspect = ScreenAspect.LONG,
             type = ScreenType.TV,
             density = ScreenDensity.XHDPI,
+            name = "ANDROID_TV_1080p"
         )
 
         @JvmField
@@ -136,6 +213,7 @@ data class DeviceScreen(
             aspect = ScreenAspect.LONG,
             type = ScreenType.TV,
             density = ScreenDensity.TVDPI,
+            name = "ANDROID_TV_720p"
         )
     }
 
@@ -148,6 +226,7 @@ data class DeviceScreen(
             round = RoundScreen.NOTROUND,
             type = ScreenType.WATCH,
             density = ScreenDensity.XHDPI,
+            name = "WEAR_OS_SQUARE"
         )
 
         val WEAR_OS_LARGE_ROUND = DeviceScreen(
@@ -158,6 +237,7 @@ data class DeviceScreen(
             round = RoundScreen.ROUND,
             type = ScreenType.WATCH,
             density = ScreenDensity.XHDPI,
+            name = "WEAR_OS_LARGE_ROUND"
         )
 
         val WEAR_OS_SMALL_ROUND = DeviceScreen(
@@ -168,6 +248,7 @@ data class DeviceScreen(
             round = RoundScreen.ROUND,
             type = ScreenType.WATCH,
             density = ScreenDensity.XHDPI,
+            name = "WEAR_OS_SMALL_ROUND"
         )
 
         val WEAR_OS_RECTANGULAR = DeviceScreen(
@@ -178,6 +259,7 @@ data class DeviceScreen(
             round = RoundScreen.NOTROUND,
             type = ScreenType.WATCH,
             density = ScreenDensity.XHDPI,
+            name = "WEAR_OS_RECTANGULAR"
         )
     }
 
@@ -190,6 +272,7 @@ data class DeviceScreen(
             round = RoundScreen.NOTROUND,
             type = ScreenType.CAR,
             density = ScreenDensity.MDPI,
+            name = "ANDROID_AUTO_1024p"
         )
     }
 }
