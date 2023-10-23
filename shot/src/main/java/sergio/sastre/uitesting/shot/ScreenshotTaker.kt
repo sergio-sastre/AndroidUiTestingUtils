@@ -1,11 +1,13 @@
 package sergio.sastre.uitesting.shot
 
 import android.app.Dialog
+import android.os.Build
 import android.view.View
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.core.view.drawToBitmap
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.karumi.shot.ScreenshotTest
+import org.lsposed.hiddenapibypass.HiddenApiBypass
 import sergio.sastre.uitesting.utils.crosslibrary.config.BitmapCaptureMethod
 import sergio.sastre.uitesting.utils.utils.drawToBitmap
 import sergio.sastre.uitesting.utils.utils.drawToBitmapWithElevation
@@ -103,10 +105,24 @@ internal class ScreenshotTaker(
                 bitmap = dialog.drawToBitmapWithElevation(config = bitmapCaptureMethod.config),
                 name = name,
             )
-            null -> screenshotTest.compareScreenshot(
-                dialog = dialog,
-                name = name,
-            )
+            null -> bypassNonSDKInterface {
+                screenshotTest.compareScreenshot(
+                    dialog = dialog,
+                    name = name,
+                )
+            }
+        }
+    }
+
+    // compareScreenshot uses some non-SDK interfaces to take screenshots of dialogs,
+    // so we need to bypass it
+    private fun bypassNonSDKInterface(actionToDo: () -> Unit) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            HiddenApiBypass.addHiddenApiExemptions("")
+        }
+        actionToDo()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            HiddenApiBypass.clearHiddenApiExemptions()
         }
     }
 }

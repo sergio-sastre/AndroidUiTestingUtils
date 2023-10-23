@@ -11,8 +11,8 @@ android {
     defaultConfig {
         minSdk 23
         targetSdk 33
-        versionCode 21
-        versionName "2.0.0"
+        versionCode 22
+        versionName "2.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -45,6 +45,7 @@ dependencies {
     implementation project(':utils')
     api 'com.karumi:shot-android:6.0.0'
     api 'androidx.activity:activity-compose:1.7.1'
+    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
 }
 
 //https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/
@@ -53,7 +54,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "shot"
-            version = '2.0.0'
+            version = '2.0.1'
 
             afterEvaluate {
                 from components.release

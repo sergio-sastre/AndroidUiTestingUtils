@@ -108,7 +108,7 @@ allprojects {
 
 ```groovy
 dependencies {
-    androidTestImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0') {
+    androidTestImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.1') {
         // if necessary, add this to avoid compose version clashes
         exclude group: 'androidx.compose.ui'
     }
@@ -162,8 +162,8 @@ Configure your robolectric screenshot tests similar to how you'd do it with on-d
 For that, add the following dependencies in your `build.gradle`:
 
 ```kotlin
-testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0'
-testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:robolectric:2.0.0'
+testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.1'
+testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:robolectric:2.0.1'
 ```
 
 If you get any error due to "Activity not found" in your application module, add the following to your `debug/manifest`
@@ -198,31 +198,37 @@ This section covers the basics: how to configure cross-library screenshot test t
 It's possible to configure several libraries though<sup>1</sup>. For shared screenshot tests (i.e. on-device + JVM), check [the next section](#shared-tests)</br></br>
 
 1. First of all, configure all the screenshot testing libraries you want your tests to support, as
-   if you'd write them with those specific libraries. Visit their respective Github pages for more info.
+   if you'd write them with those specific libraries. Visit their respective Github pages for more info.</br></br>
+   Use the AndroidUiTestingUtils version corresponding to the screenshot library version you're using:</br>
+
+   | AndroidUiTestingUtils | Roborazzi      | Paparazzi | Dropshots | Shot   |
+      | --------------------- | -------------- | --------- | --------- | ------ |
+   | *2.0.1*               | *1.7.0-rc-1*   |  1.3.1    | 0.4.1     | 6.0.0  |
+   | 2.0.0                 | 1.5.0-rc-1     |  1.3.1    | 0.4.1     | 6.0.0  |
 
 2. After that, include the following dependencies in the `build.gradle` of the module that will include your cross-library screenshot
    tests.
 
 ```
 dependencies {
-    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.0')
+    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:utils:<version>')
 
     // NOTE: From here down, add only those for the libraries you're planning to use
 
     // For Shot support
-    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:shot:2.0.0')
+    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:shot:<version>')
 
     // For Dropshots support
-    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:dropshots:2.0.0')
+    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:dropshots:<version>')
 
     // For Paparazzi support, AGP 8.0.0+ required
-    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:mapper-paparazzi:2.0.0')
-    testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:paparazzi:2.0.0')
+    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:mapper-paparazzi:<version>')
+    testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:paparazzi:<version>')
 
     // For Roborazzi support
-    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:mapper-roborazzi:2.0.0')
-    testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:robolectric:2.0.0')
-    testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:roborazzi:2.0.0')
+    debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:mapper-roborazzi:<version>')
+    testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:robolectric:<version>')
+    testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:roborazzi:<version>')
 }
 ```
  If using Roborazzi, enable robolectric native graphics through gradle as well
@@ -264,12 +270,6 @@ Want to try it out? Check out these executable examples:
 - [Cross-library screenshot test example](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/src/sharedTest/java/com/example/road/to/effective/snapshot/testing/lazycolumnscreen/crosslibrary/CoffeeDrinkAppBarComposableTest.kt)
 - [Parameterized Cross-library screenshot test example](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/src/sharedTest/java/com/example/road/to/effective/snapshot/testing/lazycolumnscreen/crosslibrary/parameterized/CoffeeDrinkListComposableParameterizedTest.kt)
 
-<sup>1</sup> It's very likely you'll configure your screenshot tests to run with maximum 1 on-device (i.e. either Shot or Dropshots) and/or 1 JVM library (i.e. Paparazzi). In that case, this or the [shared tests section](#shared-tests) are enough.</br>
-But if you wish to configure many on-device or many JVM libraries at the same time, and dynamically pick the one your screenshot tests run with, you'll need some extra configuration. For that you can use a custom gradle property passed via command line e.g. `-PscreenshotLibrary=shot`. Check these links for advice on how to configure the gradle file and the `SharedScreenshotTestRule` to get it working:</br>
-- [build.gradle](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/build.gradle)
-- [CrossLibraryScreenshotTestRule.kt](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/src/sharedTest/java/com/example/road/to/effective/snapshot/testing/lazycolumnscreen/crosslibrary/utils/CrossLibraryScreenshotTestRule.kt)
-
-
 #### Shared tests
 If instead of using just one screenshot testing library at once, you want to enable shared tests (i.e same test running either on the JVM or on a device/emulator),you have to share resources between unitTests and AndroidTests.</br>
 The easiest way is to add this in the `build.gradle` of the module where you'll write shared tests and then write your screenshot tests under `src/sharedTest`,
@@ -310,7 +310,12 @@ class CrossLibraryScreenshotTestRule(
 ```
 
 4. Finally, write your tests with the `CrossLibraryScreenshotTestRule`. For an example, see [this section](#cross-library).</br></br>
-   Depending on the approach you chose to share tests, you must put them either in the `shared test module` we've created for that purpose (option 1), or under the `sharedTest` folder we've just defined (option 2). 
+   Depending on the approach you chose to share tests, you must put them either in the `shared test module` we've created for that purpose (option 1), or under the `sharedTest` folder we've just defined (option 2).
+
+<sup>1</sup> It's very likely you'll configure your screenshot tests to run with maximum 1 on-device (i.e. either Shot or Dropshots) and/or 1 JVM library (i.e. Paparazzi). In that case, this is enough.</br>
+But if you wish to configure many on-device or many JVM libraries at the same time, and dynamically pick the one your screenshot tests run with, you'll need some extra configuration. For that you can use a custom gradle property passed via command line e.g. `-PscreenshotLibrary=shot`. Check these links for advice on how to configure the gradle file and the `SharedScreenshotTestRule` to get it working:</br>
+- [build.gradle](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/build.gradle)
+- [CrossLibraryScreenshotTestRule.kt](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/src/sharedTest/java/com/example/road/to/effective/snapshot/testing/lazycolumnscreen/crosslibrary/utils/CrossLibraryScreenshotTestRule.kt)
 
 # Usage
 
@@ -395,16 +400,6 @@ fun snapActivityTest() {
     activityScenario.close()
 }
 ```
-
-> **Warning**</br>
-> If using any TestRule with Ndtp [android-testify](https://github.com/ndtp/android-testify),
-> use `launchActivity = false` for them to take effect:
-> ```kotlin
-> @get:Rule
-> val activityTestRule =
->     ScreenshotRule(CoffeeDrinksComposeActivity::class.java, launchActivity = false)
->```
->
 
 ### Android View
 
