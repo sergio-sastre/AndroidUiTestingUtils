@@ -11,4 +11,15 @@ data class ActivityConfigItem(
     val systemLocale: String? = null,
     val fontSize: FontSize? = null,
     val displaySize: DisplaySize? = null,
-)
+) {
+    val id: String
+        get() {
+            val nonNullProperties = mutableListOf<String>()
+            systemLocale?.let { nonNullProperties.add(it.uppercase()) }
+            uiMode?.let { nonNullProperties.add(it.name) }
+            fontSize?.let { nonNullProperties.add("FONT_${it.name}") }
+            displaySize?.let { nonNullProperties.add("DISPLAY_${it.name}") }
+            orientation?.let { nonNullProperties.add(it.name) }
+            return nonNullProperties.joinToString(separator = "_")
+        }
+}
