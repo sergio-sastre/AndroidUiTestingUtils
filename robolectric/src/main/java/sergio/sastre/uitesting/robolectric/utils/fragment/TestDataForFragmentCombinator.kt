@@ -3,13 +3,13 @@ package sergio.sastre.uitesting.robolectric.utils.fragment
 import sergio.sastre.uitesting.robolectric.config.screen.DeviceScreen
 import sergio.sastre.uitesting.utils.fragmentscenario.FragmentConfigItem
 
-class TestDataForFragmentBuilder<T: Enum<T>>(uiStates: Array<T>) {
+class TestDataForFragmentCombinator<T: Enum<T>>(uiStates: Array<T>) {
 
     private var testConfigItems: Array<TestDataForFragment<T>> = uiStates.map { item ->
         TestDataForFragment(uiState = item)
     }.toTypedArray()
 
-    fun forDevices(vararg deviceScreens: DeviceScreen): TestDataForFragmentBuilder<T> = apply {
+    fun forDevices(vararg deviceScreens: DeviceScreen): TestDataForFragmentCombinator<T> = apply {
         val cartesianProductList = mutableListOf<TestDataForFragment<T>>()
         for (testItem in testConfigItems) {
             for (deviceScreen in deviceScreens) {
@@ -25,7 +25,7 @@ class TestDataForFragmentBuilder<T: Enum<T>>(uiStates: Array<T>) {
         testConfigItems = cartesianProductList.toTypedArray()
     }
 
-    fun forConfigs(vararg configs: FragmentConfigItem): TestDataForFragmentBuilder<T> = apply {
+    fun forConfigs(vararg configs: FragmentConfigItem): TestDataForFragmentCombinator<T> = apply {
         val cartesianProductList = mutableListOf<TestDataForFragment<T>>()
         for (testItem in testConfigItems) {
             for (config in configs) {
@@ -41,5 +41,5 @@ class TestDataForFragmentBuilder<T: Enum<T>>(uiStates: Array<T>) {
         testConfigItems = cartesianProductList.toTypedArray()
     }
 
-    fun generateAllCombinations() : Array<TestDataForFragment<T>> = testConfigItems.copyOf()
+    fun combineAll() : Array<TestDataForFragment<T>> = testConfigItems.copyOf()
 }

@@ -1,20 +1,20 @@
-package sergio.sastre.uitesting.robolectric.utils.activity
+package sergio.sastre.uitesting.robolectric.utils.view
 
 import sergio.sastre.uitesting.robolectric.config.screen.DeviceScreen
-import sergio.sastre.uitesting.utils.activityscenario.ActivityConfigItem
+import sergio.sastre.uitesting.utils.activityscenario.ViewConfigItem
 
-class TestDataForActivityBuilder<T: Enum<T>>(uiStates: Array<T>) {
+class TestDataForViewCombinator<T: Enum<T>>(uiStates: Array<T>) {
 
-    private var testConfigItems: Array<TestDataForActivity<T>> = uiStates.map { item ->
-        TestDataForActivity(uiState = item)
+    private var testConfigItems: Array<TestDataForView<T>> = uiStates.map { item ->
+        TestDataForView(uiState = item)
     }.toTypedArray()
 
-    fun forDevices(vararg deviceScreens: DeviceScreen): TestDataForActivityBuilder<T> = apply {
-        val cartesianProductList = mutableListOf<TestDataForActivity<T>>()
+    fun forDevices(vararg deviceScreens: DeviceScreen): TestDataForViewCombinator<T> = apply {
+        val cartesianProductList = mutableListOf<TestDataForView<T>>()
         for (testItem in testConfigItems) {
             for (deviceScreen in deviceScreens) {
                 cartesianProductList.add(
-                    TestDataForActivity(
+                    TestDataForView(
                         uiState = testItem.uiState,
                         device = deviceScreen,
                         config = testItem.config
@@ -25,12 +25,12 @@ class TestDataForActivityBuilder<T: Enum<T>>(uiStates: Array<T>) {
         testConfigItems = cartesianProductList.toTypedArray()
     }
 
-    fun forConfigs(vararg configs: ActivityConfigItem): TestDataForActivityBuilder<T> = apply {
-        val cartesianProductList = mutableListOf<TestDataForActivity<T>>()
+    fun forConfigs(vararg configs: ViewConfigItem): TestDataForViewCombinator<T> = apply {
+        val cartesianProductList = mutableListOf<TestDataForView<T>>()
         for (testItem in testConfigItems) {
             for (config in configs) {
                 cartesianProductList.add(
-                    TestDataForActivity(
+                    TestDataForView(
                         uiState = testItem.uiState,
                         device = testItem.device,
                         config = config
@@ -41,5 +41,5 @@ class TestDataForActivityBuilder<T: Enum<T>>(uiStates: Array<T>) {
         testConfigItems = cartesianProductList.toTypedArray()
     }
 
-    fun generateAllCombinations() : Array<TestDataForActivity<T>> = testConfigItems.copyOf()
+    fun combineAll() : Array<TestDataForView<T>> = testConfigItems.copyOf()
 }
