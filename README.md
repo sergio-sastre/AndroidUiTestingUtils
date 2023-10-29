@@ -923,7 +923,7 @@ class SnapComposableTest {
             backgroundColor = TRANSPARENT,
         )
 
-    @Config(sdk = [30]) // Do not use qualifiers if using `setDeviceScreen()
+    @Config(sdk = [30]) // Do not use qualifiers if using `DeviceScreen` in the Rule
     @Test
     fun snapComposable() {
         activityScenarioForComposableRule
@@ -943,8 +943,24 @@ class SnapComposableTest {
     }
 }
 ```
+The snapComposable method can be simplified further if adding the following dependency
+```groovy
+testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:roborazzi:2.0.1'
+```
+and then
+```kotlin
+@Test
+fun snapComposable() {
+    activityScenarioForComposableRule
+       .captureRoboImage("path/MyComposable.png"){
+          AppTheme { // this theme must use isSystemInDarkTheme() internally
+             yourComposable()
+          }
+       }
+}
+```
 
-or without `RobolectricActivityScenarioForComposableRule` test rule
+You can also use *AndroidUiTestingUtils* without `RobolectricActivityScenarioForComposableRule` test rule
 
 ```kotlin
 @RunWith(RobolectricTestRunner::class) // or ParameterizedRobolectricTestRunner for parameterized test
@@ -1055,6 +1071,7 @@ class SnapFragmentTest {
 ```
 
 ### Multiple Devices and Configs all combined
+
 *AndroidUiTestingUtils* also helps generate all parameters of a set of UiStates under a given set of devices and configurations.
 For that, use the correpsonding type depending on what you are testing:
 - *Activity*: `TestDataForActivity<MyEnum>`
@@ -1081,18 +1098,18 @@ class MultipleDevicesAndConfigsMemoriseTest(
     @JvmStatic
     @ParameterizedRobolectricTestRunner.Parameters
     fun testItemProvider(): Array<TestDataForView<UiStateEnum>> =
-      TestDataForViewCombinator(
-        uiStates = MyEnum.values()
-      )
-      .forDevices(
-        PIXEL_4A,
-        MEDIUM_TABLET,
-      )
-      .forConfigs(
-        ViewConfigItem(uiMode = DAY, fontSize = SMALL),
-        ViewConfigItem(uiMode = NIGHT, locale = "ar"),
-      )
-      .combineAll()
+       TestDataForViewCombinator(
+          uiStates = MyEnum.values()
+       )
+       .forDevices(
+          DeviceScreen.Phone.PIXEL_4A,
+         DeviceScreen.Tablet.MEDIUM_TABLET,
+       )
+       .forConfigs(
+          ViewConfigItem(uiMode = DAY, fontSize = SMALL),
+          ViewConfigItem(uiMode = NIGHT, locale = "ar"),
+       )
+       .combineAll()
 
     // Passed config & device to the scenario
     @get:Rule
@@ -1102,26 +1119,25 @@ class MultipleDevicesAndConfigsMemoriseTest(
     )
 
     @GraphicsMode(GraphicsMode.Mode.NATIVE)
+    @Config(sdk = [30]) // Do not use qualifiers if using `DeviceScreen`in the rule
     @Test
     fun snapView() {
-      val layout = rule.inflateAndWaitForIdle(R.layout.my_view)
+       val layout = rule.inflateAndWaitForIdle(R.layout.my_view)
 
-      val view = waitForMeasuredView {
+       val view = waitForMeasuredView {
          layout.bind(item = testItem.uiState.value)
-      }
+       }
 
-      // testItem.screenshotId generates a unique ID for the screenshot
-      // based on the MyEnum.name, configuration & device name
-      // e.g:
-      // 1. UI_STATE_1_DAY_FONT_SMALL_PIXEL_4A
-      // 2. UI_STATE_1_DAY_FONT_SMALL_MEDIUM_TABLET
-      // 3. UI_STATE_1_AR_NIGHT_PIXEL_4A
-      // 4. UI_STATE_1_AR_NIGHT_MEDIUM_TABLET
-      // 5. UI_STATE_2_DAY_FONT_SMALL_PIXEL_4A
-      // 6,7,8. UI_STATE_2...
-      view.captureRoboImage(
-         filePath("${testItem.screenshotId}_Parameterized")
-      )
+       // testItem.screenshotId generates a unique ID for the screenshot
+       // based on the MyEnum.name, configuration & device name
+       // e.g:
+       // 1. UI_STATE_1_DAY_FONT_SMALL_PIXEL_4A
+       // 2. UI_STATE_1_DAY_FONT_SMALL_MEDIUM_TABLET
+       // 3. UI_STATE_1_AR_NIGHT_PIXEL_4A
+       // 4. UI_STATE_1_AR_NIGHT_MEDIUM_TABLET
+       // 5. UI_STATE_2_DAY_FONT_SMALL_PIXEL_4A
+       // 6,7,8. UI_STATE_2...
+       view.captureRoboImage("path/${testItem.screenshotId}.png")
     }
 }
 ```
