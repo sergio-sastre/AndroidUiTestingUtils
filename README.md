@@ -1055,7 +1055,7 @@ class SnapFragmentTest {
 ```
 
 ### Multiple Devices and Configs all combined
-AndroidUiTestingUtils also heps generate all parameters of a set of UiStates under a given set of devices and configurations.
+*AndroidUiTestingUtils* also helps generate all parameters of a set of UiStates under a given set of devices and configurations.
 For that, use the correpsonding type depending on what you are testing:
 - *Activity*: `TestDataForActivity<MyEnum>`
 - *Fragment*: `TestDataForFragment<MyEnum>`
