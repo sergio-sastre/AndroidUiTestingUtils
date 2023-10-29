@@ -87,6 +87,7 @@ Requests.
             - [Android View](#android-view-rng)
             - [Jetpack Compose](#jetpack-compose-rng)
             - [Fragment](#fragment-rng)
+            - [Multiple devices and configs](#multiple-devices-and-configs-all-combined)
         - [Cross-library](#cross-library)
     - [Utils](#utils)
     - [Reading on screenshot testing](#reading-on-screenshot-testing)
@@ -157,7 +158,8 @@ For multi-module apps, do this in the app module.
 Robolectric supports screenshot testing
 via [Robolectric Native graphics (RNG)](https://github.com/robolectric/robolectric/releases/tag/robolectric-4.10)
 since 4.10.
-Configure your robolectric screenshot tests similar to how you'd do it with on-device tests!
+With AndroidUitestingutils, you can configure your robolectric screenshot tests similar to how you'd do it with on-device tests!
+Moreover, it offers some utility methods to generate Robolectric screenshot tests for different screen sizes and configurations!
 
 For that, add the following dependencies in your `build.gradle`:
 
@@ -1048,6 +1050,78 @@ class SnapFragmentTest {
             .captureRoboImage("path/MyActivity.png")
 
         fragmentScenario.close()
+    }
+}
+```
+
+### Multiple Devices and Configs all combined
+AndroidUiTestingUtils also heps generate all parameters of a set of UiStates under a given set of devices and configurations.
+For that, use the correpsonding type depending on what you are testing:
+- *Activity*: `TestDataForActivity<MyEnum>`
+- *Fragment*: `TestDataForFragment<MyEnum>`
+- *Composable*: `TestDataForComposable<MyEnum>`
+- *View* (e.g. Dialogs, ViewHolders): `TestDataForView<MyEnum>`
+
+Here an example with Views
+```kotlin
+@RunWith(ParameterizedRobolectricTestRunner::class)
+class MultipleDevicesAndConfigsMemoriseTest(
+    private val testItem: TestDataForView<UiStateEnum>
+) {
+    
+    // Define possible uiStates
+    enum class UiStateEnum(val value: MyUiState) {
+        UI_STATE_1(myUiState1),
+        UI_STATE_2(myUiState2),
+    }
+
+    // Here we generates all possible combinations
+    // i.e. 2 UiStates x 2 Devices x 2 Configs = 8 test
+    companion object {
+    @JvmStatic
+    @ParameterizedRobolectricTestRunner.Parameters
+    fun testItemProvider(): Array<TestDataForView<UiStateEnum>> =
+      TestDataForViewCombinator(
+        uiStates = MyEnum.values()
+      )
+      .forDevices(
+        PIXEL_4A,
+        MEDIUM_TABLET,
+      )
+      .forConfigs(
+        ViewConfigItem(uiMode = DAY, fontSize = SMALL),
+        ViewConfigItem(uiMode = NIGHT, locale = "ar"),
+      )
+      .combineAll()
+
+    // Passed config & device to the scenario
+    @get:Rule
+    val rule = RobolectricActivityScenarioForViewRule(
+        config = testItem.config,
+        deviceScreen = testItem.device,
+    )
+
+    @GraphicsMode(GraphicsMode.Mode.NATIVE)
+    @Test
+    fun snapView() {
+      val layout = rule.inflateAndWaitForIdle(R.layout.my_view)
+
+      val view = waitForMeasuredView {
+         layout.bind(item = testItem.uiState.value)
+      }
+
+      // testItem.screenshotId generates a unique ID for the screenshot
+      // based on the MyEnum.name, configuration & device name
+      // e.g:
+      // 1. UI_STATE_1_DAY_FONT_SMALL_PIXEL_4A
+      // 2. UI_STATE_1_DAY_FONT_SMALL_MEDIUM_TABLET
+      // 3. UI_STATE_1_AR_NIGHT_PIXEL_4A
+      // 4. UI_STATE_1_AR_NIGHT_MEDIUM_TABLET
+      // 5. UI_STATE_2_DAY_FONT_SMALL_PIXEL_4A
+      // 6,7,8. UI_STATE_2...
+      view.captureRoboImage(
+         filePath("${testItem.screenshotId}_Parameterized")
+      )
     }
 }
 ```
