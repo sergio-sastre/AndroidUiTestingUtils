@@ -60,7 +60,7 @@ Thanks to [Screenshotbot](https://screenshotbot.io) for their support!
 [<img align="left" width="100" src="https://user-images.githubusercontent.com/6097181/192350235-b3b5dc63-e7e7-48da-bdb6-851a130aaf8d.png">](https://screenshotbot.io)
 
 By using Screenshotbot instead of the in-build record/verify modes provided by most screenshot
-libraries, you'll give your colleages a better developer experience, since they will not be required
+libraries, you'll give your colleaguesa better developer experience, since they will not be required
 to manually record screenshots after every run, instead getting notifications on their Pull
 Requests.
 <br clear="left"/>
