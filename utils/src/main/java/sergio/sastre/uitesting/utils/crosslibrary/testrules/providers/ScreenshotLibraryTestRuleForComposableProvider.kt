@@ -9,6 +9,7 @@ interface ScreenshotLibraryTestRuleForComposableProvider {
         const val PAPARAZZI = "sergio.sastre.uitesting.paparazzi.PaparazziScreenshotTestRuleForComposable";
         const val SHOT = "sergio.sastre.uitesting.shot.ShotScreenshotTestRuleForComposable";
         const val DROPSHOTS = "sergio.sastre.uitesting.dropshots.DropshotsScreenshotTestRuleForComposable";
+        const val ANDROID_TESTIFY = "sergio.sastre.uitesting.android_testify.AndroidTestifyScreenshotTestRuleForComposable";
         const val ROBORAZZI = "sergio.sastre.uitesting.roborazzi.RoborazziScreenshotTestRuleForComposable";
     }
 
@@ -25,6 +26,9 @@ interface ScreenshotLibraryTestRuleForComposableProvider {
 
     val shotScreenshotTestRule
         get() = getScreenshotTestRuleClassForName(SHOT, config)
+
+    val androidTestifyScreenshotTestRule
+        get() = getScreenshotTestRuleClassForName(ANDROID_TESTIFY, config)
 
     fun getScreenshotTestRuleClassForName(
         className: String,
