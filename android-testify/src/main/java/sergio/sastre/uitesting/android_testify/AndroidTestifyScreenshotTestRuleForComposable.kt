@@ -30,7 +30,7 @@ class AndroidTestifyScreenshotTestRuleForComposable(
     override fun snapshot(composable: @Composable () -> Unit) {
         screenshotRule
             .setCompose { composable() }
-            .configure { captureMethod = androidTestifyConfig.captureMethod }
+            .setBitmapCaptureMethod(androidTestifyConfig.bitmapCaptureMethod)
             .generateDiffs(androidTestifyConfig.generateDiffs)
             .assertSame()
     }
@@ -38,7 +38,7 @@ class AndroidTestifyScreenshotTestRuleForComposable(
     override fun snapshot(name: String?, composable: @Composable () -> Unit) {
         screenshotRule
             .setCompose { composable() }
-            .configure { captureMethod = androidTestifyConfig.captureMethod }
+            .setBitmapCaptureMethod(androidTestifyConfig.bitmapCaptureMethod)
             .generateDiffs(androidTestifyConfig.generateDiffs)
             .assertSame(name = name)
     }

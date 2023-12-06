@@ -11,8 +11,6 @@ import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import dev.testify.ScreenshotRule
 import dev.testify.TestDescription
 import dev.testify.TestifyFeatures
-import dev.testify.core.processor.capture.canvasCapture
-import dev.testify.core.processor.capture.pixelCopyCapture
 import dev.testify.testDescription
 import sergio.sastre.uitesting.utils.crosslibrary.config.BitmapCaptureMethod
 import sergio.sastre.uitesting.utils.utils.drawToBitmapWithElevation
@@ -65,6 +63,29 @@ internal fun <T : Activity> ScreenshotRule<T>.setViewUnderTest(
             waitForIdleSync()
         }
         waitForMeasuredView { view }
+    }
+}
+
+internal fun <T : Activity> ScreenshotRule<T>.setBitmapCaptureMethod(
+    bitmapCaptureMethod: BitmapCaptureMethod?,
+): ScreenshotRule<T> = apply {
+    when(bitmapCaptureMethod){
+        is BitmapCaptureMethod.Canvas -> {
+            fun canvas(activity: Activity, targetView: View?): Bitmap? {
+                return targetView?.drawToBitmap(bitmapCaptureMethod.config)
+            }
+            configure { captureMethod = ::canvas }
+        }
+        is BitmapCaptureMethod.PixelCopy -> {
+            fun pixelCopy(activity: Activity, targetView: View?): Bitmap? {
+                return targetView?.drawToBitmapWithElevation(
+                    activity = activity,
+                    config = bitmapCaptureMethod.config
+                )
+            }
+            configure { captureMethod = ::pixelCopy }
+        }
+        null -> {/*no-op*/ }
     }
 }
 
