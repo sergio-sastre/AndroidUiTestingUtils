@@ -8,6 +8,7 @@ interface ScreenshotLibraryTestRuleForViewProvider {
     companion object ScreenshotTestRuleClassPath {
         const val PAPARAZZI = "sergio.sastre.uitesting.paparazzi.PaparazziScreenshotTestRuleForView";
         const val SHOT = "sergio.sastre.uitesting.shot.ShotScreenshotTestRuleForView";
+        const val ANDROID_TESTIFY = "sergio.sastre.uitesting.android_testify.AndroidTestifyScreenshotTestRuleForView";
         const val DROPSHOTS = "sergio.sastre.uitesting.dropshots.DropshotsScreenshotTestRuleForView";
         const val ROBORAZZI = "sergio.sastre.uitesting.roborazzi.RoborazziScreenshotTestRuleForView";
     }
@@ -25,6 +26,9 @@ interface ScreenshotLibraryTestRuleForViewProvider {
 
     val shotScreenshotTestRule
         get() = getScreenshotTestRuleClassForName(SHOT, config)
+
+    val androidTestifyScreenshotTestRule
+        get() = getScreenshotTestRuleClassForName(ANDROID_TESTIFY, config)
 
     fun getScreenshotTestRuleClassForName(
         className: String,
