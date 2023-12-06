@@ -95,7 +95,7 @@ class AndroidTestifyScreenshotTestRuleForView(
     private fun takeSnapshot(name:String?){
         screenshotRule
             .setViewUnderTest(viewToScreenshot!!)
-            .configure { captureMethod = androidTestifyConfig.captureMethod }
+            .setBitmapCaptureMethod(androidTestifyConfig.bitmapCaptureMethod)
             .generateDiffs(androidTestifyConfig.generateDiffs)
             .assertSame(name = name)
     }
