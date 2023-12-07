@@ -3,7 +3,9 @@ package sergio.sastre.uitesting.roborazzi.config
 import com.github.takahirom.roborazzi.Dump
 import com.github.takahirom.roborazzi.Dump.Companion.AccessibilityExplanation
 import com.github.takahirom.roborazzi.Dump.Companion.DefaultExplanation
+import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
 import com.github.takahirom.roborazzi.RoborazziOptions
+import com.github.takahirom.roborazzi.ThresholdValidator
 import sergio.sastre.uitesting.robolectric.config.screen.DeviceScreen
 import sergio.sastre.uitesting.robolectric.config.screen.RoundScreen
 import sergio.sastre.uitesting.robolectric.config.screen.ScreenAspect
@@ -12,6 +14,7 @@ import sergio.sastre.uitesting.robolectric.config.screen.ScreenOrientation
 import sergio.sastre.uitesting.robolectric.config.screen.ScreenSize
 import sergio.sastre.uitesting.robolectric.config.screen.ScreenType
 import sergio.sastre.uitesting.mapper.roborazzi.RoborazziConfig
+import sergio.sastre.uitesting.mapper.roborazzi.wrapper.ComparisonStyle
 import sergio.sastre.uitesting.mapper.roborazzi.wrapper.DumpExplanation
 import sergio.sastre.uitesting.mapper.roborazzi.wrapper.CaptureType as WrapperCaptureType
 import sergio.sastre.uitesting.mapper.roborazzi.wrapper.screen.RoundScreen as WrapperRoundScreen
@@ -42,24 +45,28 @@ internal class RoborazziSharedTestAdapter(
             )
         }
 
+    @ExperimentalRoborazziApi
     fun asRoborazziOptions(): RoborazziOptions {
         roborazziConfig.roborazziOptions.let {
             val adaptedCaptureType: RoborazziOptions.CaptureType =
                 when (it.captureType) {
                     is WrapperCaptureType.Dump -> {
-                        val dumpExplanation = when((it.captureType as WrapperCaptureType.Dump).explanation){
-                            DumpExplanation.AccessibilityExplanation -> AccessibilityExplanation
-                            DumpExplanation.DefaultExplanation -> DefaultExplanation
-                        }
+                        val dumpExplanation =
+                            when ((it.captureType as WrapperCaptureType.Dump).explanation) {
+                                DumpExplanation.AccessibilityExplanation -> AccessibilityExplanation
+                                DumpExplanation.DefaultExplanation -> DefaultExplanation
+                            }
                         RoborazziOptions.CaptureType.Dump(explanation = dumpExplanation)
                     }
+
                     is WrapperCaptureType.Screenshot -> RoborazziOptions.CaptureType.Screenshot()
                 }
 
             val adaptedCompareOptions: RoborazziOptions.CompareOptions =
                 RoborazziOptions.CompareOptions(
                     outputDirectoryPath = it.compareOptions.outputDirectoryPath,
-                    changeThreshold = it.compareOptions.changeThreshold,
+                    resultValidator = ThresholdValidator(it.compareOptions.changeThreshold),
+                    comparisonStyle = asComparisonStyle()
                 )
 
             return RoborazziOptions(
@@ -68,6 +75,20 @@ internal class RoborazziSharedTestAdapter(
             )
         }
     }
+
+    @ExperimentalRoborazziApi
+    private fun asComparisonStyle(): RoborazziOptions.CompareOptions.ComparisonStyle =
+        when (
+            val comparisonStyle = roborazziConfig.roborazziOptions.compareOptions.comparisonStyle
+        ) {
+            is ComparisonStyle.Grid -> RoborazziOptions.CompareOptions.ComparisonStyle.Grid(
+                bigLineSpaceDp = comparisonStyle.bigLineSpaceDp,
+                smallLineSpaceDp = comparisonStyle.smallLineSpaceDp,
+                hasLabel = comparisonStyle.hasLabel,
+            )
+
+            ComparisonStyle.Simple -> RoborazziOptions.CompareOptions.ComparisonStyle.Simple
+        }
 
     private fun asDefaultOrientation(): ScreenOrientation =
         config?.let {
