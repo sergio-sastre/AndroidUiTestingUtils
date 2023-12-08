@@ -11,8 +11,8 @@ android {
     defaultConfig {
         minSdk 23
         targetSdk 33
-        versionCode 25
-        versionName "2.0.2-rc1"
+        versionCode 26
+        versionName "2.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -56,7 +56,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "android-testify"
-            version = '2.0.2-rc1'
+            version = '2.1.0'
 
             afterEvaluate {
                 from components.release

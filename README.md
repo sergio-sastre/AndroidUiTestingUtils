@@ -109,7 +109,7 @@ allprojects {
 
 ```groovy
 dependencies {
-    androidTestImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.2') {
+    androidTestImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.1.0') {
         // if necessary, add this to avoid compose version clashes
         exclude group: 'androidx.compose.ui'
     }
@@ -164,8 +164,8 @@ Moreover, it offers some utility methods to generate Robolectric screenshot test
 For that, add the following dependencies in your `build.gradle`:
 
 ```kotlin
-testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.0.2'
-testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:robolectric:2.0.2'
+testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.1,0'
+testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:robolectric:2.1.0'
 ```
 
 If you get any error due to "Activity not found" in your application module, add the following to your `debug/manifest`
@@ -205,8 +205,8 @@ It's possible to configure several libraries though<sup>1</sup>. For shared scre
    It's recommended to use the AndroidUiTestingUtils version that corresponds to the screenshot library version you're using:</br>
 
 | AndroidUiTestingUtils | Roborazzi      | Paparazzi | Dropshots | Shot   | Android-Testify |
-| --------------------- | -------------- | --------- | --------- |--------|-----------------|
-| *2.0.2*               | *1.8.0-alpha-6*|  1.3.1    | 0.4.1     | 6.0.0  | *2.0.0*         |
+|-----------------------| -------------- | --------- | --------- |--------|-----------------|
+| *2.1.0*               | *1.8.0-alpha-6*|  1.3.1    | 0.4.1     | 6.0.0  | *2.0.0*         |
 | 2.0.1                 | 1.7.0-rc-1     |  1.3.1    | 0.4.1     | 6.0.0  | -               |
 | 2.0.0                 | 1.5.0-rc-1     |  1.3.1    | 0.4.1     | 6.0.0  | -               |
 
@@ -960,7 +960,7 @@ class SnapComposableTest {
 ```
 The snapComposable method can be simplified further if adding the following dependency
 ```groovy
-testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:roborazzi:2.0.2'
+testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:roborazzi:2.1.0'
 ```
 and then
 ```kotlin
