@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace 'sergio.sastre.uitesting.dropshots'
+    namespace 'sergio.sastre.uitesting.android_testify'
     compileSdk 33
 
     defaultConfig {
@@ -15,6 +15,7 @@ android {
         versionName "2.0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -27,6 +28,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
@@ -44,7 +46,7 @@ android {
 dependencies {
     implementation project(':utils')
     implementation 'androidx.test:rules:1.5.0'
-    api 'com.dropbox.dropshots:dropshots:0.4.1'
+    api 'dev.testify:testify:2.0.0'
     api 'androidx.activity:activity-compose:1.7.1'
 }
 
@@ -53,7 +55,7 @@ publishing {
     publications {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
-            artifactId = "dropshots"
+            artifactId = "android-testify"
             version = '2.0.2'
 
             afterEvaluate {

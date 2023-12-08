@@ -76,6 +76,10 @@ object ActivityScenarioConfigurator {
             ActivityScenarioConfigurator.themeId = theme
         }
 
+        fun setActivityBackgroundColor(@ColorInt backgroundColor: Int): ForView = apply {
+            ActivityScenarioConfigurator.backgroundColor = backgroundColor
+        }
+
         fun launchConfiguredActivity(
             @ColorInt backgroundColor: Int? = null,
         ): ActivityScenario<out FragmentActivity> {
@@ -121,6 +125,10 @@ object ActivityScenarioConfigurator {
 
         fun setDisplaySize(displaySize: DisplaySize): ForComposable = apply {
             ActivityScenarioConfigurator.displaySize = displaySize
+        }
+
+        fun setActivityBackgroundColor(@ColorInt backgroundColor: Int): ForComposable = apply {
+            ActivityScenarioConfigurator.backgroundColor = backgroundColor
         }
 
         fun launchConfiguredActivity(

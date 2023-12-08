@@ -11,8 +11,8 @@ android {
     defaultConfig {
         minSdk 23
         targetSdk 33
-        versionCode 22
-        versionName "2.0.1"
+        versionCode 23
+        versionName "2.0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -34,7 +34,7 @@ android {
 
 dependencies {
     implementation project(':utils')
-    implementation "org.robolectric:robolectric:4.11-beta-2"
+    implementation "org.robolectric:robolectric:4.11.1"
 }
 
 //https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/
@@ -43,7 +43,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "robolectric"
-            version = '2.0.1'
+            version = '2.0.2'
 
             afterEvaluate {
                 from components.release
