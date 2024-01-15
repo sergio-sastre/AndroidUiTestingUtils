@@ -35,7 +35,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.0'
+        kotlinCompilerExtensionVersion '1.4.6'
     }
 }
 
@@ -43,7 +43,7 @@ dependencies {
     implementation project(':utils')
     implementation 'androidx.test:rules:1.5.0'
     api 'com.dropbox.dropshots:dropshots:0.4.1'
-    api 'androidx.activity:activity-compose:1.7.1'
+    api 'androidx.activity:activity-compose:1.8.2'
 }
 
 //https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/
@@ -52,7 +52,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "dropshots"
-            version = '2.1.1-alpha01'
+            version = '2.1.1-alpha02'
 
             afterEvaluate {
                 from components.release

@@ -35,7 +35,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.0'
+        kotlinCompilerExtensionVersion '1.4.6'
     }
 }
 
@@ -48,7 +48,7 @@ dependencies {
     api 'androidx.test.espresso:espresso-core:3.5.1'
     api 'org.hamcrest:hamcrest:2.2'
 
-    api 'androidx.activity:activity-compose:1.7.1'
+    api 'androidx.activity:activity-compose:1.8.2'
 }
 
 //https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/
@@ -57,7 +57,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "roborazzi"
-            version = '2.1.1-alpha01'
+            version = '2.1.1-alpha02'
 
             afterEvaluate {
                 from components.release

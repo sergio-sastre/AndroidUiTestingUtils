@@ -35,14 +35,14 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.0'
+        kotlinCompilerExtensionVersion '1.4.6'
     }
 }
 
 dependencies {
     implementation project(':utils')
     api 'com.karumi:shot-android:6.0.0'
-    api 'androidx.activity:activity-compose:1.7.1'
+    api 'androidx.activity:activity-compose:1.8.2'
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
 }
 
@@ -52,7 +52,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "shot"
-            version = '2.1.1-alpha01'
+            version = '2.1.1-alpha02'
 
             afterEvaluate {
                 from components.release

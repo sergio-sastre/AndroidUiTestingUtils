@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
@@ -74,6 +75,7 @@ class RoborazziScreenshotTestRuleForView(
 
     private fun captureDumpDialog(name: String?, dialogView: View) {
         (activityScenarioRule.activity.window.decorView as ViewGroup).addView(dialogView)
+        @OptIn(ExperimentalRoborazziApi::class)
         dialogView
             .captureRoboImage(
                 filePath = filePathGenerator.invoke(roborazziConfig.filePath, name),
@@ -82,6 +84,7 @@ class RoborazziScreenshotTestRuleForView(
     }
 
     private fun captureScreenshotDialog(name: String?, dialog: Dialog) {
+        @OptIn(ExperimentalRoborazziApi::class)
         dialog
             .drawToBitmap()
             .captureRoboImage(
@@ -91,6 +94,7 @@ class RoborazziScreenshotTestRuleForView(
     }
 
     override fun snapshotView(name: String?, view: View) {
+        @OptIn(ExperimentalRoborazziApi::class)
         view
             .captureRoboImage(
                 filePath = filePathGenerator.invoke(roborazziConfig.filePath, name),
@@ -99,6 +103,7 @@ class RoborazziScreenshotTestRuleForView(
     }
 
     override fun snapshotViewHolder(name: String?, viewHolder: RecyclerView.ViewHolder) {
+        @OptIn(ExperimentalRoborazziApi::class)
         viewHolder
             .itemView
             .captureRoboImage(
