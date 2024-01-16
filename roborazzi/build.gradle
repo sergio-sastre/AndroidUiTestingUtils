@@ -37,6 +37,13 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion '1.4.6'
     }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
 }
 
 dependencies {

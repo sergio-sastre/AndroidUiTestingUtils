@@ -6,6 +6,7 @@ plugins {
 }
 
 android {
+    namespace = 'sergio.sastre.uitesting.utils'
     compileSdk 33
 
     defaultConfig {
@@ -40,6 +41,13 @@ android {
 
     composeOptions {
         kotlinCompilerExtensionVersion '1.4.6'
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
     }
 }
 
