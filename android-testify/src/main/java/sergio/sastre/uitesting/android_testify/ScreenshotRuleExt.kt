@@ -40,13 +40,13 @@ fun <T : Activity> ScreenshotRule<T>.setScreenshotFirstView(): ScreenshotRule<T>
 
 fun <T : Activity> ScreenshotRule<T>.setScreenshotFragment(
     fragment: Fragment,
-    fragmentArgs: Bundle,
+    fragmentArgs: Bundle? = null,
 ): ScreenshotRule<T> =
     this.setViewModifications {
         (activity as FragmentActivity).supportFragmentManager.beginTransaction()
             .add(
                 android.R.id.content,
-                fragment.apply { arguments = fragmentArgs },
+                fragment.apply { if (fragmentArgs != null) arguments = fragmentArgs },
                 "Android-Testify-Fragment"
             )
             .commitNow()
