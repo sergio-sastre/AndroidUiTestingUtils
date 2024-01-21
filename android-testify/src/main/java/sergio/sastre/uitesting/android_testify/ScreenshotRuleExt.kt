@@ -2,14 +2,10 @@ package sergio.sastre.uitesting.android_testify
 
 import android.app.Activity
 import android.graphics.Bitmap
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.drawToBitmap
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import dev.testify.ScreenshotRule
@@ -37,24 +33,6 @@ fun <T : Activity> ScreenshotRule<T>.setScreenshotFirstView(): ScreenshotRule<T>
     this.setScreenshotViewProvider {
         it.getChildAt(0)
     }
-
-fun <T : Activity> ScreenshotRule<T>.setScreenshotFragment(
-    fragment: Fragment,
-    fragmentArgs: Bundle? = null,
-): ScreenshotRule<T> =
-    this.setViewModifications {
-        (activity as FragmentActivity).supportFragmentManager.beginTransaction()
-            .add(
-                android.R.id.content,
-                fragment.apply { if (fragmentArgs != null) arguments = fragmentArgs },
-                "Android-Testify-Fragment"
-            )
-            .commitNow()
-    }
-        .setScreenshotViewProvider {
-            (activity as FragmentActivity).supportFragmentManager
-                .findFragmentByTag("Android-Testify-Fragment")!!.requireView()
-        }
 
 fun <T : Activity> ScreenshotRule<T>.assertSame(name: String?) {
     if (name != null) {
