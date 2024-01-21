@@ -45,6 +45,36 @@ class ScreenshotRuleWithConfigurationForFragment<F : Fragment>(
                 config?.theme?.run { setTheme(this) }
                 activityBackgroundColor?.run { setActivityBackgroundColor(this) }
             }
+
+        setFragmentForScreenshot()
+    }
+
+    private fun setFragmentForScreenshot(){
+        setViewModifications {
+            if (factory != null) {
+                FragmentFactoryHolderViewModel.getInstance(activity).fragmentFactory = factory
+                activity.supportFragmentManager.fragmentFactory = factory
+            }
+
+            val fragment = activity.supportFragmentManager.fragmentFactory
+                .instantiate(requireNotNull(fragmentClass.classLoader), fragmentClass.name)
+
+            if (fragmentArgs != null) {
+                fragment.arguments = fragmentArgs
+            }
+
+            activity.supportFragmentManager.beginTransaction()
+                .add(
+                    android.R.id.content,
+                    fragment,
+                    FRAGMENT_TAG
+                )
+                .commitNow()
+
+        // by default, the fragment is what we screenshot
+        }.setScreenshotViewProvider {
+            activity.supportFragmentManager.findFragmentByTag(FRAGMENT_TAG)!!.requireView()
+        }
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -71,36 +101,6 @@ class ScreenshotRuleWithConfigurationForFragment<F : Fragment>(
                 return viewModel
             }
         }
-    }
-
-    override fun afterActivityLaunched() {
-        super.afterActivityLaunched()
-
-        setViewModifications {
-            if (factory != null) {
-                FragmentFactoryHolderViewModel.getInstance(activity).fragmentFactory = factory
-                activity.supportFragmentManager.fragmentFactory = factory
-            }
-
-            val fragment = activity.supportFragmentManager.fragmentFactory
-                .instantiate(requireNotNull(fragmentClass.classLoader), fragmentClass.name)
-
-            if (fragmentArgs != null) {
-                fragment.arguments = fragmentArgs
-            }
-
-            activity.supportFragmentManager.beginTransaction()
-                .add(
-                    android.R.id.content,
-                    fragment,
-                    FRAGMENT_TAG
-                )
-                .commitNow()
-        }
-            // by default, the fragment is what we screenshot
-            .setScreenshotViewProvider {
-                activity.supportFragmentManager.findFragmentByTag(FRAGMENT_TAG)!!.requireView()
-            }
     }
 }
 
