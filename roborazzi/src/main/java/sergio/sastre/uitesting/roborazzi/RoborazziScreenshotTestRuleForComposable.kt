@@ -2,6 +2,7 @@ package sergio.sastre.uitesting.roborazzi
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.onRoot
+import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
@@ -39,7 +40,9 @@ class RoborazziScreenshotTestRuleForComposable(
         snapshot(null, composable)
     }
 
+
     override fun snapshot(name: String?, composable: @Composable () -> Unit) {
+        @OptIn(ExperimentalRoborazziApi::class)
         activityScenarioRule
             .setContent { composable() }
             .composeRule

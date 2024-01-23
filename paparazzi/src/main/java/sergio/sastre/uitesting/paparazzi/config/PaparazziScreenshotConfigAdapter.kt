@@ -2,7 +2,9 @@ package sergio.sastre.uitesting.paparazzi.config
 
 import com.android.resources.NightMode
 import com.android.resources.ScreenOrientation
-import com.android.resources.ScreenOrientation.*
+import com.android.resources.ScreenOrientation.LANDSCAPE
+import com.android.resources.ScreenOrientation.PORTRAIT
+import com.android.resources.ScreenOrientation.SQUARE
 import sergio.sastre.uitesting.mapper.paparazzi.PaparazziConfig
 import sergio.sastre.uitesting.utils.common.Orientation
 import sergio.sastre.uitesting.utils.common.UiMode
@@ -78,7 +80,11 @@ internal class PaparazziScreenshotConfigAdapter(
         }
 
     private fun String.toBC47Locale(): String {
-        return if (this.contains("-")) {
+        return if (this == "en_XA") {
+            "en-rXA"
+        } else if (this == "ar_XB"){
+            "ar-rXB"
+        } else if (this.contains("-")) {
             "b+${this.replace(oldChar = '-', newChar = '+')}"
         } else {
             this

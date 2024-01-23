@@ -6,13 +6,11 @@ plugins {
 
 android {
     namespace 'sergio.sastre.uitesting.dropshots'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         minSdk 23
-        targetSdk 33
-        versionCode 26
-        versionName "2.1.0"
+        targetSdk 34
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -23,10 +21,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
@@ -37,7 +37,14 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.0'
+        kotlinCompilerExtensionVersion '1.5.0'
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
     }
 }
 
@@ -45,7 +52,7 @@ dependencies {
     implementation project(':utils')
     implementation 'androidx.test:rules:1.5.0'
     api 'com.dropbox.dropshots:dropshots:0.4.1'
-    api 'androidx.activity:activity-compose:1.7.1'
+    api 'androidx.activity:activity-compose:1.8.2'
 }
 
 //https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/
@@ -54,7 +61,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "dropshots"
-            version = '2.1.0'
+            version = '2.2.0'
 
             afterEvaluate {
                 from components.release

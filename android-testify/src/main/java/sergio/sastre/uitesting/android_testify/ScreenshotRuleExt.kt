@@ -69,13 +69,14 @@ internal fun <T : Activity> ScreenshotRule<T>.setViewUnderTest(
 internal fun <T : Activity> ScreenshotRule<T>.setBitmapCaptureMethod(
     bitmapCaptureMethod: BitmapCaptureMethod?,
 ): ScreenshotRule<T> = apply {
-    when(bitmapCaptureMethod){
+    when (bitmapCaptureMethod) {
         is BitmapCaptureMethod.Canvas -> {
             fun canvas(activity: Activity, targetView: View?): Bitmap? {
                 return targetView?.drawToBitmap(bitmapCaptureMethod.config)
             }
             configure { captureMethod = ::canvas }
         }
+
         is BitmapCaptureMethod.PixelCopy -> {
             fun pixelCopy(activity: Activity, targetView: View?): Bitmap? {
                 return targetView?.drawToBitmapWithElevation(
@@ -85,7 +86,9 @@ internal fun <T : Activity> ScreenshotRule<T>.setBitmapCaptureMethod(
             }
             configure { captureMethod = ::pixelCopy }
         }
-        null -> {/*no-op*/ }
+
+        null -> {/*no-op*/
+        }
     }
 }
 

@@ -2,16 +2,16 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'maven-publish'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
-    compileSdk 33
+    namespace = 'sergio.sastre.uitesting.utils'
+    compileSdk 34
 
     defaultConfig {
         minSdk 23
-        targetSdk 33
-        versionCode 26
-        versionName "2.1.0"
+        targetSdk 34
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -40,26 +40,30 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.0'
+        kotlinCompilerExtensionVersion '1.5.0'
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
     }
 }
 
 dependencies {
-    api 'androidx.appcompat:appcompat:1.7.0-alpha02'
-    api 'com.google.android.material:material:1.9.0'
+    api 'androidx.appcompat:appcompat:1.7.0-alpha03'
+    api 'com.google.android.material:material:1.11.0'
     api 'androidx.test:core:1.5.0'
 
     //noinspection GradleDependency
     api ('androidx.core:core-ktx:1.9.0') {
-        because '1.10.0 causes troubles with Paparazzi'
+        because '1.10.0 caused troubles with Paparazzi in the past'
     }
     api 'androidx.test.ext:junit:1.1.5'
     api 'androidx.test.espresso:espresso-core:3.5.1'
-    //noinspection GradleDependency
-    api ('androidx.compose.ui:ui-test-junit4:1.4.0') {
-        because 'it maches the compose compiler version'
-    }
-    api 'androidx.fragment:fragment-ktx:1.5.7'
+    api 'androidx.compose.ui:ui-test-junit4:1.5.4'
+    api 'androidx.fragment:fragment-ktx:1.6.2'
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
 }
 
@@ -69,7 +73,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "utils"
-            version = '2.1.0'
+            version = '2.2.0'
 
             afterEvaluate {
                 from components.release

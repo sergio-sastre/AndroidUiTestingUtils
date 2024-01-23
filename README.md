@@ -76,12 +76,17 @@ Requests.
         - [Basic configuration](#basic-configuration)
         - [Shared tests](#shared-tests)
 - [Usage](#usage)
-    - [Screnshot testing examples](#screenshot-testing-examples)
+    - [Screenshot testing examples](#screenshot-testing-examples)
         - [Activity](#activity)
         - [Android View](#android-view)
         - [Jetpack Compose](#jetpack-compose)
         - [Fragment](#fragment)
         - [Bitmap](#bitmap)
+        - [Android-Testify](#android-testify)
+            - [Activity](#activity-testify)
+            - [Android View](#android-view-testify)
+            - [Jetpack Compose](#jetpack-compose-testify)
+            - [Fragment](#fragment-testify)
         - [Robolectric](#robolectric)
             - [Activity](#activity-rng)
             - [Android View](#android-view-rng)
@@ -109,15 +114,17 @@ allprojects {
 
 ```groovy
 dependencies {
-    androidTestImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.1.0') {
-        // if necessary, add this to avoid compose version clashes
-        exclude group: 'androidx.compose.ui'
-    }
-    // add this if excluding 'androidx.compose.ui' due to compose version clashes 
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:your_compose_version"
+    androidTestImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:utils:<version>')
 }
 ```
-Also make sure that you use at least `compileSdkVersion 33`
+For compatibility purposes, choose the `version` that better fits your project
+| AndroidUiTestingUtils | CompileSDK | Kotlin | Compose Compiler |
+|-----------------------|------------|--------|------------------|
+| 2.2.0                 | 34         | 1.9.x  | 1.5.x            |
+| < 2.2.0               | 33+        | 1.8.x  | 1.4.x            |
+
+> Note
+> The Kotlin and Compose compiler versions need to be compatible. Check the compatibility map [here](https://developer.android.com/jetpack/androidx/releases/compose-kotlin)
 
 ### Application modules
 If you get any error due to "Activity not found" in your application module, add the following to the `androidTest/manifest`
@@ -164,8 +171,9 @@ Moreover, it offers some utility methods to generate Robolectric screenshot test
 For that, add the following dependencies in your `build.gradle`:
 
 ```kotlin
-testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:utils:2.1,0'
-testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:robolectric:2.1.0'
+// version 2.0.0+
+testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:utils:<version>'
+testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:robolectric:<version>'
 ```
 
 If you get any error due to "Activity not found" in your application module, add the following to your `debug/manifest`
@@ -204,11 +212,15 @@ It's possible to configure several libraries though<sup>1</sup>. For shared scre
    if you'd write them with that specific library. Visit its respective Github page for more info.</br></br>
    It's recommended to use the AndroidUiTestingUtils version that corresponds to the screenshot library version you're using:</br>
 
-| AndroidUiTestingUtils | Roborazzi      | Paparazzi | Dropshots | Shot   | Android-Testify |
-|-----------------------| -------------- | --------- | --------- |--------|-----------------|
-| *2.1.0*               | *1.8.0-alpha-6*|  1.3.1    | 0.4.1     | 6.0.0  | *2.0.0*         |
-| 2.0.1                 | 1.7.0-rc-1     |  1.3.1    | 0.4.1     | 6.0.0  | -               |
-| 2.0.0                 | 1.5.0-rc-1     |  1.3.1    | 0.4.1     | 6.0.0  | -               |
+| AndroidUiTestingUtils | Roborazzi     | Paparazzi | Dropshots | Shot   | Android-Testify |
+|-----------------------|---------------|-----------| --------- |--------|-----------------|
+| *2.2.0*               | 1.8.0-alpha-6 | *1.3.2*   | 0.4.1     | 6.0.0  | 2.0.0           |
+| 2.1.0                 | 1.8.0-alpha-6 | 1.3.1     | 0.4.1     | 6.0.0  | 2.0.0           |
+| 2.0.1                 | 1.7.0-rc-1    | 1.3.1     | 0.4.1     | 6.0.0  | -               |
+| 2.0.0                 | 1.5.0-rc-1    | 1.3.1     | 0.4.1     | 6.0.0  | -               |
+
+> Note
+> If having troubles with Paparazzi, beware of the [release notes of 1.3.2](https://github.com/cashapp/paparazzi/releases/tag/1.3.2)
 
 2. After that, include the following dependencies in the `build.gradle` of the module that will include your cross-library screenshot
    tests.
@@ -228,7 +240,9 @@ dependencies {
     // For Android-Testify support
     debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:android-testify:<version>')
 
-    // For Paparazzi support, AGP 8.0.0+ required
+    // For Paparazzi support:
+    //   2.2.0 -> AGP 8.1.1+
+    // < 2.2.0 -> AGP 8.0.0+
     debugImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:mapper-paparazzi:<version>')
     testImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:paparazzi:<version>')
 
@@ -339,14 +353,16 @@ But if you wish to configure many on-device or many JVM libraries at the same ti
 ## Screenshot testing examples
 
 The examples use [pedrovgs/Shot](https://github.com/pedrovgs/Shot). It also works with any other
-on-device screenshot testing library, like
+on-device screenshot testing library that supports ActivityScenarios, like
 Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android),
 Dropbox [Dropshots](https://github.com/dropbox/dropshots) or with a custom screenshot testing
 solution.
+For Android-Testify, which does not support ActivityScenario but the deprecated ActivityTestRule,
+take a look at the [Activity-Testify]() section.
 
-You can find more complete examples with Shot, Dropshots & Roborazzi in
+You can find more complete examples with Shot, Dropshots, Roborazzi and Android-Testify in
 the [Android screenshot testing playground](https://github.com/sergio-sastre/Android-screenshot-testing-playground)
-repo. Examples with [Android-Testify](https://github.com/ndtp/android-testify) coming very soon!
+repo.
 
 ### Activity
 
@@ -379,8 +395,7 @@ In case you don't want to/cannot use the rule, you can use **
 ActivityScenarioConfigurator.ForActivity()** directly in the test. Currently, this is the only means
 to set
 
-1. A TimeOut for the FontSize and DisplaySize TestRules
-2. A InAppLocaleTestRule for per-app language preferences
+1. An InAppLocaleTestRule for per-app language preferences
 
 Apart from that, this would be equivalent:
 
@@ -394,10 +409,10 @@ val inAppLocale = InAppLocaleTestRule("ar")
 val systemLocale = SystemLocaleTestRule("en")
 
 @get:Rule
-val fontSize = FontSizeTestRule(FontSize.HUGE).withTimeOut(inMillis = 15_000) // default is 10_000
+val fontSize = FontSizeTestRule(FontSize.HUGE)
 
 @get:Rule
-val displaySize = DisplaySizeTestRule(DisplaySize.LARGEST).withTimeOut(inMillis = 15_000)
+val displaySize = DisplaySizeTestRule(DisplaySize.LARGEST)
 
 @get:Rule
 val uiMode = UiModeTestRule(UiMode.NIGHT)
@@ -752,6 +767,115 @@ compareScreenshot(
 )
 ```
 
+### Android-Testify
+Android-Testify does not support ActivityScenarios but the deprecated ActivityTestRules.
+Moreover, Android-Testify:
+1. Requires your Activity under test to be `open` and create your own Test Activity inheriting from it and TestifyResourcesOverride<sup>1</sup> to support SystemLocale and FontSize.
+2. Does not support UiMode (Light/Dark mode), DisplaySize or custom themes.
+
+The TestRules defined in [Standard UI testing](#standard-ui-testing) are compatible with Android-Testify and they do not require that you make your Activities open.
+However, for faster Screenshot Tests and better readability, AndroidUiTesting also provides some wrappers around Android-Testify as well as some extension methods. Add the following dependency in your gradle file to access them:
+```groovy
+androidTestImplementation('com.github.sergio-sastre.AndroidUiTestingUtils:android-testify:<version>') // version 2.1.0+
+```
+
+In the following subsections you'll find screenshot test examples with such wrappers:
+`ScreenshotRuleWithConfigurationForView`, `ScreenshotRuleWithConfigurationForFragment` and `ComposableScreenshotRuleWithConfiguration`
+
+## Activity (Testify)
+Use the TestRules defined in [Standard UI testing](#standard-ui-testing) section with Android-Testify ScreenshotRule
+
+## Android View (Testify)
+for a View Holder, for instance
+```kotlin
+@get:Rule
+var screenshotRule = 
+    ScreenshotRuleWithConfigurationForView(
+        exactness = 0.85f,
+        config = ViewConfigItem(
+            uiMode = UiMode.DAY,
+            locale = "en",
+            orientation = Orientation.PORTRAIT
+        ),
+    )
+
+@ScreenshotInstrumentation
+@Test
+fun snapMemoriseViewHolderHappyPath() {
+    screenshotRule
+        .setTargetLayoutId(R.layout.memorise_row)
+        .setViewModifications { targetLayout ->
+            MemoriseViewHolder(
+                container = targetLayout,
+                itemEventListener = null,
+                animationDelay = 0L
+            ).apply {
+                bind(
+                    generateMemoriseItem(
+                        rightAligned = false,
+                        activity = screenshotRule.activity
+                    )
+                )
+            }
+        }
+        .setScreenshotFirstView() // this is to screenshot the view only
+        .withExperimentalFeatureEnabled(GenerateDiffs)
+        .assertSame(name = "nameOfMyScreenshot")
+}
+```
+
+## Jetpack Compose (Testify)
+```kotlin
+@get:Rule
+val screenshotRule = 
+    ComposableScreenshotRuleWithConfiguration(
+        exactness = 0.85f,
+        config = ComposableConfigItem(
+            locale = "en",
+            uiMode = UiMode.DAY,
+            fontSize = FontSize.NORMAL,
+            displaySize = DisplaySize.NORMAL,
+            orientation = Orientation.PORTRAIT
+        )
+    )
+
+@ScreenshotInstrumentation
+@Test
+fun snapComposable() {
+    screenshotRule
+        .setCompose { myComposable() }
+        .withExperimentalFeatureEnabled(GenerateDiffs)
+        .assertSame(name = "nameOfMyScreenshot")
+}
+```
+
+## Fragment (Testify)
+```kotlin
+@get:Rule
+val screenshotRule =
+    ScreenshotRuleWithConfigurationForFragment(
+        exactness = 0.85f,
+        fragmentClass = MyFragment::class.java,
+        fragmentArgs = bundleOf("key" to "value"),
+        config = FragmentConfigItem(
+            locale = "ar_XB",
+            theme = R.style.myCustomTheme,
+            uiMode = UiMode.NIGHT,
+            fontSize = FontSize.SMALL,
+            displaySize = DisplaySize.SMALL,
+            orientation = Orientation.LANDSCAPE
+        ),
+    )
+
+@ScreenshotInstrumentation
+@Test
+fun snapFragment() {
+    screenshotRule
+        .withExperimentalFeatureEnabled(GenerateDiffs)
+        .assertSame(name = "nameOfMyScreenshot")
+}
+```
+
 ### Robolectric
 AndroidUiTesting includes some special `ActivityScenarioConfigurators` and `FragmentScenarioConfigurators` that are additionally safe-thread, 
 what allows unit tests in parallel without unexpected behaviours.
@@ -960,7 +1084,7 @@ class SnapComposableTest {
 ```
 The snapComposable method can be simplified further if adding the following dependency
 ```groovy
-testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:roborazzi:2.1.0'
+testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:roborazzi:<version>' // version 2.2.0+
 ```
 and then
 ```kotlin
@@ -1045,7 +1169,7 @@ class SnapFragmentTest {
     fun snapFragment() {
         robolectricFragmentScenarioConfiguratorRule
             .fragment
-            .view!!
+            .requireView()
             .captureRoboImage("path/MyFragment.png")
     }
 }
@@ -1077,7 +1201,7 @@ class SnapFragmentTest {
 
         fragmentScenario
             .waitForFragment()
-            .view!!
+            .requireView()
             .captureRoboImage("path/MyActivity.png")
 
         fragmentScenario.close()
@@ -1118,7 +1242,7 @@ class MultipleDevicesAndConfigsMemoriseTest(
        )
        .forDevices(
           DeviceScreen.Phone.PIXEL_4A,
-         DeviceScreen.Tablet.MEDIUM_TABLET,
+          DeviceScreen.Tablet.MEDIUM_TABLET,
        )
        .forConfigs(
           ViewConfigItem(uiMode = DAY, fontSize = SMALL),
@@ -1171,7 +1295,12 @@ fun defaultCrossLibraryScreenshotTestRule(config: ScreenshotConfigForComposable)
         .configure(
             ShotConfig(bitmapCaptureMethod = PixelCopy())
         ).configure(
-            DropshotsConfig(resultValidator = ThresholdValidator(0.15f))
+            DropshotsConfig(
+                bitmapCaptureMethod = PixelCopy(),
+                resultValidator = ThresholdValidator(0.15f)
+            )
+        ).configure(
+            AndroidTestifyConfig(bitmapCaptureMethod = PixelCopy())
         ).configure(
             PaparazziConfig(deviceConfig = DeviceConfig.NEXUS_4)
         ).configure(
