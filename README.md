@@ -51,7 +51,7 @@ For examples of usage of this library in combination with Shot, Dropshots & Robo
 
 In the near future, there are plans to also support, among others:
 
-1. Dynamic colors (via TestRule)
+1. Dynamic colors
 2. Reduce snapshot testing flakiness
 3. Folding features
 4. Accessibility features
