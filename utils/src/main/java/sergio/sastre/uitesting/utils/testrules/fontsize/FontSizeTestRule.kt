@@ -2,10 +2,12 @@ package sergio.sastre.uitesting.utils.testrules.fontsize
 
 import android.os.SystemClock
 import android.util.Log
+
+import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
-import org.junit.rules.TestRule
 import sergio.sastre.uitesting.utils.common.FontSize
+import sergio.sastre.uitesting.utils.common.FontSizeScale
 import sergio.sastre.uitesting.utils.testrules.Condition
 import sergio.sastre.uitesting.utils.testrules.fontsize.FontSizeTestRule.FontScaleStatement.Companion.MAX_RETRIES_TO_WAIT_FOR_SETTING
 import sergio.sastre.uitesting.utils.testrules.fontsize.FontSizeTestRule.FontScaleStatement.Companion.SLEEP_TO_WAIT_FOR_SETTING_MILLIS
@@ -19,7 +21,7 @@ import sergio.sastre.uitesting.utils.testrules.fontsize.FontSizeTestRule.FontSca
  * WARNING: It's not compatible with Robolectric
  */
 class FontSizeTestRule(
-    private val fontSize: FontSize
+    private val fontSize: FontSizeScale
 ) : TestRule {
 
     companion object {
@@ -46,7 +48,7 @@ class FontSizeTestRule(
         private val baseStatement: Statement,
         private val description: Description,
         private val scaleSetting: FontScaleSetting,
-        private val scale: FontSize,
+        private val scale: FontSizeScale,
         private val timeOutInMillis: Int,
     ) : Statement() {
 
@@ -61,7 +63,7 @@ class FontSizeTestRule(
             } catch (throwable: Throwable) {
                 val testName = "${description.testClass.simpleName}\$${description.methodName}"
                 val errorMessage =
-                    "Test $testName failed on setting FontSize to ${scale.name}"
+                    "Test $testName failed on setting FontSize to ${scale.scale}"
                 Log.e(TAG, errorMessage)
                 throw throwable
             } finally {
@@ -70,7 +72,7 @@ class FontSizeTestRule(
             }
         }
 
-        private fun scaleMatches(scale: FontSize): Condition {
+        private fun scaleMatches(scale: FontSizeScale): Condition {
             return object : Condition {
                 override fun holds(): Boolean {
                     return scaleSetting.get() === scale
@@ -79,7 +81,7 @@ class FontSizeTestRule(
         }
 
         @Synchronized
-        private fun sleepUntil(condition: Condition, expectedFontSize: FontSize) {
+        private fun sleepUntil(condition: Condition, expectedFontSize: FontSizeScale) {
             var iterations = 0
             var retries = 0
             while (!condition.holds()) {
@@ -90,7 +92,7 @@ class FontSizeTestRule(
                 if (mustRetry) {
                     retries++
                     scaleSetting.set(expectedFontSize)
-                    Log.d(TAG, "trying to set FontSize to ${expectedFontSize.name}, $retries retry")
+                    Log.d(TAG, "trying to set font size scale to ${expectedFontSize.scale}, $retries retry")
                 }
                 if (iterations == retriesCount) {
                     throw timeoutError()

@@ -3,6 +3,7 @@ package sergio.sastre.uitesting.utils.crosslibrary.config
 import sergio.sastre.uitesting.utils.activityscenario.ComposableConfigItem
 import sergio.sastre.uitesting.utils.common.DisplaySize
 import sergio.sastre.uitesting.utils.common.FontSize
+import sergio.sastre.uitesting.utils.common.FontSizeScale
 import sergio.sastre.uitesting.utils.common.Orientation
 import sergio.sastre.uitesting.utils.common.UiMode
 
@@ -21,7 +22,7 @@ import sergio.sastre.uitesting.utils.common.UiMode
 class ScreenshotConfigForComposable(
     val orientation: Orientation = Orientation.PORTRAIT,
     val uiMode: UiMode = UiMode.DAY,
-    val fontScale: FontSize = FontSize.NORMAL,
+    val fontScale: FontSizeScale = FontSize.NORMAL,
     val locale: String = "en",
     val displaySize: DisplaySize = DisplaySize.NORMAL,
 ) {

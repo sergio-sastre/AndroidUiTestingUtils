@@ -14,16 +14,16 @@ import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.FragmentActivity
 import androidx.test.core.app.ActivityScenario
-import sergio.sastre.uitesting.utils.common.FontSize
 import sergio.sastre.uitesting.utils.common.LocaleUtil
 import sergio.sastre.uitesting.utils.common.Orientation
 import sergio.sastre.uitesting.utils.common.UiMode
 import sergio.sastre.uitesting.utils.activityscenario.orientation.OrientationTestWatcher
 import sergio.sastre.uitesting.utils.common.DisplaySize
+import sergio.sastre.uitesting.utils.common.FontSizeScale
 import java.util.*
 
 object ActivityScenarioConfigurator {
-    private var fontSize: FontSize? = null
+    private var fontSize: FontSizeScale? = null
     private var locale: Locale? = null
     private var orientation: Orientation? = null
     private var uiMode: UiMode? = null
@@ -48,7 +48,7 @@ object ActivityScenarioConfigurator {
      *  that purpose.
      */
     class ForView {
-        fun setFontSize(fontSize: FontSize): ForView = apply {
+        fun setFontSize(fontSize: FontSizeScale): ForView = apply {
             ActivityScenarioConfigurator.fontSize = fontSize
         }
 
@@ -103,7 +103,7 @@ object ActivityScenarioConfigurator {
      *
      */
     class ForComposable {
-        fun setFontSize(fontSize: FontSize): ForComposable = apply {
+        fun setFontSize(fontSize: FontSizeScale): ForComposable = apply {
             ActivityScenarioConfigurator.fontSize = fontSize
         }
 
@@ -210,7 +210,7 @@ object ActivityScenarioConfigurator {
     private fun Context.wrap(): Context {
         val newConfig = Configuration(resources.configuration)
 
-        fontSize?.run { newConfig.fontScale = value.toFloat() }
+        fontSize?.run { newConfig.fontScale = this.scale }
         locale?.run { newConfig.setLocale(this) }
         uiMode?.run { newConfig.uiMode = this.configurationInt }
         displaySize?.run {
