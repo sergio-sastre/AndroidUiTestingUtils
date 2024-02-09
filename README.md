@@ -35,23 +35,6 @@ Wondering why verifying our design under these configurations is important? I've
 
 🎨 [Design a pixel perfect Android app](https://sergiosastre.hashnode.dev/design-a-pixel-perfect-android-app-with-screenshot-testing)
 
-## Executable examples
-
-For examples of usage of this library in combination with&#x20;
-
-* [Shot](https://github.com/pedrovgs/Shot)
-* [Dropshots](https://github.com/dropbox/dropshots)
-* [Roborazzi](https://github.com/takahirom/roborazzi)
-* [Android-Testify](https://github.com/ndtp/android-testify)
-
-or how to use it for&#x20;
-
-* Cross-Library Screenshot tests
-
-check the following repo, which has already everything setup. Just clone and execute!
-
-📸 [Android screenshot testing playground](https://github.com/sergio-sastre/Android-screenshot-testing-playground)
-
 ## Sponsors
 
 <figure><img src=".gitbook/assets/192350235-b3b5dc63-e7e7-48da-bdb6-851a130aaf8d.png" alt="" width="100"><figcaption></figcaption></figure>

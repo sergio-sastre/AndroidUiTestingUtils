@@ -9,4 +9,5 @@
   * [Android-Testify usage](usage/android-testify-usage.md)
   * [Cross-Library usage](usage/cross-library-usage.md)
   * [TestRules & other utils](usage/testrules-and-other-utils.md)
+* [Ready-to-Run Samples](ready-to-run-samples.md)
 * [Github](https://github.com/sergio-sastre/AndroidUiTestingUtils)

@@ -1,6 +1,6 @@
 # Usage
 
-The examples use [pedrovgs/Shot](https://github.com/pedrovgs/Shot). It also works with any other on-device screenshot testing library that supports _ActivityScenarios_, like&#x20;
+These examples use [pedrovgs/Shot](https://github.com/pedrovgs/Shot). It also works with any other on-device screenshot testing library that supports _ActivityScenarios_, like&#x20;
 
 * Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android)
 * Dropbox [Dropshots](https://github.com/dropbox/dropshots)&#x20;
