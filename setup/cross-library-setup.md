@@ -110,7 +110,7 @@ Want to try it out? Check out these executable examples:
 
 ### Roborazzi
 
-If using Roborazzi, enable _robolectric native graphics_ through Gradle as well
+If using Roborazzi or a Robolectric based library, enable _robolectric native graphics_ through Gradle as well
 
 ```groovy
 android {
@@ -119,7 +119,6 @@ android {
         unitTests {
             ...
             all {
-                // NOTE: Only necessary if adding Roborazzi
                 systemProperty 'robolectric.graphicsMode', 'NATIVE'
             }
         }
@@ -129,7 +128,7 @@ android {
 
 ### **Android-Testify**
 
-If using Android-Testify, you also need to define the annotation it uses to identify screenshot tests
+If using Android-Testify, you also need to define the annotation it uses to identify screenshot tests in the Android-Testify gradle plugin as follows
 
 ```groovy
 testify {
@@ -139,14 +138,13 @@ testify {
 ```
 
 {% hint style="info" %}
-You'll need to annotate your Cross-Library screenshot tests with it to run them with Android-Testify
+Annotate your Cross-Library screenshot tests with it to run them with Android-Testify
 {% endhint %}
 
 ## **Shared tests**
 
-If instead of using just one screenshot testing library at once, you want to enable shared tests (i.e. same test running either on the JVM or on a device/emulator), you have to share resources between Unit Tests and Android Tests.
+These are tests that can run either on the JVM or on a device/emulator. For that, you have to share resources between Unit Tests and Android Tests.
 
-\
 The easiest way is to add this in the `build.gradle` of the module where you'll write shared tests and then write your screenshot tests under `src/sharedTest`,
 
 ```groovy
@@ -190,23 +188,30 @@ class CrossLibraryScreenshotTestRule(
    Put them under the `sharedTest` folder we've just defined.
 
 {% hint style="info" %}
-It's very likely you'll configure your screenshot tests to run with maximum&#x20;
+This is likely the most common use case. There are Ready-To-Run examples available
 
-* 1 on-device (e.g. either Shot, Dropshots or Android-Testify)&#x20;
+* [Shot + Roborazzi](https://github.com/sergio-sastre/Android-screenshot-testing-playground/tree/master/dialogs/shot%2Broborazzi)
+* [Dropshots + Paparazzi](https://github.com/sergio-sastre/Android-screenshot-testing-playground/tree/master/lazycolumnscreen/dropshots%2Bpaparazzi)
+* [Dropshots + Roborazzi](https://github.com/sergio-sastre/Android-screenshot-testing-playground/tree/master/recyclerviewscreen/dropshots%2Broborazzi)
+{% endhint %}
 
-and/or&#x20;
+### Pick the library dynamically
 
-* 1 JVM library (e.g.. either Paparazzi or Roborazzi). In that case, this is enough.
+If you want to use&#x20;
 
-\
-If that is not the case and, you need to dynamically pick the library your screenshot tests run with. For that you'll need some extra configuration, for instance, a custom gradle property passed via command line e.g.
+* Many On-device libraries (e.g. either **Shot**, **Dropshots** or **Android-Testify**)&#x20;
 
-* &#x20;`-PscreenshotLibrary=shot`. \
+and/or
 
+* Many JVM libraries (e.g.. either **Paparazzi** or **Roborazzi**).
 
-Check these links for advice on how to configure the gradle file and the `SharedScreenshotTestRule` to get it working:\
+you need to dynamically pick the library your screenshot tests run with.&#x20;
 
+For that you'll need some extra configuration, for instance, a custom Gradle property that you can pass via command line e.g.
+
+* &#x20;`-PscreenshotLibrary=shot`
+
+Check these links for advice on how to configure the Gradle file and the `SharedScreenshotTestRule` to get it working:
 
 * [build.gradle](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/build.gradle)
 * [CrossLibraryScreenshotTestRule.kt](https://github.com/sergio-sastre/Android-screenshot-testing-playground/blob/master/lazycolumnscreen/crosslibrary/src/sharedTest/java/com/example/road/to/effective/snapshot/testing/lazycolumnscreen/crosslibrary/utils/CrossLibraryScreenshotTestRule.kt)
-{% endhint %}

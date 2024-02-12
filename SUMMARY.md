@@ -1,6 +1,6 @@
 # Table of contents
 
-* [Android UI Testing Utils](README.md)
+* [Overview](README.md)
 * [Setup](setup/README.md)
   * [Robolectric setup](setup/robolectric-setup.md)
   * [Cross-Library setup](setup/cross-library-setup.md)

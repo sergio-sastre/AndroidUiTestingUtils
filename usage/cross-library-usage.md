@@ -2,15 +2,17 @@
 
 _AndroidUiTestingUtils_ provides out-of-the-box support to write screenshot tests that can run across libraries for **Composables** and **Android Views**
 
-To configure cross-library screenshot tests, you need to follow the steps in [this section](cross-library-usage.md#cross-library-screenshot-tests).
+To configure cross-library screenshot tests, you need to follow the steps in [this section](../setup/cross-library-setup.md).
 
 Once done, write your tests like this:
 
 1. Define a ScreenshotTestRule with the default configuration, which can be overriden in your tests
 
 ```kotlin
-fun defaultCrossLibraryScreenshotTestRule(config: ScreenshotConfigForComposable): ScreenshotTestRule =
-    CrossLibraryTestRule(config)
+fun defaultCrossLibraryScreenshotTestRule(
+   config: ScreenshotConfigForComposable,
+): ScreenshotTestRule =
+    CrossLibraryScreenshotTestRule(config)
         // Optional: Define special configurations for each library you're using  
         .configure(
             ShotConfig(bitmapCaptureMethod = PixelCopy())
