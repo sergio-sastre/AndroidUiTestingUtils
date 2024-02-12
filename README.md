@@ -1,4 +1,4 @@
-# Android UI Testing Utils
+# Overview
 
 [![](https://jitpack.io/v/sergio-sastre/AndroidUiTestingUtils.svg)](https://jitpack.io/#sergio-sastre/AndroidUiTestingUtils)\
 [![](https://androidweekly.net/issues/issue-508/badge)](https://androidweekly.net/issues/issue-508)
@@ -14,7 +14,7 @@ A set of _TestRules_, _ActivityScenarios_ and utils to facilitate UI & screensho
 For screenshot testing, it supports:
 
 * **Jetpack Compose**
-* **android Views** (e.g. custom Views, ViewHolders, etc.)
+* **Android Views** (e.g. custom Views, ViewHolders, etc.)
 * **Activities**
 * **Fragments**
 * [**Robolectric**](setup/robolectric-setup.md)
