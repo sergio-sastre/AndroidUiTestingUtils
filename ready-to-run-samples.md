@@ -15,4 +15,4 @@ check out the following repo, which has already everything setup.
 
 📸 [Android screenshot testing playground](https://github.com/sergio-sastre/Android-screenshot-testing-playground)
 
-Just clone and run the test!
+Just clone and run the tests!
