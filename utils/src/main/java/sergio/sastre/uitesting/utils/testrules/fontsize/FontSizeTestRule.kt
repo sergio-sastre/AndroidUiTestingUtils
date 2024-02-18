@@ -61,8 +61,9 @@ class FontSizeTestRule(
             } catch (throwable: Throwable) {
                 val testName = "${description.testClass.simpleName}\$${description.methodName}"
                 val errorMessage =
-                    "Test $testName failed on setting DisplaySize to ${scale.name}"
+                    "Test $testName failed on setting FontSize to ${scale.name}"
                 Log.e(TAG, errorMessage)
+                throw throwable
             } finally {
                 scaleSetting.set(initialScale)
                 sleepUntil(scaleMatches(initialScale), initialScale)
