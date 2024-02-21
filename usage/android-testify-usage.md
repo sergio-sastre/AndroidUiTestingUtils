@@ -41,6 +41,7 @@ val screenshotRule =
 fun snapFragment() {
     screenshotRule
         .withExperimentalFeatureEnabled(GenerateDiffs)
+        .waitForIdleSync()
         .assertSame(name = "nameOfMyScreenshot")
 }
 ```
@@ -82,6 +83,7 @@ fun snapMemoriseViewHolderHappyPath() {
         }
         .setScreenshotFirstView() // this is to screenshot the view only
         .withExperimentalFeatureEnabled(GenerateDiffs)
+        .waitForIdleSync()
         .assertSame(name = "nameOfMyScreenshot")
 }
 ```
@@ -108,6 +110,7 @@ fun snapComposable() {
     screenshotRule
         .setCompose { myComposable() }
         .withExperimentalFeatureEnabled(GenerateDiffs)
+        .waitForIdleSync()
         .assertSame(name = "nameOfMyScreenshot")
 }
 ```
