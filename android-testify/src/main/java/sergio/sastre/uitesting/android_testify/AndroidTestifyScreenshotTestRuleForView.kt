@@ -97,6 +97,7 @@ class AndroidTestifyScreenshotTestRuleForView(
             .setViewUnderTest(viewToScreenshot!!)
             .setBitmapCaptureMethod(androidTestifyConfig.bitmapCaptureMethod)
             .generateDiffs(androidTestifyConfig.generateDiffs)
+            .waitForIdleSync()
             .assertSame(name = name)
     }
 

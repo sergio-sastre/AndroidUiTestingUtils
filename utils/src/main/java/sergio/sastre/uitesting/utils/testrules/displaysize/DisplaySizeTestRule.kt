@@ -2,15 +2,9 @@ package sergio.sastre.uitesting.utils.testrules.displaysize
 
 import android.os.SystemClock
 import android.util.Log
-import androidx.annotation.Discouraged
-import androidx.annotation.IntRange
-
-import org.junit.rules.TestRule
-import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
-
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import org.junit.rules.TestRule
 import sergio.sastre.uitesting.utils.common.DisplaySize
 import sergio.sastre.uitesting.utils.testrules.Condition
 import sergio.sastre.uitesting.utils.testrules.displaysize.DisplaySizeTestRule.DisplaySizeStatement.Companion.MAX_RETRIES_TO_WAIT_FOR_SETTING
@@ -23,9 +17,11 @@ import sergio.sastre.uitesting.utils.testrules.displaysize.DisplaySizeTestRule.D
  */
 class DisplaySizeTestRule(
     private val displaySize: DisplaySize,
-) : TestWatcher(), TestRule {
+) : TestRule {
 
     companion object {
+        private val TAG = DisplaySizeTestRule::class.java.simpleName
+
         fun smallDisplaySizeTestRule(): DisplaySizeTestRule = DisplaySizeTestRule(
             DisplaySize.SMALL
         )
@@ -48,36 +44,13 @@ class DisplaySizeTestRule(
 
     private val displayScaleSetting: DisplayScaleSetting = DisplayScaleSetting()
 
-    private var previousDensityDpi: Int = 0
-
-    /**
-     * Since the Display Size setting is changed via adb, it might take longer than expected to
-     * take effect, and could be device dependent. One can use this method to adjust the default
-     * time out which is [MAX_RETRIES_TO_WAIT_FOR_SETTING] * [SLEEP_TO_WAIT_FOR_SETTING_MILLIS]
-     */
-    @Discouraged(
-        message = "Consider removing this method, since it will be removed in a future version. " +
-                "This was initially built as a workaround for an issue that should not happen anymore. " +
-                "If after all, you still need this, consider opening an issue."
-    )
-    fun withTimeOut(@IntRange(from = 0) inMillis: Int): DisplaySizeTestRule = apply {
-        this.timeOutInMillis = inMillis
-    }
-
-    override fun starting(description: Description?) {
-        previousDensityDpi = getInstrumentation().targetContext.resources.configuration.densityDpi
-    }
-
-    override fun finished(description: Description?) {
-        displayScaleSetting.resetDisplaySizeScale(previousDensityDpi)
-    }
-
     override fun apply(base: Statement, description: Description): Statement {
-        return DisplaySizeStatement(base, displayScaleSetting, displaySize, timeOutInMillis)
+        return DisplaySizeStatement(base, description, displayScaleSetting, displaySize, timeOutInMillis)
     }
 
     private class DisplaySizeStatement(
         private val baseStatement: Statement,
+        private val description: Description,
         private val scaleSetting: DisplayScaleSetting,
         private val scale: DisplaySize,
         private val timeOutInMillis: Int,
@@ -86,14 +59,25 @@ class DisplaySizeTestRule(
         @Throws(Throwable::class)
         override fun evaluate() {
             val initialDisplay = scaleSetting.densityDpi
-            val expectedDisplay = (initialDisplay * scale.value.toFloat()).toInt()
-            scaleSetting.setDisplaySizeScale(scale)
-            sleepUntil(scaleMatches(expectedDisplay), expectedDisplay)
+            try {
+                val expectedDisplay = (initialDisplay * scale.value.toFloat()).toInt()
+                scaleSetting.setDisplaySizeScale(scale)
+                sleepUntil(scaleMatches(expectedDisplay), expectedDisplay)
 
-            baseStatement.evaluate()
+                baseStatement.evaluate()
 
-            scaleSetting.resetDisplaySizeScale(initialDisplay)
-            sleepUntil(scaleMatches(initialDisplay), initialDisplay)
+                scaleSetting.resetDisplaySizeScale(initialDisplay)
+                sleepUntil(scaleMatches(initialDisplay), initialDisplay)
+            } catch (throwable: Throwable){
+                val testName = "${description.testClass.simpleName}\$${description.methodName}"
+                val errorMessage =
+                    "Test $testName failed on setting DisplaySize to ${scale.name}"
+                Log.e(TAG, errorMessage)
+                throw throwable
+            } finally {
+                scaleSetting.resetDisplaySizeScale(initialDisplay)
+                sleepUntil(scaleMatches(initialDisplay), initialDisplay)
+            }
         }
 
         private fun scaleMatches(densityDpi: Int): Condition {
@@ -116,7 +100,7 @@ class DisplaySizeTestRule(
                 if (mustRetry) {
                     retries++
                     scaleSetting.setDisplaySizeScale(expectedDisplay)
-                    Log.d("DisplaySizeTestRule", "trying to set DisplaySize to $expectedDisplay, $retries retry")
+                    Log.d(TAG, "trying to set DisplaySize to $expectedDisplay, $retries retry")
                 }
                 if (iterations == iterationsCount) {
                     throw timeoutError()
