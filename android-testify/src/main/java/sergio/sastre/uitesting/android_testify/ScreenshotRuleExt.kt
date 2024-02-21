@@ -45,6 +45,10 @@ fun <T : Activity> ScreenshotRule<T>.assertSame(name: String?) {
     assertSame()
 }
 
+fun <T : Activity> ScreenshotRule<T>.waitForIdleSync(): ScreenshotRule<T> = apply {
+    getInstrumentation().waitForIdleSync()
+}
+
 // We need to ensure the view is attached to the screenshotRule activity window for testify to
 // take the screenshot. This is especially important for dialogs
 internal fun <T : Activity> ScreenshotRule<T>.setViewUnderTest(
