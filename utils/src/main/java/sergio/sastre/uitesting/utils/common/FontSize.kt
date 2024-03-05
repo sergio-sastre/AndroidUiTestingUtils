@@ -8,10 +8,10 @@ import org.junit.Assume
 interface FontSizeScale {
 
     companion object {
-        fun supportedValuesForCurrentSdk(): List<FontSizeScale> =
+        fun supportedValuesForCurrentSdk(): Array<FontSizeScale> =
             when (SDK_INT >= UPSIDE_DOWN_CAKE) {
-                true -> FontSizeNonLinear.entries.toTypedArray().toList()
-                false -> FontSizeLinear.entries.toTypedArray().toList()
+                true -> FontSizeNonLinear.entries.toTypedArray()
+                false -> FontSizeLinear.entries.toTypedArray()
             }
     }
 
@@ -74,6 +74,8 @@ private val maxFontSizeScaleSupported =
         false -> MAX_LINEAR_FONT_SCALE
     }
 
-fun assumeSupportsFontSizeScale(fontSizeScale: FontSizeScale) {
-    Assume.assumeTrue(fontSizeScale.scale <= maxFontSizeScaleSupported)
+fun assumeSdkSupports(fontSizeScale: FontSizeScale?) {
+    fontSizeScale?.scale?.run {
+        Assume.assumeTrue(this <= maxFontSizeScaleSupported)
+    }
 }
