@@ -51,6 +51,7 @@ class ShotScreenshotTestRuleForView(
             dialog = dialog,
             bitmapCaptureMethod = shotConfig.bitmapCaptureMethod,
             name = name,
+            maxPixels = shotConfig.viewMaxPixels
         )
     }
 
@@ -59,6 +60,7 @@ class ShotScreenshotTestRuleForView(
             view = view,
             bitmapCaptureMethod = shotConfig.bitmapCaptureMethod,
             name = name,
+            maxPixels = shotConfig.viewMaxPixels
         )
     }
 
@@ -67,6 +69,7 @@ class ShotScreenshotTestRuleForView(
             viewHolder = viewHolder,
             bitmapCaptureMethod = shotConfig.bitmapCaptureMethod,
             name = name,
+            maxPixels = shotConfig.viewMaxPixels
         )
     }
 

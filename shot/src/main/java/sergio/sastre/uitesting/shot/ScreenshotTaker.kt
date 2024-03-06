@@ -39,6 +39,7 @@ internal class ScreenshotTaker(
         view: View,
         bitmapCaptureMethod: BitmapCaptureMethod?,
         name: String?,
+        maxPixels: Long,
     ) {
         compareScreenshot(
             view = view,
@@ -47,7 +48,8 @@ internal class ScreenshotTaker(
             onNoBitmapCapturedMethod = {
                 screenshotTest.compareScreenshot(
                     view = view,
-                    name = name
+                    name = name,
+                    maxPixels = maxPixels,
                 )
             }
         )
@@ -76,6 +78,7 @@ internal class ScreenshotTaker(
         viewHolder: ViewHolder,
         bitmapCaptureMethod: BitmapCaptureMethod?,
         name: String?,
+        maxPixels: Long,
     ) {
         compareScreenshot(
             view = viewHolder.itemView,
@@ -86,6 +89,7 @@ internal class ScreenshotTaker(
                     holder = viewHolder,
                     heightInPx = viewHolder.itemView.measuredHeight,
                     name = name,
+                    maxPixels = maxPixels,
                 )
             }
         )
@@ -95,6 +99,7 @@ internal class ScreenshotTaker(
         dialog: Dialog,
         bitmapCaptureMethod: BitmapCaptureMethod?,
         name: String?,
+        maxPixels: Long,
     ) {
         when (bitmapCaptureMethod) {
             is BitmapCaptureMethod.Canvas -> screenshotTest.compareScreenshot(
@@ -109,6 +114,7 @@ internal class ScreenshotTaker(
                 screenshotTest.compareScreenshot(
                     dialog = dialog,
                     name = name,
+                    maxPixels = maxPixels,
                 )
             }
         }
