@@ -50,7 +50,7 @@ android {
 
 dependencies {
     implementation project(':utils')
-    api 'com.karumi:shot-android:6.0.0'
+    api 'com.karumi:shot-android:6.1.0'
     api 'androidx.activity:activity-compose:1.8.2'
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
 }
