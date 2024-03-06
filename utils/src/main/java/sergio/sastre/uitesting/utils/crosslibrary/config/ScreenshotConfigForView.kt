@@ -6,9 +6,9 @@ import androidx.test.platform.app.InstrumentationRegistry
 import sergio.sastre.uitesting.utils.activityscenario.ViewConfigItem
 import sergio.sastre.uitesting.utils.common.DisplaySize
 import sergio.sastre.uitesting.utils.common.FontSize
+import sergio.sastre.uitesting.utils.common.FontSizeScale
 import sergio.sastre.uitesting.utils.common.Orientation
 import sergio.sastre.uitesting.utils.common.UiMode
-import java.lang.StringBuilder
 
 /**
  * Configuration that all screenshot libraries support for cross-library screenshot tests.
@@ -29,7 +29,7 @@ data class ScreenshotConfigForView(
     val orientation: Orientation = Orientation.PORTRAIT,
     val uiMode: UiMode = UiMode.DAY,
     val locale: String = "en",
-    val fontSize: FontSize = FontSize.NORMAL,
+    val fontSize: FontSizeScale = FontSize.NORMAL,
     val displaySize: DisplaySize = DisplaySize.NORMAL,
     val theme: String? = null,
 ) {

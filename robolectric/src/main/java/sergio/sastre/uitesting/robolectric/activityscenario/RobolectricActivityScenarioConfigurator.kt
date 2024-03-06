@@ -16,18 +16,18 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.android.controller.ActivityController
 import sergio.sastre.uitesting.robolectric.config.RobolectricQualifiersBuilder.setQualifiers
 import sergio.sastre.uitesting.robolectric.config.screen.DeviceScreen
-import sergio.sastre.uitesting.utils.common.FontSize
 import sergio.sastre.uitesting.utils.common.LocaleUtil
 import sergio.sastre.uitesting.utils.common.Orientation
 import sergio.sastre.uitesting.utils.common.UiMode
 import sergio.sastre.uitesting.utils.common.DisplaySize
+import sergio.sastre.uitesting.utils.common.FontSizeScale
 import java.util.*
 
 object RobolectricActivityScenarioConfigurator {
 
     internal data class State(
         var deviceScreen: DeviceScreen? = null,
-        var fontSize: FontSize? = null,
+        var fontSize: FontSizeScale? = null,
         var locale: Locale? = null,
         var orientation: Orientation? = null,
         var uiMode: UiMode? = null,
@@ -58,7 +58,7 @@ object RobolectricActivityScenarioConfigurator {
         val newConfig = this@applyState
         state.apply {
             orientation?.let { newConfig.orientation = it.activityInfo }
-            fontSize?.let { newConfig.fontScale = it.value.toFloat() }
+            fontSize?.let { newConfig.fontScale = it.scale }
             displaySize?.let {
                 val newDensityDpi = it.value.toFloat() * newConfig.densityDpi
                 newConfig.densityDpi = newDensityDpi.toInt()
@@ -110,7 +110,7 @@ object RobolectricActivityScenarioConfigurator {
             state = state.copy(deviceScreen = deviceScreen)
         }
 
-        fun setFontSize(fontSize: FontSize): ForView = apply {
+        fun setFontSize(fontSize: FontSizeScale): ForView = apply {
             state = state.copy(fontSize = fontSize)
         }
 
@@ -190,7 +190,7 @@ object RobolectricActivityScenarioConfigurator {
             state = state.copy(deviceScreen = deviceScreen)
         }
 
-        fun setFontSize(fontSize: FontSize): ForComposable = apply {
+        fun setFontSize(fontSize: FontSizeScale): ForComposable = apply {
             state = state.copy(fontSize = fontSize)
         }
 
@@ -259,7 +259,7 @@ object RobolectricActivityScenarioConfigurator {
             state = state.copy(deviceScreen = deviceScreen)
         }
 
-        fun setFontSize(fontSize: FontSize): ForActivity = apply {
+        fun setFontSize(fontSize: FontSizeScale): ForActivity = apply {
             state = state.copy(fontSize = fontSize)
         }
 

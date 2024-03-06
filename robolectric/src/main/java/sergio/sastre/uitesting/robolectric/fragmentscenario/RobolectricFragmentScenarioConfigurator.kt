@@ -32,7 +32,7 @@ import sergio.sastre.uitesting.robolectric.activityscenario.RobolectricActivityS
 import sergio.sastre.uitesting.robolectric.config.RobolectricQualifiersBuilder.setQualifiers
 import sergio.sastre.uitesting.robolectric.config.screen.DeviceScreen
 import sergio.sastre.uitesting.utils.common.DisplaySize
-import sergio.sastre.uitesting.utils.common.FontSize
+import sergio.sastre.uitesting.utils.common.FontSizeScale
 import sergio.sastre.uitesting.utils.common.LocaleUtil
 import sergio.sastre.uitesting.utils.common.Orientation
 import sergio.sastre.uitesting.utils.common.UiMode
@@ -185,7 +185,7 @@ class RobolectricFragmentScenarioConfigurator<F : Fragment> constructor(
     class ForFragment() {
         data class State(
             var deviceScreen: DeviceScreen? = null,
-            var fontSize: FontSize? = null,
+            var fontSize: FontSizeScale? = null,
             var locale: Locale? = null,
             var orientation: Orientation? = null,
             var uiMode: UiMode? = null,
@@ -223,7 +223,7 @@ class RobolectricFragmentScenarioConfigurator<F : Fragment> constructor(
             state = state.copy(uiMode = uiMode)
         }
 
-        fun setFontSize(fontSize: FontSize) = apply {
+        fun setFontSize(fontSize: FontSizeScale) = apply {
             state = state.copy(fontSize = fontSize)
         }
 

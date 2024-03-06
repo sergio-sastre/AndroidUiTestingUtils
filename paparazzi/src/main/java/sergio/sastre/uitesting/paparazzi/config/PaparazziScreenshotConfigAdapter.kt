@@ -18,7 +18,7 @@ internal class PaparazziScreenshotConfigAdapter(
         PaparazziWrapperConfigAdapter(paparazziConfig).asPaparazziDeviceConfig().copy(
             orientation = screenshotConfigForComposable.orientation.toScreenOrientation(),
             nightMode = screenshotConfigForComposable.uiMode.toNightMode(),
-            fontScale = screenshotConfigForComposable.fontScale.value.toFloat(),
+            fontScale = screenshotConfigForComposable.fontScale.scale,
             locale = screenshotConfigForComposable.locale.toBC47Locale(),
         ).hackViewDimensionsToOrientation()
 
@@ -26,7 +26,7 @@ internal class PaparazziScreenshotConfigAdapter(
         PaparazziWrapperConfigAdapter(paparazziConfig).asPaparazziDeviceConfig().copy(
             orientation = screenshotConfigForView.orientation.toScreenOrientation(),
             nightMode = screenshotConfigForView.uiMode.toNightMode(),
-            fontScale = screenshotConfigForView.fontSize.value.toFloat(),
+            fontScale = screenshotConfigForView.fontSize.scale,
             locale = screenshotConfigForView.locale.toBC47Locale(),
         ).hackViewDimensionsToOrientation()
 

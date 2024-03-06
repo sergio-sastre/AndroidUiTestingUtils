@@ -29,7 +29,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.test.core.app.ActivityScenario
 import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioConfigurator
 import sergio.sastre.uitesting.utils.common.DisplaySize
-import sergio.sastre.uitesting.utils.common.FontSize
+import sergio.sastre.uitesting.utils.common.FontSizeScale
 import sergio.sastre.uitesting.utils.common.LocaleUtil
 import sergio.sastre.uitesting.utils.common.Orientation
 import sergio.sastre.uitesting.utils.common.UiMode
@@ -174,7 +174,7 @@ class FragmentScenarioConfigurator<F : Fragment> constructor(
     }
 
     companion object {
-        private var fontSize: FontSize? = null
+        private var fontSize: FontSizeScale? = null
         private var locale: Locale? = null
         private var orientation: Orientation? = null
         private var uiMode: UiMode? = null
@@ -197,7 +197,7 @@ class FragmentScenarioConfigurator<F : Fragment> constructor(
             this.uiMode = uiMode
         }
 
-        fun setFontSize(fontSize: FontSize) = apply {
+        fun setFontSize(fontSize: FontSizeScale) = apply {
             this.fontSize = fontSize
         }
 
