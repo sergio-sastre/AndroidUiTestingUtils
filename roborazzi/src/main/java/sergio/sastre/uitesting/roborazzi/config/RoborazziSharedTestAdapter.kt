@@ -1,5 +1,7 @@
 package sergio.sastre.uitesting.roborazzi.config
 
+import com.dropbox.differ.ImageComparator
+import com.dropbox.differ.SimpleImageComparator
 import com.github.takahirom.roborazzi.Dump
 import com.github.takahirom.roborazzi.Dump.Companion.AccessibilityExplanation
 import com.github.takahirom.roborazzi.Dump.Companion.DefaultExplanation
@@ -66,12 +68,14 @@ internal class RoborazziSharedTestAdapter(
                 RoborazziOptions.CompareOptions(
                     outputDirectoryPath = it.compareOptions.outputDirectoryPath,
                     resultValidator = ThresholdValidator(it.compareOptions.changeThreshold),
-                    comparisonStyle = asComparisonStyle()
+                    comparisonStyle = asComparisonStyle(),
+                    imageComparator = asImageComparator(),
                 )
 
             return RoborazziOptions(
                 captureType = adaptedCaptureType,
-                compareOptions = adaptedCompareOptions
+                compareOptions = adaptedCompareOptions,
+                contextData = it.contextData,
             )
         }
     }
@@ -89,6 +93,15 @@ internal class RoborazziSharedTestAdapter(
 
             ComparisonStyle.Simple -> RoborazziOptions.CompareOptions.ComparisonStyle.Simple
         }
+
+    private fun asImageComparator(): ImageComparator {
+        val imageComparator = roborazziConfig.roborazziOptions.compareOptions.simpleImageComparator
+        return SimpleImageComparator(
+            maxDistance = imageComparator.maxDistance,
+            hShift = imageComparator.hShift,
+            vShift = imageComparator.vShift,
+        )
+    }
 
     private fun asDefaultOrientation(): ScreenOrientation =
         config?.let {
