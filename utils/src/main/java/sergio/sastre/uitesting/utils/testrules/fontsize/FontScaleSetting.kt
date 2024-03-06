@@ -7,7 +7,6 @@ import android.content.res.Resources
 import android.os.Build
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import sergio.sastre.uitesting.utils.common.FontSizeScale
-import sergio.sastre.uitesting.utils.common.FontSizeScaleValue
 import sergio.sastre.uitesting.utils.utils.waitForExecuteShellCommand
 
 internal class FontScaleSetting internal constructor() {
@@ -16,7 +15,7 @@ internal class FontScaleSetting internal constructor() {
         get() = getInstrumentation().targetContext.resources
 
     internal fun get(): FontSizeScale {
-        return FontSizeScaleValue(resources.configuration.fontScale)
+        return FontSizeScale.Value(resources.configuration.fontScale)
     }
 
     internal fun set(scale: FontSizeScale) {

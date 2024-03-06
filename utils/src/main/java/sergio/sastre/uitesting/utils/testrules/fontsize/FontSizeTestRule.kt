@@ -2,6 +2,7 @@ package sergio.sastre.uitesting.utils.testrules.fontsize
 
 import android.os.SystemClock
 import android.util.Log
+import androidx.annotation.Discouraged
 
 import org.junit.rules.TestRule
 import org.junit.runner.Description
@@ -33,7 +34,20 @@ class FontSizeTestRule(
 
         fun largeFontScaleTestRule(): FontSizeTestRule = FontSizeTestRule(FontSize.LARGE)
 
+        @Discouraged("use xlargeFontScaleTestRule() instead")
         fun hugeFontScaleTestRule(): FontSizeTestRule = FontSizeTestRule(FontSize.HUGE)
+
+        fun xlargeFontScaleTestRule(): FontSizeTestRule = FontSizeTestRule(FontSize.XLARGE)
+
+        fun xxlargeFontScaleTestRule(): FontSizeTestRule = FontSizeTestRule(FontSize.XXLARGE)
+
+        fun xxxlargeFontScaleTestRule(): FontSizeTestRule = FontSizeTestRule(FontSize.XXXLARGE)
+
+        fun maximumLinearFontScaleTestRule(): FontSizeTestRule = FontSizeTestRule(FontSize.MAXIMUM_LINEAR)
+
+        fun maximumNonLinearFontScaleTestRule(): FontSizeTestRule = FontSizeTestRule(FontSize.MAXIMUM_NON_LINEAR)
+
+        fun largestFontScaleTestRule(): FontSizeTestRule = FontSizeTestRule(FontSize.LARGEST)
     }
 
     private var timeOutInMillis = MAX_RETRIES_TO_WAIT_FOR_SETTING * SLEEP_TO_WAIT_FOR_SETTING_MILLIS

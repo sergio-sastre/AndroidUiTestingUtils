@@ -22,9 +22,9 @@ interface FontSizeScale {
             true -> this.name
             false -> this.scale.toString().replace(".", "_") + "f"
         }
-}
 
-class FontSizeScaleValue(override val scale: Float) : FontSizeScale
+    class Value(override val scale: Float) : FontSizeScale
+}
 
 private const val MAX_LINEAR_FONT_SCALE = 1.3f
 private const val MAX_NON_LINEAR_FONT_SCALE = 2.0f
