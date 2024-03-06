@@ -20,7 +20,7 @@ internal class PaparazziScreenshotConfigAdapter(
             nightMode = screenshotConfigForComposable.uiMode.toNightMode(),
             fontScale = screenshotConfigForComposable.fontScale.value.toFloat(),
             locale = screenshotConfigForComposable.locale.toBC47Locale(),
-        ).adjustDimensionsToOrientation()
+        ).hackViewDimensionsToOrientation()
 
     fun getDeviceConfigFor(screenshotConfigForView: ScreenshotConfigForView): app.cash.paparazzi.DeviceConfig =
         PaparazziWrapperConfigAdapter(paparazziConfig).asPaparazziDeviceConfig().copy(
@@ -28,7 +28,7 @@ internal class PaparazziScreenshotConfigAdapter(
             nightMode = screenshotConfigForView.uiMode.toNightMode(),
             fontScale = screenshotConfigForView.fontSize.value.toFloat(),
             locale = screenshotConfigForView.locale.toBC47Locale(),
-        ).adjustDimensionsToOrientation()
+        ).hackViewDimensionsToOrientation()
 
     /**
      * Paparazzi has sometimes problems with measuring views. Therefore, this uses a default
@@ -36,41 +36,30 @@ internal class PaparazziScreenshotConfigAdapter(
      *
      * Set the RenderingMode explicitly if that is not desired.
      */
-    private fun app.cash.paparazzi.DeviceConfig.adjustDimensionsToOrientation()
+    private fun app.cash.paparazzi.DeviceConfig.hackViewDimensionsToOrientation()
             : app.cash.paparazzi.DeviceConfig {
         // If a Paparazzi rendering mode applies,
         // do not hack Height and Width to simulate orientation change
         if (paparazziConfig.renderingMode != null) {
-            return switchHeightAndWidth()
+            return copy(orientation = this.orientation)
         }
 
+        // This is a hack when if using SHRINK, the ViewHolder dimensions are miscalculated
+        // For that, one should use V_SCROLL + these values in DeviceConfig
         val old = copy()
         return when (orientation) {
-            PORTRAIT -> copy(screenHeight = 1)
+            PORTRAIT -> copy(
+                screenHeight = old.screenWidth,
+                screenWidth = 1,
+                orientation = LANDSCAPE,
+            )
             LANDSCAPE -> copy(
-                screenHeight = 1,
                 screenWidth = old.screenHeight,
+                screenHeight = 1,
+                orientation = LANDSCAPE,
             )
             SQUARE -> this
         }
-    }
-
-    private fun app.cash.paparazzi.DeviceConfig.switchHeightAndWidth()
-            : app.cash.paparazzi.DeviceConfig {
-        val old = copy()
-        val height = when (orientation) {
-            LANDSCAPE -> old.screenWidth
-            PORTRAIT, SQUARE -> old.screenHeight
-        }
-        val width = when (orientation) {
-            LANDSCAPE -> old.screenHeight
-            PORTRAIT, SQUARE -> old.screenWidth
-        }
-        return this.copy(
-            screenHeight = height,
-            screenWidth = width,
-            orientation = this.orientation
-        )
     }
 
     private fun Orientation.toScreenOrientation(): ScreenOrientation =
@@ -79,17 +68,13 @@ internal class PaparazziScreenshotConfigAdapter(
             Orientation.LANDSCAPE -> LANDSCAPE
         }
 
-    private fun String.toBC47Locale(): String {
-        return if (this == "en_XA") {
-            "en-rXA"
-        } else if (this == "ar_XB"){
-            "ar-rXB"
-        } else if (this.contains("-")) {
-            "b+${this.replace(oldChar = '-', newChar = '+')}"
-        } else {
-            this
+    private fun String.toBC47Locale(): String =
+        when {
+            this == "en_XA" -> "en-rXA"
+            this == "ar_XB" -> "ar-rXB"
+            this.contains("-") -> "b+${this.replace(oldChar = '-', newChar = '+')}"
+            else -> this
         }
-    }
 
     private fun UiMode.toNightMode(): NightMode =
         when (this) {

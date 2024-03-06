@@ -6,8 +6,6 @@ data class Environment(
     val platformDir: String? = null,
     val compileSdkVersion: Int? = null,
     val appTestDir: String? = null,
-    val resDir: String? = null,
-    val assetsDir: String? = null,
     val packageName: String? = null,
     val resourcePackageNames: List<String>? = null,
     val localResourceDirs: List<String>? = null,
