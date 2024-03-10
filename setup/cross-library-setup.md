@@ -7,7 +7,7 @@ I wrote about why you might need it and how _AndroidUiTestingUtils_ supports thi
 * 🌎 [A World Beyond Libraries: Cross-Library screenshot tests on Android](https://sergiosastre.hashnode.dev/a-world-beyond-libraries-cross-library-screenshot-tests-on-android)
 * 📚 [Write Once, Test Everywhere: Cross-Library Screenshot Testing with AndroidUiTestingUtils 2.0.0](https://sergiosastre.hashnode.dev/write-once-test-everywhere-cross-library-screenshot-testing-with-androiduitestingutils)
 
-Currently, it provides out-of-the-box support for the following screenshot testing libraries 1:
+Currently, it provides out-of-the-box support for the following screenshot testing libraries:
 
 * [Paparazzi](https://github.com/cashapp/paparazzi)&#x20;
 * [Shot](https://github.com/pedrovgs/Shot)
@@ -40,12 +40,13 @@ You can achieve this in 4 easy steps:
    \
    It's recommended to use the AndroidUiTestingUtils version that corresponds to the screenshot library version you're using:
 
-| AndroidUiTestingUtils | Roborazzi     | Paparazzi   | Dropshots | Shot  | Android-Testify |
-| --------------------- | ------------- | ----------- | --------- | ----- | --------------- |
-| _**2.2.0**_           | 1.8.0-alpha-6 | _**1.3.2**_ | 0.4.1     | 6.0.0 | 2.0.0           |
-| 2.1.0                 | 1.8.0-alpha-6 | 1.3.1       | 0.4.1     | 6.0.0 | 2.0.0           |
-| 2.0.1                 | 1.7.0-rc-1    | 1.3.1       | 0.4.1     | 6.0.0 | -               |
-| 2.0.0                 | 1.5.0-rc-1    | 1.3.1       | 0.4.1     | 6.0.0 | -               |
+| AndroidUiTestingUtils | Roborazzi     | Paparazzi   | Dropshots | Shot        | Android-Testify |
+| --------------------- | ------------- | ----------- | --------- | ----------- | --------------- |
+| _**2.3.0**_           | _**1.10.1**_  | _**1.3.3**_ | 0.4.1     | _**6.1.0**_ | 2.0.0           |
+| 2.2.x                 | 1.8.0-alpha-6 | 1.3.2       | 0.4.1     | 6.0.0       | 2.0.0           |
+| 2.1.0                 | 1.8.0-alpha-6 | 1.3.1       | 0.4.1     | 6.0.0       | 2.0.0           |
+| 2.0.1                 | 1.7.0-rc-1    | 1.3.1       | 0.4.1     | 6.0.0       | -               |
+| 2.0.0                 | 1.5.0-rc-1    | 1.3.1       | 0.4.1     | 6.0.0       | -               |
 
 {% hint style="warning" %}
 If having troubles with Paparazzi, beware of the [release notes of 1.3.2](https://github.com/cashapp/paparazzi/releases/tag/1.3.2)
@@ -191,7 +192,7 @@ class CrossLibraryScreenshotTestRule(
 This is likely the most common use case. There are Ready-To-Run examples available
 
 * [Shot + Roborazzi](https://github.com/sergio-sastre/Android-screenshot-testing-playground/tree/master/dialogs/shot%2Broborazzi)
-* [Dropshots + Paparazzi](https://github.com/sergio-sastre/Android-screenshot-testing-playground/tree/master/lazycolumnscreen/dropshots%2Bpaparazzi)
+* [Android-Testify + Paparazzi](https://github.com/sergio-sastre/Android-screenshot-testing-playground/tree/master/lazycolumnscreen/android-testify+paparazzi)
 * [Dropshots + Roborazzi](https://github.com/sergio-sastre/Android-screenshot-testing-playground/tree/master/recyclerviewscreen/dropshots%2Broborazzi)
 {% endhint %}
 

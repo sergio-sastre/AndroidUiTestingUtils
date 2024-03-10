@@ -1,6 +1,6 @@
 # Android-Testify usage
 
-Android-Testify does not support _ActivityScenario_ but the deprecated _ActivityTestRule._ So, in order to generate screenshot under different configurations, you'd need to resort to the TestRules described in [this section](testrules-and-other-utils.md#testrules).\
+Android-Testify does not support _ActivityScenario_ but the deprecated _ActivityTestRule._ So, in order to generate screenshot under different configurations, you'd need to resort to the TestRules described in [this section](../testrules-and-other-utils.md#testrules).\
 \
 Nevertheless, _AndroidUiTestingUtils_ provides optimized ScreenshotTestRules to leverage Android-Testify tests for **Fragments**, **Android Views** and **Jetpack Compose**. \
 These are used in the upcoming examples.\
@@ -15,7 +15,7 @@ androidTestImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:androi
 
 ## Activity
 
-Use _AndroidUiTesting_ [TestRules ](testrules-and-other-utils.md#testrules)with the standard Android-Testify ScreenshotRule
+Use _AndroidUiTesting_ [TestRules ](../testrules-and-other-utils.md#testrules)with the standard Android-Testify ScreenshotRule
 
 ## Fragment
 
@@ -110,7 +110,6 @@ fun snapComposable() {
     screenshotRule
         .setCompose { myComposable() }
         .withExperimentalFeatureEnabled(GenerateDiffs)
-        .waitForIdleSync()
         .assertSame(name = "nameOfMyScreenshot")
 }
 ```

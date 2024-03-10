@@ -14,6 +14,8 @@ testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:utils:<versio
 testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:robolectric:<version>'
 ```
 
+## Application Modules
+
 If you get any error due to "Activity not found" in your application module, add the following to your `debug/manifest`
 
 ```xml

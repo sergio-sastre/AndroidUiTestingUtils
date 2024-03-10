@@ -11,7 +11,7 @@ or &#x20;
 
 * Cross-Library Screenshot tests
 
-check out the following repo, which has already everything setup.
+check out the following repo, which **has already everything setup**.
 
 📸 [Android screenshot testing playground](https://github.com/sergio-sastre/Android-screenshot-testing-playground)
 
