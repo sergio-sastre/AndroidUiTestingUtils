@@ -6,19 +6,19 @@ package sergio.sastre.uitesting.utils.testrules.fontsize
 import android.content.res.Resources
 import android.os.Build
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import sergio.sastre.uitesting.utils.common.FontSize
+import sergio.sastre.uitesting.utils.common.FontSizeScale
 import sergio.sastre.uitesting.utils.utils.waitForExecuteShellCommand
 
-class FontScaleSetting internal constructor() {
+internal class FontScaleSetting internal constructor() {
 
     private val resources
         get() = getInstrumentation().targetContext.resources
 
-    fun get(): FontSize {
-        return FontSize.from(resources.configuration.fontScale)
+    internal fun get(): FontSizeScale {
+        return FontSizeScale.Value(resources.configuration.fontScale)
     }
 
-    fun set(scale: FontSize) {
+    internal fun set(scale: FontSizeScale) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 changeFontScaleFromApi24(scale)
@@ -30,19 +30,21 @@ class FontScaleSetting internal constructor() {
         }
     }
 
-    private fun changeFontScaleFromApi24(scale: FontSize) {
-        getInstrumentation().waitForExecuteShellCommand("settings put system font_scale " + scale.value)
+    private fun changeFontScaleFromApi24(fontScale: FontSizeScale) {
+        getInstrumentation().waitForExecuteShellCommand(
+            "settings put system font_scale " + fontScale.scale
+        )
     }
 
     @Suppress("DEPRECATION")
-    private fun changeFontScalePreApi24(scale: FontSize) {
-        resources.configuration.fontScale = java.lang.Float.parseFloat(scale.value)
+    private fun changeFontScalePreApi24(fontScale: FontSizeScale) {
+        resources.configuration.fontScale = fontScale.scale
         val metrics = Resources.getSystem().displayMetrics
         metrics.scaledDensity = resources.configuration.fontScale * metrics.density
         resources.updateConfiguration(resources.configuration, metrics)
     }
 
-    private fun saveFontScaleError(scale: FontSize): RuntimeException {
-        return RuntimeException("Unable to save font size " + scale.name)
+    private fun saveFontScaleError(fontScale: FontSizeScale): RuntimeException {
+        return RuntimeException("Unable to save font size scale" + fontScale.scale)
     }
 }

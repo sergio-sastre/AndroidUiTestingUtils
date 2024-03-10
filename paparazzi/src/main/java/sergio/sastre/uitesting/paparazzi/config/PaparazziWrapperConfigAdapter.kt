@@ -103,8 +103,6 @@ internal class PaparazziWrapperConfigAdapter(
             compileSdkVersion = configEnvironment?.compileSdkVersion
                 ?: environment.compileSdkVersion,
             appTestDir = configEnvironment?.appTestDir ?: environment.appTestDir,
-            resDir = configEnvironment?.resDir ?: environment.resDir,
-            assetsDir = configEnvironment?.assetsDir ?: environment.assetsDir,
             packageName = configEnvironment?.packageName ?: environment.packageName,
             resourcePackageNames = configEnvironment?.resourcePackageNames
                 ?: environment.resourcePackageNames,
