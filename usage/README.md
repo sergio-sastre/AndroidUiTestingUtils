@@ -35,7 +35,7 @@ FontSize.LARGE               // 1.15f
 FontSize.XLARGE              // 1.30f
 FontSize.XXLARGE             // 1.50f
 FontSize.XXXLARGE            // 1.80f
-FontSize.LARGEST             // SDK 34+ -> 2.00f, SDK < 34 -> 1.3f
+FontSize.LARGEST             // SDK 34+ -> 2.00f, SDK < 34 -> 1.30f
 
 FontSize.MAXIMUM_LINEAR      // 1.30f
 FontSize.MAXIMUM_NON_LINEAR  // 2.00f
