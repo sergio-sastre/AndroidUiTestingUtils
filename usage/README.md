@@ -89,7 +89,7 @@ FontSize.LARGEST    // 2.00f
 
 ### Skip Tests
 
-You can skip not "officially" supported _FontSizeScale_ by using `assumeSdkSupports` at the beginning of the test, for instance:
+You can skip _FontSizeScales_ that the current API Level does not support by using `assumeSdkSupports` at the beginning of the test, for instance:
 
 ```kotlin
 private val targetFontSizeScale = FontSize.XXXLARGE
