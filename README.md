@@ -18,8 +18,8 @@ For screenshot testing, it supports:
  - **android Views** (e.g. custom Views, ViewHolders, etc.)
  - **Activities**
  - **Fragments**
- - [**Robolectric**](#robolectric-screenshot-tests)
- - [**Cross-library** & **Shared screenshot testing**](#cross-library-screenshot-tests) i.e. same test running either on device or on JVM.
+ - [**Robolectric**](https://sergio-sastre.gitbook.io/androiduitestingutils/setup/robolectric-setup)
+ - [**Cross-library** & **Shared screenshot testing**](https://sergio-sastre.gitbook.io/androiduitestingutils/setup/cross-library-setup) i.e. same test running either on device or on JVM.
 </br>
 
 This library enables you to easily change the following configurations in your UI tests:
