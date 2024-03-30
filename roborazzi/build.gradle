@@ -51,7 +51,7 @@ dependencies {
     implementation project(':robolectric')
     implementation project(':mapper-roborazzi')
 
-    api 'io.github.takahirom.roborazzi:roborazzi:1.10.1'
+    api 'io.github.takahirom.roborazzi:roborazzi:1.11.0'
     api 'androidx.test.espresso:espresso-core:3.5.1'
     api 'org.hamcrest:hamcrest:2.2'
 
@@ -64,7 +64,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "roborazzi"
-            version = '2.3.0'
+            version = '2.3.1'
 
             afterEvaluate {
                 from components.release
