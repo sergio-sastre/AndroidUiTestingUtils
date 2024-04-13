@@ -42,7 +42,8 @@ You can achieve this in 4 easy steps:
 
 | AndroidUiTestingUtils | Roborazzi     | Paparazzi | Dropshots | Shot        | Android-Testify |
 | --------------------- | ------------- | --------- | --------- | ----------- | --------------- |
-| _**2.3.1**_           | _**1.11.0**_  | 1.3.3     | 0.4.1     | 6.1.0       | 2.0.0           |
+| _**2.3.2**_           | _**1.12.0**_  | 1.3.3     | 0.4.1     | 6.1.0       | 2.0.0           |
+| 2.3.1                 | 1.11.0        | 1.3.3     | 0.4.1     | 6.1.0       | 2.0.0           |
 | 2.3.0                 | 1.10.1        | 1.3.3     | 0.4.1     | _**6.1.0**_ | 2.0.0           |
 | 2.2.x                 | 1.8.0-alpha-6 | 1.3.2     | 0.4.1     | 6.0.0       | 2.0.0           |
 | 2.1.0                 | 1.8.0-alpha-6 | 1.3.1     | 0.4.1     | 6.0.0       | 2.0.0           |
@@ -50,7 +51,7 @@ You can achieve this in 4 easy steps:
 | 2.0.0                 | 1.5.0-rc-1    | 1.3.1     | 0.4.1     | 6.0.0       | -               |
 
 {% hint style="info" %}
-AndroidUiTestingUtils 2.3.1 uses Robolectric 4.12.1 under the hood, which adds support for Native Graphics on Windows, and therefore Roborazzi!
+AndroidUiTestingUtils 2.3.1+ uses Robolectric 4.12.1 under the hood, which adds support for Native Graphics on Windows, and therefore Roborazzi!
 {% endhint %}
 
 {% hint style="warning" %}
