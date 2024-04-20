@@ -117,7 +117,9 @@ Want to try it out? Check out these executable examples:
 
 ### Roborazzi
 
-If using Roborazzi or a Robolectric based library, enable _robolectric native graphics_ through Gradle as well
+If using Roborazzi or a Robolectric based library, enable _robolectric native graphics_ through Gradle as well.\
+\
+Optionally, you can also enable hardware native graphics via Gradle to render shadows and elevation!
 
 ```groovy
 android {
@@ -127,6 +129,10 @@ android {
             ...
             all {
                 systemProperty 'robolectric.graphicsMode', 'NATIVE'
+                
+                // Enable hardware rendering to display shadows and elevation. 
+                // Still experimental. Supported only on API 31+
+                systemProperty 'robolectric.screenshot.hwrdr.native', 'true'
             }
         }
     }
