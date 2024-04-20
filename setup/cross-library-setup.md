@@ -140,7 +140,7 @@ android {
 ```
 
 {% hint style="danger" %}
-Hardware native Graphics requires AndroidUiTestingUtils 2.3.1+, which use Robolectric 4.12.1 under the hood.
+Hardware Native Graphics requires AndroidUiTestingUtils 2.3.1+, which use Robolectric 4.12.1 under the hood.
 {% endhint %}
 
 ### **Android-Testify**
