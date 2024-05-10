@@ -3,6 +3,7 @@ package sergio.sastre.uitesting.mapper.roborazzi
 import androidx.annotation.ColorInt
 import sergio.sastre.uitesting.mapper.roborazzi.wrapper.RoborazziOptions
 import sergio.sastre.uitesting.mapper.roborazzi.wrapper.screen.DeviceScreen
+import sergio.sastre.uitesting.utils.crosslibrary.config.BitmapCaptureMethod
 import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
 
 data class RoborazziConfig(
@@ -10,6 +11,7 @@ data class RoborazziConfig(
     val roborazziOptions: RoborazziOptions = RoborazziOptions(),
     val deviceScreen: DeviceScreen? = null,
     @ColorInt val backgroundColor: Int? = null,
+    val bitmapCaptureMethod: BitmapCaptureMethod? = null,
 ) : LibraryConfig {
 
     companion object {

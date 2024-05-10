@@ -1,7 +1,6 @@
 package sergio.sastre.uitesting.roborazzi
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.test.onRoot
 import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.runner.Description
@@ -45,8 +44,8 @@ class RoborazziScreenshotTestRuleForComposable(
         @OptIn(ExperimentalRoborazziApi::class)
         activityScenarioRule
             .setContent { composable() }
-            .composeRule
-            .onRoot()
+            .composeView
+            .drawToBitmap(roborazziConfig.bitmapCaptureMethod)
             .captureRoboImage(
                 filePath = filePathGenerator(roborazziConfig.filePath, name),
                 roborazziOptions = roborazziAdapter.asRoborazziOptions(),
