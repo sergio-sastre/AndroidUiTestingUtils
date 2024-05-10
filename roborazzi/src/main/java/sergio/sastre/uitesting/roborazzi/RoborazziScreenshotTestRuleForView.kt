@@ -16,7 +16,6 @@ import sergio.sastre.uitesting.mapper.roborazzi.wrapper.CaptureType
 import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
 import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfigForView
 import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRuleForView
-import sergio.sastre.uitesting.utils.utils.drawToBitmap
 
 class RoborazziScreenshotTestRuleForView(
     override val config: ScreenshotConfigForView = ScreenshotConfigForView(),
@@ -67,7 +66,6 @@ class RoborazziScreenshotTestRuleForView(
         if (roborazziConfig.roborazziOptions.captureType is CaptureType.Dump) {
             captureDumpDialog(name, requireNotNull(dumpDialogView))
                 .also { dumpDialogView = null }
-
         } else {
             captureScreenshotDialog(name, dialog)
         }
@@ -77,6 +75,7 @@ class RoborazziScreenshotTestRuleForView(
         (activityScenarioRule.activity.window.decorView as ViewGroup).addView(dialogView)
         @OptIn(ExperimentalRoborazziApi::class)
         dialogView
+            .drawToBitmap(roborazziConfig.bitmapCaptureMethod)
             .captureRoboImage(
                 filePath = filePathGenerator.invoke(roborazziConfig.filePath, name),
                 roborazziOptions = roborazziAdapter.asRoborazziOptions(),
@@ -86,7 +85,7 @@ class RoborazziScreenshotTestRuleForView(
     private fun captureScreenshotDialog(name: String?, dialog: Dialog) {
         @OptIn(ExperimentalRoborazziApi::class)
         dialog
-            .drawToBitmap()
+            .drawToBitmap(roborazziConfig.bitmapCaptureMethod)
             .captureRoboImage(
                 filePath = filePathGenerator.invoke(roborazziConfig.filePath, name),
                 roborazziOptions = roborazziAdapter.asRoborazziOptions(),
@@ -96,6 +95,7 @@ class RoborazziScreenshotTestRuleForView(
     override fun snapshotView(name: String?, view: View) {
         @OptIn(ExperimentalRoborazziApi::class)
         view
+            .drawToBitmap(roborazziConfig.bitmapCaptureMethod)
             .captureRoboImage(
                 filePath = filePathGenerator.invoke(roborazziConfig.filePath, name),
                 roborazziOptions = roborazziAdapter.asRoborazziOptions(),
@@ -106,6 +106,7 @@ class RoborazziScreenshotTestRuleForView(
         @OptIn(ExperimentalRoborazziApi::class)
         viewHolder
             .itemView
+            .drawToBitmap(roborazziConfig.bitmapCaptureMethod)
             .captureRoboImage(
                 filePath = filePathGenerator.invoke(roborazziConfig.filePath, name),
                 roborazziOptions = roborazziAdapter.asRoborazziOptions(),
