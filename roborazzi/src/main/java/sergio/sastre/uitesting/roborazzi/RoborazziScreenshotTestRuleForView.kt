@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.platform.app.InstrumentationRegistry.*
 import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.runner.Description
@@ -16,7 +17,6 @@ import sergio.sastre.uitesting.mapper.roborazzi.wrapper.CaptureType
 import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
 import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfigForView
 import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRuleForView
-import sergio.sastre.uitesting.utils.utils.drawToBitmap
 
 class RoborazziScreenshotTestRuleForView(
     override val config: ScreenshotConfigForView = ScreenshotConfigForView(),
@@ -53,10 +53,7 @@ class RoborazziScreenshotTestRuleForView(
         sergio.sastre.uitesting.utils.utils.waitForMeasuredView { actionToDo() }
 
     override fun waitForMeasuredDialog(actionToDo: () -> Dialog): Dialog {
-        // Workaround for dialog dump mode
-        if (roborazziConfig.roborazziOptions.captureType is CaptureType.Dump) {
-            dumpDialogView = waitForMeasuredView { actionToDo().window!!.decorView }
-        }
+        dumpDialogView = actionToDo().window!!.decorView
         return sergio.sastre.uitesting.utils.utils.waitForMeasuredDialog { actionToDo() }
     }
 
@@ -64,52 +61,36 @@ class RoborazziScreenshotTestRuleForView(
         sergio.sastre.uitesting.utils.utils.waitForMeasuredViewHolder { actionToDo() }
 
     override fun snapshotDialog(name: String?, dialog: Dialog) {
-        if (roborazziConfig.roborazziOptions.captureType is CaptureType.Dump) {
-            captureDumpDialog(name, requireNotNull(dumpDialogView))
-                .also { dumpDialogView = null }
-
-        } else {
-            captureScreenshotDialog(name, dialog)
+        requireNotNull(dumpDialogView).run {
+            (activityScenarioRule.activity.window.decorView as ViewGroup).addView(this)
+            getInstrumentation().waitForIdleSync()
+            snapshotView(name, waitForMeasuredView { this })
+        }.also {
+            dumpDialogView = null
         }
-    }
-
-    private fun captureDumpDialog(name: String?, dialogView: View) {
-        (activityScenarioRule.activity.window.decorView as ViewGroup).addView(dialogView)
-        @OptIn(ExperimentalRoborazziApi::class)
-        dialogView
-            .captureRoboImage(
-                filePath = filePathGenerator.invoke(roborazziConfig.filePath, name),
-                roborazziOptions = roborazziAdapter.asRoborazziOptions(),
-            )
-    }
-
-    private fun captureScreenshotDialog(name: String?, dialog: Dialog) {
-        @OptIn(ExperimentalRoborazziApi::class)
-        dialog
-            .drawToBitmap()
-            .captureRoboImage(
-                filePath = filePathGenerator.invoke(roborazziConfig.filePath, name),
-                roborazziOptions = roborazziAdapter.asRoborazziOptions(),
-            )
     }
 
     override fun snapshotView(name: String?, view: View) {
         @OptIn(ExperimentalRoborazziApi::class)
-        view
-            .captureRoboImage(
-                filePath = filePathGenerator.invoke(roborazziConfig.filePath, name),
-                roborazziOptions = roborazziAdapter.asRoborazziOptions(),
-            )
+        when (roborazziConfig.roborazziOptions.captureType is CaptureType.Dump) {
+            // Dump does not support Bitmap.captureRoboImage
+            true -> view
+                .captureRoboImage(
+                    filePath = filePathGenerator.invoke(roborazziConfig.filePath, name),
+                    roborazziOptions = roborazziAdapter.asRoborazziOptions(),
+                )
+
+            false -> view
+                .drawToBitmap(roborazziConfig.bitmapCaptureMethod)
+                .captureRoboImage(
+                    filePath = filePathGenerator.invoke(roborazziConfig.filePath, name),
+                    roborazziOptions = roborazziAdapter.asRoborazziOptions(),
+                )
+        }
     }
 
     override fun snapshotViewHolder(name: String?, viewHolder: RecyclerView.ViewHolder) {
-        @OptIn(ExperimentalRoborazziApi::class)
-        viewHolder
-            .itemView
-            .captureRoboImage(
-                filePath = filePathGenerator.invoke(roborazziConfig.filePath, name),
-                roborazziOptions = roborazziAdapter.asRoborazziOptions(),
-            )
+        snapshotView(name, viewHolder.itemView)
     }
 
     override fun configure(config: LibraryConfig): ScreenshotTestRuleForView = apply {

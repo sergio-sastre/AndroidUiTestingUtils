@@ -5,7 +5,7 @@ import android.content.res.Configuration
 import sergio.sastre.uitesting.utils.common.DisplaySize
 
 @Suppress("DEPRECATION")
-fun Context.setDisplaySize(displaySize: DisplaySize) =
+internal fun Context.setDisplaySize(displaySize: DisplaySize) =
     this.apply {
         val density = resources.configuration.densityDpi
         val config = Configuration(resources.configuration)

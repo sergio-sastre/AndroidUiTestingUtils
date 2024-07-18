@@ -50,7 +50,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "mapper-roborazzi"
-            version = '2.3.2'
+            version = '2.3.3'
 
             afterEvaluate {
                 from components.release

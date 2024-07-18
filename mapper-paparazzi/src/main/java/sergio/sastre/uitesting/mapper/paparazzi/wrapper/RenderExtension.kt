@@ -11,6 +11,9 @@ interface RenderExtension {
     fun renderView(contentView: View): View
 }
 
+/**
+ * This is used via reflection to support accessibility
+ */
 class AccessibilityRenderExtension : RenderExtension {
     override fun renderView(contentView: View): View {
         // use reflection to avoid direct dependency on Paparazzi
