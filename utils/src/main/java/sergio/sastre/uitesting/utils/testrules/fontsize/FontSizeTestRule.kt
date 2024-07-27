@@ -86,10 +86,10 @@ class FontSizeTestRule(
             }
         }
 
-        private fun scaleMatches(scale: FontSizeScale): Condition {
+        private fun scaleMatches(fontSizeScale: FontSizeScale): Condition {
             return object : Condition {
                 override fun holds(): Boolean {
-                    return scaleSetting.get() === scale
+                    return scaleSetting.get().scale == fontSizeScale.scale
                 }
             }
         }
@@ -106,7 +106,7 @@ class FontSizeTestRule(
                 if (mustRetry) {
                     retries++
                     scaleSetting.set(expectedFontSize)
-                    Log.d(TAG, "trying to set font size scale to ${expectedFontSize.scale}, $retries retry")
+                    Log.d(TAG, "trying to set font size scale to ${expectedFontSize.scale}, currently ${scaleSetting.get().scale}, $retries retries")
                 }
                 if (iterations == retriesCount) {
                     throw timeoutError()
