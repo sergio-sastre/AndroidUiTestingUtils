@@ -6,11 +6,11 @@ import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRuleFo
 interface ScreenshotLibraryTestRuleForComposableProvider {
 
     companion object ScreenshotTestRuleClassPath {
-        const val PAPARAZZI = "sergio.sastre.uitesting.paparazzi.PaparazziScreenshotTestRuleForComposable";
-        const val SHOT = "sergio.sastre.uitesting.shot.ShotScreenshotTestRuleForComposable";
-        const val DROPSHOTS = "sergio.sastre.uitesting.dropshots.DropshotsScreenshotTestRuleForComposable";
-        const val ANDROID_TESTIFY = "sergio.sastre.uitesting.android_testify.AndroidTestifyScreenshotTestRuleForComposable";
-        const val ROBORAZZI = "sergio.sastre.uitesting.roborazzi.RoborazziScreenshotTestRuleForComposable";
+        const val PAPARAZZI = "sergio.sastre.uitesting.paparazzi.PaparazziScreenshotTestRuleForComposable"
+        const val SHOT = "sergio.sastre.uitesting.shot.ShotScreenshotTestRuleForComposable"
+        const val DROPSHOTS = "sergio.sastre.uitesting.dropshots.DropshotsScreenshotTestRuleForComposable"
+        const val ANDROID_TESTIFY = "sergio.sastre.uitesting.android_testify.screenshotscenario.ScreenshotScenarioRuleForComposable"
+        const val ROBORAZZI = "sergio.sastre.uitesting.roborazzi.RoborazziScreenshotTestRuleForComposable"
     }
 
     val config: ScreenshotConfigForComposable

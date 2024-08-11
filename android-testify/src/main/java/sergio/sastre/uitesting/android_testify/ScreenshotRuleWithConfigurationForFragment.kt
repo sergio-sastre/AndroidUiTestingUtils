@@ -15,6 +15,7 @@ import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioConfigurat
 import sergio.sastre.uitesting.utils.common.Orientation
 import sergio.sastre.uitesting.utils.fragmentscenario.FragmentConfigItem
 
+@Deprecated("For Android-Testify 3.0.0+, use ScreenshotScenarioRuleForFragment instead")
 class ScreenshotRuleWithConfigurationForFragment<F : Fragment>(
     exactness: Float? = null,
     enableReporter: Boolean = false,

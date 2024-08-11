@@ -6,11 +6,11 @@ import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRuleFo
 interface ScreenshotLibraryTestRuleForViewProvider {
 
     companion object ScreenshotTestRuleClassPath {
-        const val PAPARAZZI = "sergio.sastre.uitesting.paparazzi.PaparazziScreenshotTestRuleForView";
-        const val SHOT = "sergio.sastre.uitesting.shot.ShotScreenshotTestRuleForView";
-        const val ANDROID_TESTIFY = "sergio.sastre.uitesting.android_testify.AndroidTestifyScreenshotTestRuleForView";
-        const val DROPSHOTS = "sergio.sastre.uitesting.dropshots.DropshotsScreenshotTestRuleForView";
-        const val ROBORAZZI = "sergio.sastre.uitesting.roborazzi.RoborazziScreenshotTestRuleForView";
+        const val PAPARAZZI = "sergio.sastre.uitesting.paparazzi.PaparazziScreenshotTestRuleForView"
+        const val SHOT = "sergio.sastre.uitesting.shot.ShotScreenshotTestRuleForView"
+        const val ANDROID_TESTIFY = "sergio.sastre.uitesting.android_testify.screenshotscenario.ScreenshotScenarioRuleForView"
+        const val DROPSHOTS = "sergio.sastre.uitesting.dropshots.DropshotsScreenshotTestRuleForView"
+        const val ROBORAZZI = "sergio.sastre.uitesting.roborazzi.RoborazziScreenshotTestRuleForView"
     }
 
     val config: ScreenshotConfigForView
