@@ -1,35 +1,46 @@
-package sergio.sastre.uitesting.android_testify
+package sergio.sastre.uitesting.android_testify.screenshotscenario
 
 import android.app.Dialog
 import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import dev.testify.core.TestifyConfiguration
+import dev.testify.scenario.ScreenshotScenarioRule
 import org.junit.rules.RuleChain
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
+import sergio.sastre.uitesting.android_testify.AndroidTestifyConfig
 import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioForViewRule
 import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
 import sergio.sastre.uitesting.utils.crosslibrary.config.ScreenshotConfigForView
 import sergio.sastre.uitesting.utils.crosslibrary.testrules.ScreenshotTestRuleForView
 import sergio.sastre.uitesting.utils.testrules.animations.DisableAnimationsRule
-import sergio.sastre.uitesting.utils.utils.inflateAndWaitForIdle
 import sergio.sastre.uitesting.utils.utils.waitForMeasuredView as androidUiTestingUtilsMeasuredView
 import sergio.sastre.uitesting.utils.utils.waitForMeasuredViewHolder as androidUiTestingUtilsMeasuredViewHolder
 import sergio.sastre.uitesting.utils.utils.waitForMeasuredDialog as androidUiTestingUtilsMeasuredDialog
 
-class AndroidTestifyScreenshotTestRuleForView(
+class ScreenshotScenarioRuleForView(
     override val config: ScreenshotConfigForView = ScreenshotConfigForView(),
 ) : ScreenshotTestRuleForView(config) {
 
     private var androidTestifyConfig: AndroidTestifyConfig = AndroidTestifyConfig()
 
-    private val screenshotRule: ScreenshotRuleWithConfigurationForView by lazy {
-        ScreenshotRuleWithConfigurationForView(
-            exactness = androidTestifyConfig.exactness,
-            activityBackgroundColor = androidTestifyConfig.backgroundColor,
+    private val screenshotRule: ScreenshotScenarioRule by lazy {
+        ScreenshotScenarioRule(
+            configuration = TestifyConfiguration(
+                exactness = androidTestifyConfig.exactness,
+                hideCursor = androidTestifyConfig.hideCursor,
+                hidePasswords = androidTestifyConfig.hidePasswords,
+                hideScrollbars = androidTestifyConfig.hideScrollbars,
+                hideSoftKeyboard = androidTestifyConfig.hideSoftKeyboard,
+                hideTextSuggestions = androidTestifyConfig.hideTextSuggestions,
+                useSoftwareRenderer = androidTestifyConfig.useSoftwareRenderer,
+                exclusionRects = androidTestifyConfig.exclusionRects,
+                exclusionRectProvider = androidTestifyConfig.exclusionRectProvider,
+                pauseForInspection = androidTestifyConfig.pauseForInspection,
+                compareMethod = androidTestifyConfig.compareMethod,
+            ),
             enableReporter = androidTestifyConfig.enableReporter,
-            initialTouchMode = androidTestifyConfig.initialTouchMode,
-            config = config.toViewConfig()
         )
     }
 
@@ -62,8 +73,10 @@ class AndroidTestifyScreenshotTestRuleForView(
                 .apply(base, description)
         }
 
-    override fun inflate(layoutId: Int): View =
-        activityScenarioRule.activity.inflateAndWaitForIdle(layoutId)
+    override fun inflate(layoutId: Int): View {
+        screenshotRule.withScenario(activityScenarioRule.activityScenario)
+        return activityScenarioRule.inflateAndWaitForIdle(layoutId)
+    }
 
     override fun waitForMeasuredView(actionToDo: () -> View): View {
         viewToScreenshot = androidUiTestingUtilsMeasuredView { actionToDo() }
@@ -81,20 +94,29 @@ class AndroidTestifyScreenshotTestRuleForView(
     }
 
     override fun snapshotDialog(name: String?, dialog: Dialog) {
-        takeSnapshot(name = name)
+        takeDialogSnapshot(name = name)
     }
 
     override fun snapshotView(name: String?, view: View) {
-        takeSnapshot(name = name)
+        takeViewSnapshot(name = name)
     }
 
     override fun snapshotViewHolder(name: String?, viewHolder: RecyclerView.ViewHolder) {
-        takeSnapshot(name = name)
+        takeViewSnapshot(name = name)
     }
 
-    private fun takeSnapshot(name:String?){
+    private fun takeViewSnapshot(name:String?){
         screenshotRule
             .setViewUnderTest(viewToScreenshot!!)
+            .setBitmapCaptureMethod(androidTestifyConfig.bitmapCaptureMethod)
+            .generateDiffs(androidTestifyConfig.generateDiffs)
+            .waitForIdleSync()
+            .assertSame(name = name)
+    }
+
+    private fun takeDialogSnapshot(name:String?){
+        screenshotRule
+            .setDialogViewUnderTest(viewToScreenshot!!)
             .setBitmapCaptureMethod(androidTestifyConfig.bitmapCaptureMethod)
             .generateDiffs(androidTestifyConfig.generateDiffs)
             .waitForIdleSync()
