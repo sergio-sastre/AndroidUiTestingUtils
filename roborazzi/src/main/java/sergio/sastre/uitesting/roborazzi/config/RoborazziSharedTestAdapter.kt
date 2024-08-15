@@ -72,10 +72,17 @@ internal class RoborazziSharedTestAdapter(
                     imageComparator = asImageComparator(),
                 )
 
+            val adaptedRecordOptions: RoborazziOptions.RecordOptions =
+                RoborazziOptions.RecordOptions(
+                    resizeScale = it.recordOptions.resizeScale,
+                    applyDeviceCrop = it.recordOptions.applyDeviceCrop,
+                )
+
             return RoborazziOptions(
                 captureType = adaptedCaptureType,
                 compareOptions = adaptedCompareOptions,
                 contextData = it.contextData,
+                recordOptions = adaptedRecordOptions,
             )
         }
     }
