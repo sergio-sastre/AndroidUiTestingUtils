@@ -79,16 +79,19 @@ class ScreenshotScenarioRuleForView(
     }
 
     override fun waitForMeasuredView(actionToDo: () -> View): View {
+        screenshotRule.withScenario(activityScenarioRule.activityScenario)
         viewToScreenshot = androidUiTestingUtilsMeasuredView { actionToDo() }
         return androidUiTestingUtilsMeasuredView { actionToDo() }
     }
 
     override fun waitForMeasuredDialog(actionToDo: () -> Dialog): Dialog {
+        screenshotRule.withScenario(activityScenarioRule.activityScenario)
         viewToScreenshot = androidUiTestingUtilsMeasuredView { actionToDo().window!!.decorView }
         return androidUiTestingUtilsMeasuredDialog { actionToDo() }
     }
 
     override fun waitForMeasuredViewHolder(actionToDo: () -> RecyclerView.ViewHolder): RecyclerView.ViewHolder {
+        screenshotRule.withScenario(activityScenarioRule.activityScenario)
         viewToScreenshot = androidUiTestingUtilsMeasuredView { actionToDo().itemView }
         return androidUiTestingUtilsMeasuredViewHolder { actionToDo() }
     }

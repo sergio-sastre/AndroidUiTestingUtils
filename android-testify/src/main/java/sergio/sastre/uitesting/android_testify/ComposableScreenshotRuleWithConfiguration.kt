@@ -27,7 +27,6 @@ import sergio.sastre.uitesting.utils.common.Orientation
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-@Deprecated("For Android-Testify 3.0.0+, use ScreenshotScenarioRuleForComposable instead")
 open class ComposableScreenshotRuleWithConfiguration(
     exactness: Float = 0.9f,
     initialTouchMode: Boolean = false,

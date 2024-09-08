@@ -10,7 +10,6 @@ import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioConfigurat
 import sergio.sastre.uitesting.utils.activityscenario.ViewConfigItem
 import sergio.sastre.uitesting.utils.common.Orientation
 
-@Deprecated("For Android-Testify 3.0.0+, use ScreenshotScenarioRuleForView instead")
 class ScreenshotRuleWithConfigurationForView(
     exactness: Float? = null,
     enableReporter: Boolean = false,
