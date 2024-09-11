@@ -19,7 +19,7 @@ class AndroidTestifyConfig(
     val hideScrollbars: Boolean = true,
     val hideSoftKeyboard: Boolean = true,
     val hideTextSuggestions: Boolean = true,
-    val useSoftwareRenderer: Boolean = true,
+    val useSoftwareRenderer: Boolean = false,
     val exclusionRects: MutableSet<Rect> = HashSet(),
     val exclusionRectProvider: ExclusionRectProvider? = null,
     val compareMethod: CompareMethod? = null,

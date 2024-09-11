@@ -56,12 +56,6 @@ internal fun ScreenshotScenarioRule.setViewUnderTest(
     }
 }
 
-internal fun ScreenshotScenarioRule.setComposeViewUnderTest(
-    view: View,
-): ScreenshotScenarioRule = apply {
-    setScreenshotViewProvider { view }
-}
-
 internal fun ScreenshotScenarioRule.setBitmapCaptureMethod(
     bitmapCaptureMethod: BitmapCaptureMethod?,
 ): ScreenshotScenarioRule = apply {

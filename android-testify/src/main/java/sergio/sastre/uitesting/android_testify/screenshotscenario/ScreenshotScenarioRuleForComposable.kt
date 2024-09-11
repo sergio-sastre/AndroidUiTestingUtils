@@ -65,14 +65,9 @@ class ScreenshotScenarioRuleForComposable(
     override fun snapshot(composable: @Composable () -> Unit) {
         screenshotRule
             .withScenario(activityScenarioRule.activityScenario)
-
-        val composeView =
-            activityScenarioRule
-                .setContent(composable)
-                .composeView
-
-        screenshotRule
-            .setComposeViewUnderTest(composeView)
+            .setScreenshotViewProvider {
+                activityScenarioRule.setContent { composable() }.composeView
+            }
             .setBitmapCaptureMethod(androidTestifyConfig.bitmapCaptureMethod)
             .generateDiffs(androidTestifyConfig.generateDiffs)
             .assertSame(null)
@@ -81,14 +76,9 @@ class ScreenshotScenarioRuleForComposable(
     override fun snapshot(name: String?, composable: @Composable () -> Unit) {
         screenshotRule
             .withScenario(activityScenarioRule.activityScenario)
-
-        val composeView =
-            activityScenarioRule
-                .setContent(composable)
-                .composeView
-
-        screenshotRule
-            .setComposeViewUnderTest(composeView)
+            .setScreenshotViewProvider {
+                activityScenarioRule.setContent { composable() }.composeView
+            }
             .setBitmapCaptureMethod(androidTestifyConfig.bitmapCaptureMethod)
             .generateDiffs(androidTestifyConfig.generateDiffs)
             .assertSame(name = name)
