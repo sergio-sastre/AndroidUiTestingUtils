@@ -50,9 +50,12 @@ android {
 
 dependencies {
     implementation project(':utils')
-    implementation 'androidx.test:rules:1.5.0'
+    //noinspection GradleDependency
+    implementation ('androidx.test:rules:1.5.0') {
+        because "1.6.x makes tests fail when running Gradle Managed Devices"
+    }
     api 'com.dropbox.dropshots:dropshots:0.4.1'
-    api 'androidx.activity:activity-compose:1.8.2'
+    api 'androidx.activity:activity-compose:1.9.2'
 }
 
 //https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/
@@ -61,7 +64,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "dropshots"
-            version = '2.3.5'
+            version = '2.4.0'
 
             afterEvaluate {
                 from components.release

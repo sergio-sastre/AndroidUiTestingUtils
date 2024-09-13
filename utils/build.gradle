@@ -55,15 +55,13 @@ dependencies {
     api 'androidx.appcompat:appcompat:1.7.0'
     api 'com.google.android.material:material:1.12.0'
     api 'androidx.test:core:1.6.1'
-
     //noinspection GradleDependency
-    api ('androidx.core:core-ktx:1.9.0') {
-        because '1.10.0 caused troubles with Paparazzi in the past'
+    api ('androidx.test.espresso:espresso-core:3.5.1') {
+        because "3.6.x makes tests fail when running Gradle Managed Devices"
     }
-    api 'androidx.test.ext:junit:1.1.5'
-    api 'androidx.test.espresso:espresso-core:3.5.1'
-    api 'androidx.compose.ui:ui-test-junit4:1.5.4'
-    api 'androidx.fragment:fragment-ktx:1.6.2'
+    api 'androidx.compose.ui:ui-test-junit4:1.7.1'
+    api 'androidx.fragment:fragment-ktx:1.8.3'
+    implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
 }
 
@@ -73,7 +71,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "utils"
-            version = '2.3.5'
+            version = '2.4.0'
 
             afterEvaluate {
                 from components.release
