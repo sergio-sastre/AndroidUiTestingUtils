@@ -1,6 +1,14 @@
 # Android-Testify usage
 
-Android-Testify does not support _ActivityScenario_ but the deprecated _ActivityTestRule._ So, in order to generate screenshot under different configurations, you'd need to resort to the TestRules described in [this section](../testrules-and-other-utils.md#testrules).\
+## Android-Testify 3.x.x
+
+Since Android-Testify 3.0.0, it supports _ActivityScenarios_! That means, you could use AndroidUiTestingUtils _ActivityScenarios_ for Views, Composable, etc. together with Android-Testify 3.x.x.&#x20;
+
+Check some examples in [this repo](https://github.com/sergio-sastre/Android-screenshot-testing-playground).
+
+## Android-Testify 2.x.x
+
+Android-Testify 2.x.x does not support _ActivityScenario_ but the deprecated _ActivityTestRule._ So, in order to generate screenshot under different configurations, you'd need to resort to the TestRules described in [this section](../testrules-and-other-utils.md#testrules).\
 \
 Nevertheless, _AndroidUiTestingUtils_ provides optimized ScreenshotTestRules to leverage Android-Testify tests for **Fragments**, **Android Views** and **Jetpack Compose**. \
 These are used in the upcoming examples.\
