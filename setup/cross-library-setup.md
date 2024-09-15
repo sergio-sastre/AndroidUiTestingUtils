@@ -40,16 +40,17 @@ You can achieve this in 4 easy steps:
    \
    It's recommended to use the AndroidUiTestingUtils version that corresponds to the screenshot library version you're using:
 
-| AndroidUiTestingUtils | Roborazzi     | Paparazzi | Dropshots | Shot        | Android-Testify |
-| --------------------- | ------------- | --------- | --------- | ----------- | --------------- |
-| _**2.4.0**_           | _**1.26.0**_  | 1.3.3     | 0.4.1     | 6.1.0       | _**3.2.0**_     |
-| 2.3.2-2.3.5           | 1.12.0        | 1.3.3     | 0.4.1     | 6.1.0       | 2.0.0           |
-| 2.3.1                 | 1.11.0        | 1.3.3     | 0.4.1     | 6.1.0       | 2.0.0           |
-| 2.3.0                 | 1.10.1        | 1.3.3     | 0.4.1     | _**6.1.0**_ | 2.0.0           |
-| 2.2.x                 | 1.8.0-alpha-6 | 1.3.2     | 0.4.1     | 6.0.0       | 2.0.0           |
-| 2.1.0                 | 1.8.0-alpha-6 | 1.3.1     | 0.4.1     | 6.0.0       | 2.0.0           |
-| 2.0.1                 | 1.7.0-rc-1    | 1.3.1     | 0.4.1     | 6.0.0       | -               |
-| 2.0.0                 | 1.5.0-rc-1    | 1.3.1     | 0.4.1     | 6.0.0       | -               |
+| AndroidUiTestingUtils | Roborazzi     | Paparazzi   | Dropshots | Shot        | Android-Testify |
+| --------------------- | ------------- | ----------- | --------- | ----------- | --------------- |
+| _**2.5.0**_           | 1.26.0        | _**1.3.4**_ | 0.4.1     | 6.1.0       | 3.2.0           |
+| 2.4.0                 | 1.26.0        | 1.3.3       | 0.4.1     | 6.1.0       | 3.2.0           |
+| 2.3.2-2.3.5           | 1.12.0        | 1.3.3       | 0.4.1     | 6.1.0       | 2.0.0           |
+| 2.3.1                 | 1.11.0        | 1.3.3       | 0.4.1     | 6.1.0       | 2.0.0           |
+| 2.3.0                 | 1.10.1        | 1.3.3       | 0.4.1     | _**6.1.0**_ | 2.0.0           |
+| 2.2.x                 | 1.8.0-alpha-6 | 1.3.2       | 0.4.1     | 6.0.0       | 2.0.0           |
+| 2.1.0                 | 1.8.0-alpha-6 | 1.3.1       | 0.4.1     | 6.0.0       | 2.0.0           |
+| 2.0.1                 | 1.7.0-rc-1    | 1.3.1       | 0.4.1     | 6.0.0       | -               |
+| 2.0.0                 | 1.5.0-rc-1    | 1.3.1       | 0.4.1     | 6.0.0       | -               |
 
 {% hint style="info" %}
 AndroidUiTestingUtils 2.3.1+ uses Robolectric 4.12.1 under the hood, which adds support for Native Graphics on Windows, and therefore Roborazzi!
