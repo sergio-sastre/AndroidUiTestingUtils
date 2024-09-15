@@ -48,7 +48,7 @@ android {
 dependencies {
     implementation project(':utils')
     api project(':mapper-paparazzi')
-    api('app.cash.paparazzi:paparazzi:1.3.3')
+    api('app.cash.paparazzi:paparazzi:1.3.4')
 }
 
 //https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/

@@ -40,24 +40,24 @@ internal class PaparazziWrapperConfigAdapter(
     fun asPaparazziDensity(): Density =
         when (config.density) {
             PaparazziWrapperDensity.XXXHIGH -> Density.XXXHIGH
-            PaparazziWrapperDensity.DPI_560 -> Density.DPI_560
+            PaparazziWrapperDensity.DPI_560 -> Density(560)
             PaparazziWrapperDensity.XXHIGH -> Density.XXHIGH
-            PaparazziWrapperDensity.DPI_440 -> Density.DPI_440
-            PaparazziWrapperDensity.DPI_420 -> Density.DPI_420
-            PaparazziWrapperDensity.DPI_400 -> Density.DPI_400
-            PaparazziWrapperDensity.DPI_360 -> Density.DPI_360
+            PaparazziWrapperDensity.DPI_440 -> Density(440)
+            PaparazziWrapperDensity.DPI_420 -> Density(420)
+            PaparazziWrapperDensity.DPI_400 -> Density(400)
+            PaparazziWrapperDensity.DPI_360 -> Density(360)
             PaparazziWrapperDensity.XHIGH -> Density.XHIGH
-            PaparazziWrapperDensity.DPI_260 -> Density.DPI_260
-            PaparazziWrapperDensity.DPI_280 -> Density.DPI_280
-            PaparazziWrapperDensity.DPI_300 -> Density.DPI_300
-            PaparazziWrapperDensity.DPI_340 -> Density.DPI_340
+            PaparazziWrapperDensity.DPI_260 -> Density(260)
+            PaparazziWrapperDensity.DPI_280 -> Density(280)
+            PaparazziWrapperDensity.DPI_300 -> Density(300)
+            PaparazziWrapperDensity.DPI_340 -> Density(340)
             PaparazziWrapperDensity.HIGH -> Density.HIGH
-            PaparazziWrapperDensity.DPI_220 -> Density.DPI_220
+            PaparazziWrapperDensity.DPI_220 -> Density(220)
             PaparazziWrapperDensity.TV -> Density.TV
-            PaparazziWrapperDensity.DPI_200 -> Density.DPI_200
-            PaparazziWrapperDensity.DPI_180 -> Density.DPI_180
+            PaparazziWrapperDensity.DPI_200 -> Density(200)
+            PaparazziWrapperDensity.DPI_180 -> Density(180)
             PaparazziWrapperDensity.MEDIUM -> Density.MEDIUM
-            PaparazziWrapperDensity.DPI_140 -> Density.DPI_140
+            PaparazziWrapperDensity.DPI_140 -> Density(140)
             PaparazziWrapperDensity.LOW -> Density.LOW
             PaparazziWrapperDensity.ANYDPI -> Density.ANYDPI
             PaparazziWrapperDensity.NODPI -> Density.NODPI
