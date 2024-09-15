@@ -65,7 +65,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "android-testify"
-            version = '2.4.0'
+            version = '2.5.0'
 
             afterEvaluate {
                 from components.release
