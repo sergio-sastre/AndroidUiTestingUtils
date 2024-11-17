@@ -3,7 +3,6 @@ package sergio.sastre.uitesting.mapper.paparazzi.wrapper
 import java.util.*
 
 data class Environment(
-    val platformDir: String? = null,
     val compileSdkVersion: Int? = null,
     val appTestDir: String? = null,
     val packageName: String? = null,

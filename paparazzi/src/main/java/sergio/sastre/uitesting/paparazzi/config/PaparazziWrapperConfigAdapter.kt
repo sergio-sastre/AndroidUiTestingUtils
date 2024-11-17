@@ -61,6 +61,7 @@ internal class PaparazziWrapperConfigAdapter(
             PaparazziWrapperDensity.LOW -> Density.LOW
             PaparazziWrapperDensity.ANYDPI -> Density.ANYDPI
             PaparazziWrapperDensity.NODPI -> Density.NODPI
+            else -> Density(config.density.dpi)
         }
 
     fun asPaparazziScreenRatio(): ScreenRatio =
@@ -99,7 +100,6 @@ internal class PaparazziWrapperConfigAdapter(
         val environment = detectEnvironment()
         val configEnvironment = paparazziConfig.environment
         return environment.copy(
-            platformDir = configEnvironment?.platformDir ?: environment.platformDir,
             compileSdkVersion = configEnvironment?.compileSdkVersion
                 ?: environment.compileSdkVersion,
             appTestDir = configEnvironment?.appTestDir ?: environment.appTestDir,

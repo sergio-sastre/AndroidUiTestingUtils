@@ -36,6 +36,8 @@ class PaparazziForComposableTestRuleBuilder {
             maxPercentDifference = paparazziConfig.maxPercentageDiff,
             environment = sharedTestAdapter.asEnvironment(),
             renderExtensions = sharedTestAdapter.asRenderExtensions(),
+            useDeviceResolution = paparazziConfig.useDeviceResolution,
+            validateAccessibility = paparazziConfig.validateAccessibility,
         )
     }
 }

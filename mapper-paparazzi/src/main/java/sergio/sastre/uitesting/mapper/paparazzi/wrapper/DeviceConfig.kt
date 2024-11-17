@@ -5,12 +5,21 @@ data class DeviceConfig(
     val screenWidth: Int = 768,
     val xdpi: Int = 320,
     val ydpi: Int = 320,
-    val density: Density = Density.XHIGH,
+    val density: DpiDensity = Density.XHIGH,
     val ratio: ScreenRatio = ScreenRatio.NOTLONG,
     val size: ScreenSize = ScreenSize.NORMAL,
     val navigation: Navigation = Navigation.NONAV,
     val released: String = "November 13, 2012"
 ) {
+
+    /**
+     * The accessibilityExtension takes up half the width, therefore use this to expand it
+     */
+    fun increaseWidthForAccessibilityExtension() : DeviceConfig {
+        return copy(
+            screenWidth = this.screenWidth * 2
+        )
+    }
 
     companion object {
         @JvmField
