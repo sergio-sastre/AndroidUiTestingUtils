@@ -48,7 +48,7 @@ android {
 dependencies {
     implementation project(':utils')
     api project(':mapper-paparazzi')
-    api('app.cash.paparazzi:paparazzi:1.3.4')
+    api('app.cash.paparazzi:paparazzi:1.3.5')
 }
 
 //https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/
@@ -57,7 +57,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "paparazzi"
-            version = '2.5.0'
+            version = '2.6.0'
 
             afterEvaluate {
                 from components.release

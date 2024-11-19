@@ -2,10 +2,13 @@ package sergio.sastre.uitesting.roborazzi.config
 
 import com.dropbox.differ.ImageComparator
 import com.dropbox.differ.SimpleImageComparator
+import com.github.takahirom.roborazzi.AiAssertionOptions
 import com.github.takahirom.roborazzi.Dump
 import com.github.takahirom.roborazzi.Dump.Companion.AccessibilityExplanation
 import com.github.takahirom.roborazzi.Dump.Companion.DefaultExplanation
 import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
+import com.github.takahirom.roborazzi.JvmImageIoFormat
+import com.github.takahirom.roborazzi.LosslessWebPImageIoFormat
 import com.github.takahirom.roborazzi.RoborazziOptions
 import com.github.takahirom.roborazzi.ThresholdValidator
 import sergio.sastre.uitesting.robolectric.config.screen.DeviceScreen
@@ -16,8 +19,12 @@ import sergio.sastre.uitesting.robolectric.config.screen.ScreenOrientation
 import sergio.sastre.uitesting.robolectric.config.screen.ScreenSize
 import sergio.sastre.uitesting.robolectric.config.screen.ScreenType
 import sergio.sastre.uitesting.mapper.roborazzi.RoborazziConfig
+import sergio.sastre.uitesting.mapper.roborazzi.wrapper.AiAssertion
 import sergio.sastre.uitesting.mapper.roborazzi.wrapper.ComparisonStyle
 import sergio.sastre.uitesting.mapper.roborazzi.wrapper.DumpExplanation
+import sergio.sastre.uitesting.mapper.roborazzi.wrapper.ImageIoFormat.*
+import sergio.sastre.uitesting.robolectric.config.screen.DpiDensity
+import sergio.sastre.uitesting.robolectric.config.screen.DpiDensity.*
 import sergio.sastre.uitesting.mapper.roborazzi.wrapper.CaptureType as WrapperCaptureType
 import sergio.sastre.uitesting.mapper.roborazzi.wrapper.screen.RoundScreen as WrapperRoundScreen
 import sergio.sastre.uitesting.mapper.roborazzi.wrapper.screen.ScreenDensity as WrapperDensity
@@ -76,6 +83,10 @@ internal class RoborazziSharedTestAdapter(
                 RoborazziOptions.RecordOptions(
                     resizeScale = it.recordOptions.resizeScale,
                     applyDeviceCrop = it.recordOptions.applyDeviceCrop,
+                    imageIoFormat = when (it.recordOptions.imageIoFormat) {
+                        ImageIoFormat -> JvmImageIoFormat()
+                        LosslessWebPImageIoFormat -> LosslessWebPImageIoFormat()
+                    }
                 )
 
             return RoborazziOptions(
@@ -83,9 +94,26 @@ internal class RoborazziSharedTestAdapter(
                 compareOptions = adaptedCompareOptions,
                 contextData = it.contextData,
                 recordOptions = adaptedRecordOptions,
-            )
+            ).addedAiAssertions(it.aiAssertions)
         }
     }
+
+    @OptIn(ExperimentalRoborazziApi::class)
+    private fun RoborazziOptions.addedAiAssertions(
+        aiAssertions: List<AiAssertion>
+    ) : RoborazziOptions =
+        if (aiAssertions.isEmpty()) {
+            this
+        } else {
+            val addedAiAssertions = aiAssertions.map { aiAssertion ->
+                AiAssertionOptions.AiAssertion(
+                    assertionPrompt = aiAssertion.assertionPrompt,
+                    requiredFulfillmentPercent = aiAssertion.requiredFulfillmentPercent,
+                    failIfNotFulfilled = true
+                )
+            }.toTypedArray()
+            addedAiAssertions(*addedAiAssertions)
+        }
 
     @ExperimentalRoborazziApi
     private fun asComparisonStyle(): RoborazziOptions.CompareOptions.ComparisonStyle =
@@ -146,12 +174,12 @@ internal class RoborazziSharedTestAdapter(
             }
         } ?: ScreenSize.NORMAL
 
-    private fun asDensity(): ScreenDensity =
+    private fun asDensity(): DpiDensity =
         config?.let {
             when (it.density) {
                 WrapperDensity.XXXHDPI -> ScreenDensity.XXXHDPI
                 WrapperDensity.DPI_560 -> ScreenDensity.DPI_560
-                WrapperDensity.XXHDPI -> ScreenDensity.XXXHDPI
+                WrapperDensity.XXHDPI -> ScreenDensity.XXHDPI
                 WrapperDensity.DPI_440 -> ScreenDensity.DPI_440
                 WrapperDensity.DPI_420 -> ScreenDensity.DPI_420
                 WrapperDensity.DPI_400 -> ScreenDensity.DPI_400
@@ -171,6 +199,7 @@ internal class RoborazziSharedTestAdapter(
                 WrapperDensity.LDPI -> ScreenDensity.LDPI
                 WrapperDensity.ANYDPI -> ScreenDensity.ANYDPI
                 WrapperDensity.NODPI -> ScreenDensity.NODPI
+                else -> Value(it.density.dpi)
             }
         } ?: ScreenDensity.MDPI
 

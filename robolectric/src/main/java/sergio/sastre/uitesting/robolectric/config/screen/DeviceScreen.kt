@@ -9,7 +9,7 @@ data class DeviceScreen(
     val heightDp: Int,
     val size: ScreenSize = ScreenSize.NORMAL,
     val aspect: ScreenAspect = ScreenAspect.NOTLONG,
-    val density: ScreenDensity = ScreenDensity.MDPI,
+    val density: DpiDensity = ScreenDensity.MDPI,
     val defaultOrientation: ScreenOrientation = ScreenOrientation.PORTRAIT,
     val round: RoundScreen? = null,
     val type: ScreenType? = null,

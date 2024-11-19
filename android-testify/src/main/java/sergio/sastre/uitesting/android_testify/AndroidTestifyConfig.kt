@@ -1,14 +1,13 @@
 package sergio.sastre.uitesting.android_testify
 
 import android.graphics.Rect
-import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import dev.testify.CompareMethod
 import dev.testify.core.ExclusionRectProvider
 import sergio.sastre.uitesting.utils.crosslibrary.config.BitmapCaptureMethod
 import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
 
-class AndroidTestifyConfig(
+data class AndroidTestifyConfig(
     val bitmapCaptureMethod: BitmapCaptureMethod? = null,
     val exactness: Float = 0.9f,
     val enableReporter: Boolean = false,

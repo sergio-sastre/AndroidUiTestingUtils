@@ -20,7 +20,7 @@ object RobolectricQualifiersBuilder {
                 round?.let { listOfQualifiers.add(it.qualifier) }
                 orientationQualifier(configOrientation).let { listOfQualifiers.add(it) }
                 type?.let { listOfQualifiers.add(it.qualifier) }
-                density.let { listOfQualifiers.add(it.qualifier) }
+                density.let { listOfQualifiers.add(it.valueAsQualifier()) }
 
                 setQualifiers(listOfQualifiers.joinToString(separator = "-"))
             }

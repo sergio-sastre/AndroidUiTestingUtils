@@ -10,7 +10,7 @@ import sergio.sastre.uitesting.utils.crosslibrary.config.LibraryConfig
  *    1. Requires bitmapCaptureMethod = null
  *    2. Works only with Views, not with Composables
  */
-class ShotConfig(
+data class ShotConfig(
     val ignoredViews: List<Int> = emptyList(),
     val prepareUIForScreenshot: () -> Unit = {},
     val bitmapCaptureMethod: BitmapCaptureMethod? = null,

@@ -1,26 +1,31 @@
 package sergio.sastre.uitesting.mapper.roborazzi.wrapper.screen
 
-enum class ScreenDensity(val qualifier: String) {
-    XXXHDPI("xxxhdpi"),
-    DPI_560("560dpi"),
-    XXHDPI("xxhdpi"),
-    DPI_440("440dpi"),
-    DPI_420("420dpi"),
-    DPI_400("400dpi"),
-    DPI_360("360dpi"),
-    XHDPI("xhdpi"),
-    DPI_260("260dpi"),
-    DPI_280("280dpi"),
-    DPI_300("300dpi"),
-    DPI_340("340dpi"),
-    HDPI("hdpi"),
-    DPI_220("220dpi"),
-    TVDPI("tvdpi"),
-    DPI_200("200dpi"),
-    DPI_180("180dpi"),
-    MDPI("mdpi"),
-    DPI_140("140dpi"),
-    LDPI("ldpi"),
-    ANYDPI("anydpi"),
-    NODPI("nodpi"),
+interface DpiDensity {
+    val dpi: Int
+    class Value(override val dpi: Int) : DpiDensity
+}
+
+enum class ScreenDensity(val qualifier: String, override val dpi: Int): DpiDensity {
+    XXXHDPI("xxxhdpi", 640),
+    DPI_560("560dpi", 560),
+    XXHDPI("xxhdpi", 480),
+    DPI_440("440dpi", 440),
+    DPI_420("420dpi", 420),
+    DPI_400("400dpi", 400),
+    DPI_360("360dpi", 360),
+    XHDPI("xhdpi", 480),
+    DPI_260("260dpi", 260),
+    DPI_280("280dpi", 280),
+    DPI_300("300dpi", 300),
+    DPI_340("340dpi", 340),
+    HDPI("hdpi", 240),
+    DPI_220("220dpi", 220),
+    TVDPI("tvdpi", 213),
+    DPI_200("200dpi", 200),
+    DPI_180("180dpi", 180),
+    MDPI("mdpi", 160),
+    DPI_140("140dpi", 140),
+    LDPI("ldpi", 120),
+    ANYDPI("anydpi", 0xFFFE),
+    NODPI("nodpi", 0xFFFF),
 }

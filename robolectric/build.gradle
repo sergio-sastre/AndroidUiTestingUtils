@@ -41,7 +41,7 @@ android {
 
 dependencies {
     implementation project(':utils')
-    implementation "org.robolectric:robolectric:4.13"
+    implementation "org.robolectric:robolectric:4.14"
 }
 
 //https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/
@@ -50,7 +50,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "robolectric"
-            version = '2.5.0'
+            version = '2.6.0'
 
             afterEvaluate {
                 from components.release
