@@ -3,11 +3,12 @@
 [![](https://jitpack.io/v/sergio-sastre/AndroidUiTestingUtils.svg)](https://jitpack.io/#sergio-sastre/AndroidUiTestingUtils)\
 [![](https://androidweekly.net/issues/issue-508/badge)](https://androidweekly.net/issues/issue-508)
 
-<div align="center" data-full-width="true">
+{% hint style="info" %}
+AndroidUiTestingUtils is still in active development and has a long roadmap!\
+New features are expected to come in June 2025.
+{% endhint %}
 
-<img src="https://user-images.githubusercontent.com/6097181/172724660-778176b0-a6b0-4aad-b6b4-7115ad4fc7f3.png" alt="" width="130">
-
-</div>
+<div align="center" data-full-width="true"><img src="https://user-images.githubusercontent.com/6097181/172724660-778176b0-a6b0-4aad-b6b4-7115ad4fc7f3.png" alt="" width="130"></div>
 
 A set of _TestRules_, _ActivityScenarios_ and utils to facilitate UI & screenshot testing under certain configurations, independent of the UI testing libraries you are using.\
 \
