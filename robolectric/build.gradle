@@ -41,7 +41,7 @@ android {
 
 dependencies {
     implementation project(':utils')
-    implementation "org.robolectric:robolectric:4.14"
+    implementation "org.robolectric:robolectric:4.14.1"
 }
 
 //https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/
