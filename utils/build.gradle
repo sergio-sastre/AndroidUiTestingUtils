@@ -70,7 +70,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "utils"
-            version = '2.6.0'
+            version = '2.7.0'
 
             afterEvaluate {
                 from components.release
