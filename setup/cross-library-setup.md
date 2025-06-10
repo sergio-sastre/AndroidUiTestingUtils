@@ -15,10 +15,6 @@ Currently, it provides out-of-the-box support for the following screenshot testi
 * [Roborazzi](https://github.com/takahirom/roborazzi)
 * [Android-Testify](https://github.com/ndtp/android-testify)
 
-{% hint style="info" %}
-Out-of-the-box support for Facebook [screenshot-tests-for-android](https://github.com/facebook/screenshot-tests-for-android) and QuickBird Studios [snappy](https://github.com/QuickBirdEng/kotlin-snapshot-testing) is on the roadmap.
-{% endhint %}
-
 You can also add support for your own solution / another library in 2 steps by&#x20;
 
 1. Implementing `ScreenshotTestRuleForComposable` or `ScreenshotTestRuleForView` interfaces and&#x20;
@@ -38,7 +34,7 @@ You can achieve this in 4 easy steps:
 
 1. Firstly, configure the screenshot testing library you want your tests to support, as if you'd write them with that specific library. Visit its respective Github page for more info.\
    \
-   It's recommended to use the AndroidUiTestingUtils version that corresponds to the screenshot library version you're using:
+   It's ensured that the AndroidUiTestingUtils and corresponding screenshot testing library versions in the table below are compatible. Newer version might also work, but it is not guaranteed:
 
 | AndroidUiTestingUtils | Roborazzi     | Paparazzi   | Dropshots | Shot        | Android-Testify |
 | --------------------- | ------------- | ----------- | --------- | ----------- | --------------- |

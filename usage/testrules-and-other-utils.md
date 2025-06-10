@@ -17,14 +17,34 @@ val inAppLocale = InAppLocaleTestRule("en")
 val systemLocale = SystemLocaleTestRule("en")
 
 @get:Rule
+val uiMode = UiModeTestRule(UiMode.NIGHT)
+
+// Accessibility Test Rules
+@get:Rule
 val fontSize = FontSizeTestRule(FontSize.LARGEST)
 
 @get:Rule
 val displaySize = DisplaySizeTestRule(DisplaySize.LARGEST)
 
 @get:Rule
-val uiMode = UiModeTestRule(UiMode.NIGHT)
+val boldText = FontWeightTestRule(FontWeight.BOLD)
+
+@get:Rule
+val highTextContrast = HighTextContrastTestRule()
+
 ```
+
+### **Accessibility**
+
+From all those Test Rules, it is important to highlight those that can be used in instrumentation tests for Accessibility:
+
+<figure><img src="../.gitbook/assets/6.png" alt=""><figcaption><p><br></p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/7 (1).png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/9.png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/8.png" alt=""><figcaption></figcaption></figure>
 
 ## **WaitFor...**
 
