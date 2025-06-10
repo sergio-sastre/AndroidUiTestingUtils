@@ -10,8 +10,6 @@ import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import sergio.sastre.uitesting.utils.common.FontWeight
 import sergio.sastre.uitesting.utils.testrules.Condition
-import sergio.sastre.uitesting.utils.testrules.accessibility.FontWeightTestRule.FontWeightStatement.Companion.MAX_RETRIES_TO_WAIT_FOR_SETTING
-import sergio.sastre.uitesting.utils.testrules.accessibility.FontWeightTestRule.FontWeightStatement.Companion.SLEEP_TO_WAIT_FOR_SETTING_MILLIS
 import sergio.sastre.uitesting.utils.utils.waitForExecuteShellCommand
 
 /**
@@ -20,22 +18,39 @@ import sergio.sastre.uitesting.utils.utils.waitForExecuteShellCommand
  *
  * WARNING: Only works on Instrumentation tests, not on Robolectric tests.
  */
-@RequiresApi(Build.VERSION_CODES.S)
 class FontWeightTestRule(
     private val weight: FontWeight
 ) : TestRule {
 
+    companion object {
+        private val TAG = FontWeightTestRule::class.java.simpleName
+
+        const val SLEEP_TO_WAIT_FOR_SETTING_MILLIS = 100
+        const val MAX_RETRIES_TO_WAIT_FOR_SETTING = 100
+    }
+
     private val timeOutInMillis =
         MAX_RETRIES_TO_WAIT_FOR_SETTING * SLEEP_TO_WAIT_FOR_SETTING_MILLIS
 
-    override fun apply(base: Statement, description: Description): Statement =
-        FontWeightStatement(
-            baseStatement = base,
-            description = description,
-            weight = weight.value,
-            timeOutInMillis = timeOutInMillis
-        )
+    override fun apply(base: Statement, description: Description): Statement {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            FontWeightStatement(
+                baseStatement = base,
+                description = description,
+                weight = weight.value,
+                timeOutInMillis = timeOutInMillis
+            )
+        } else {
+            object : Statement() {
+                override fun evaluate() {
+                    Log.d(TAG, "Skipping ${this.javaClass.simpleName}. It can only be used on API 31+, and the current API is ${Build.VERSION.SDK_INT}")
+                    base.evaluate()
+                }
+            }
+        }
+    }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     private class FontWeightStatement(
         private val baseStatement: Statement,
         private val description: Description,
@@ -107,13 +122,6 @@ class FontWeightTestRule(
                     )
                 }
             }
-        }
-
-        companion object {
-            private val TAG = FontWeightTestRule::class.java.simpleName
-
-            const val SLEEP_TO_WAIT_FOR_SETTING_MILLIS = 100
-            const val MAX_RETRIES_TO_WAIT_FOR_SETTING = 100
         }
     }
 }
