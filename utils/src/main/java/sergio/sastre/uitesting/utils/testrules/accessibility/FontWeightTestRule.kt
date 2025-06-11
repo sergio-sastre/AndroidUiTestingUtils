@@ -109,7 +109,7 @@ class FontWeightTestRule(
                 if (mustRetry) {
                     retries++
                     getInstrumentation().waitForExecuteShellCommand(
-                        "settings put secure font_weight_adjustment $weight"
+                        "settings put secure font_weight_adjustment $expectedFontWeight"
                     )
                     Log.d(
                         TAG,

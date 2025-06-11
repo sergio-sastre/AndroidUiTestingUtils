@@ -38,7 +38,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion '1.5.0'
+        kotlinCompilerExtensionVersion '1.5.15'
     }
 
     publishing {
@@ -53,7 +53,9 @@ dependencies {
     implementation project(':utils')
     implementation 'androidx.test:rules:1.6.1'
     api 'dev.testify:testify:3.2.2'
-    api 'androidx.activity:activity-compose:1.10.1'
+    api ("androidx.activity:activity-compose:1.9.3") {
+        because "the last one requires compose option 1.6.x"
+    }
 }
 
 //https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/

@@ -35,7 +35,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion '1.5.0'
+        kotlinCompilerExtensionVersion '1.5.15'
     }
 
     publishing {
@@ -53,7 +53,9 @@ dependencies {
 
     implementation("org.hamcrest:hamcrest:3.0")
     implementation("io.github.darkxanter:webp-imageio:0.3.3")
-    implementation("androidx.activity:activity-compose:1.10.1")
+    implementation("androidx.activity:activity-compose:1.9.3") {
+        because "the last one requires compose option 1.6.x"
+    }
 
     api 'io.github.takahirom.roborazzi:roborazzi:1.44.0'
     api 'androidx.test.espresso:espresso-core:3.6.1'

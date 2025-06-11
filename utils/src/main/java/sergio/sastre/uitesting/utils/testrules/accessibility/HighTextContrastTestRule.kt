@@ -29,10 +29,10 @@ class HighTextContrastTestRule: TestRule {
 
     @Throws(IOException::class)
     private fun enableHighTextContrast(enable: Boolean = true) {
-        val animationEnabledValue = when (enable) {
+        val highTextContrastEnabledValue = when (enable) {
             true -> 1
             false -> 0
         }
-        getInstrumentation().waitForExecuteShellCommand("settings put secure high_text_contrast_enabled $animationEnabledValue")
+        getInstrumentation().waitForExecuteShellCommand("settings put secure high_text_contrast_enabled $highTextContrastEnabledValue")
     }
 }
