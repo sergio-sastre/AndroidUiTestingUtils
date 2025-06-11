@@ -23,7 +23,8 @@ For compatibility purposes, choose the `version` that better fits your project
 
 | AndroidUiTestingUtils | CompileSDK | Kotlin  | Compose Compiler |
 | --------------------- | ---------- | ------- | ---------------- |
-| 2.3.0                 | 34         | 1.9.22+ | 1.5.10+          |
+| 2.7.0                 | 34         | 1.9.25+ | 1.5.15+          |
+| 2.3.0-2.6.0           | 34         | 1.9.22+ | 1.5.10+          |
 | 2.2.x                 | 34         | 1.9.x   | 1.5.x            |
 | < 2.2.0               | 33+        | 1.8.x + | 1.4.x +          |
 
