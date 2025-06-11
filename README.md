@@ -2,9 +2,6 @@
 <a href="https://androidweekly.net/issues/issue-508">
 <img src="https://androidweekly.net/issues/issue-508/badge">
 </a>
-> [!NOTE]  
-> AndroidUiTestingUtils is still in active development and has a long roadmap!</br>
-> New features are expected to come in June 2025.</br>
 
 
 # <p align="center">Android UI testing utils</p>
