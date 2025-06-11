@@ -7,11 +7,10 @@ plugins {
 
 android {
     namespace = 'sergio.sastre.uitesting.utils'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         minSdk 23
-        targetSdk 34
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"

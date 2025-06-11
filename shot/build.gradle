@@ -6,11 +6,10 @@ plugins {
 
 android {
     namespace 'sergio.sastre.uitesting.shot'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         minSdk 23
-        targetSdk 34
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
