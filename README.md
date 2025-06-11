@@ -21,11 +21,12 @@ This library enables you to easily change the following configurations in your U
 1. Locale (also [Pseudolocales](https://developer.android.com/guide/topics/resources/pseudolocales) **en\_XA** & **ar\_XB**)
    1. App Locale (i.e. per-app language preference)
    2. System Locale
-2. Font size
-3. Orientation
-4. Custom themes
-5. Dark mode / Day-Night mode
+2. Custom themes
+3. Dark mode / Day-Night mode
+4. Orientation
+5. Font size
 6. Display size
+7. Accessibility options (e.g. high contrast text, bold text)
 
 Wondering why verifying our design under these configurations is important? I've got you covered:
 
