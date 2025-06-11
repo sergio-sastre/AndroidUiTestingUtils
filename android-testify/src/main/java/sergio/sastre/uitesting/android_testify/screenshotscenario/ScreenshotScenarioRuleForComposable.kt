@@ -70,6 +70,7 @@ class ScreenshotScenarioRuleForComposable(
             }
             .setBitmapCaptureMethod(androidTestifyConfig.bitmapCaptureMethod)
             .generateDiffs(androidTestifyConfig.generateDiffs)
+            .waitForIdleSync()
             .assertSame(null)
     }
 
@@ -81,6 +82,7 @@ class ScreenshotScenarioRuleForComposable(
             }
             .setBitmapCaptureMethod(androidTestifyConfig.bitmapCaptureMethod)
             .generateDiffs(androidTestifyConfig.generateDiffs)
+            .waitForIdleSync()
             .assertSame(name = name)
     }
 
