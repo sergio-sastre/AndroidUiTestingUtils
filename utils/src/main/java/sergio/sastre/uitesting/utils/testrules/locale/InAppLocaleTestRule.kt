@@ -1,16 +1,7 @@
 package sergio.sastre.uitesting.utils.testrules.locale
 
-import android.app.Activity
-import android.app.Application
 import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
-import androidx.appcompat.app.AppCompatDelegate.getApplicationLocales
-import androidx.appcompat.app.AppCompatDelegate.setApplicationLocales
-import androidx.core.os.LocaleListCompat
-import androidx.test.core.app.ApplicationProvider
+import org.junit.rules.RuleChain
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
@@ -23,7 +14,7 @@ import java.util.*
  * Beware that in-app locales prevail over the system locale while displaying texts.
  *
  * WARNING: This TestRule works on API 32 or lower if autoStoreLocale = false.
- * Otherwise, tt is not ensured to work as expected
+ * Otherwise, it is not ensured to work as expected
  * That's why it's strongly recommended to disable it in your debug-manifest.
  * For instance, by including the following in your debug-manifest:
  *
@@ -40,72 +31,83 @@ import java.util.*
  *
  * WARNING: It's not compatible with Robolectric
  **/
-class InAppLocaleTestRule constructor(private val locale: Locale) : TestRule {
+class InAppLocaleTestRule
+/**
+ * Applies [locale] as in-app-locale.
+ *
+ * WARNING: The order in which this rule applies is important:
+ * 1. For API < 33, the order must be lower than that of the ActivityScenarioRule
+ * 2. For API 33+, the order must be greater than that of the ActivityScenarioRule
+ * Alternatively, use InAppLocaleTestRule(locale, activityScenarioRule),
+ * which handles order correctly on its own
+ */
+@Deprecated(
+    message = "Use the (locale: Locale, activityScenarioRule: TestRule) constructor instead. This will be removed in version 2.9.0",
+    replaceWith = ReplaceWith("InAppLocaleTestRule(locale, activityScenarioRule)")
+)
+constructor(private val locale: Locale) : TestRule {
 
-    companion object {
-        private val TAG = InAppLocaleTestRule::class.java.simpleName
+    private var activityScenarioRule: TestRule? = null
+
+    /**
+     * Applies [testLocale] as in-app-locale.
+     *
+     * WARNING: The order in which this rule applies is important:
+     * 1. For API < 33, the order must be lower than that of the ActivityScenarioRule
+     * 2. For API 33+, the order must be greater than that of the ActivityScenarioRule
+     * Alternatively, use InAppLocaleTestRule(locale, activityScenarioRule),
+     * which handles order correctly on its own
+     */
+    @Deprecated(
+        message = "Use the (locale: String, activityScenarioRule: TestRule) constructor instead. This will be removed in version 2.9.0",
+        replaceWith = ReplaceWith("InAppLocaleTestRule(locale, activityScenarioRule)")
+    )
+    constructor(
+        testLocale: String
+    ) : this(LocaleUtil.localeFromString(testLocale)) {
+        this.activityScenarioRule = null
     }
 
-    private lateinit var initialLocales: LocaleListCompat
-
-    constructor(testLocale: String) : this(LocaleUtil.localeFromString(testLocale))
-
-    private val appLocalesLanguageTags
-        get() = getApplicationLocales().toLanguageTags().ifBlank { "empty" }
-
-    override fun apply(base: Statement, description: Description): Statement {
-        return object : Statement() {
-            @Throws(Throwable::class)
-            override fun evaluate() {
-                try {
-                    // From API 33 we need to ensure that AppCompatDelegate.setApplicationLocales
-                    // is called after onActivityCreated
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        setApplicationLocaleAfterActivityOnCreate(locale)
-                    } else {
-                        setApplicationLocaleInLooper(Looper.getMainLooper(), locale)
-                    }
-                    base.evaluate()
-                } catch (throwable: Throwable) {
-                    val testName = "${description.testClass.simpleName}\$${description.methodName}"
-                    val errorMessage =
-                        "Test $testName failed on setting inAppLocale to ${locale.toLanguageTag()}"
-                    Log.e(TAG, errorMessage)
-                    throw throwable
-                } finally {
-                    // must run on Main thread to avoid IllegalStateExceptions
-                    Handler(Looper.getMainLooper()).post {
-                        setApplicationLocales(initialLocales)
-                        Log.d(TAG, "in-app locales reset to $appLocalesLanguageTags")
-                    }
-                }
-            }
-        }
+    /**
+     * Applies [locale] as in-app-locale.
+     * By passing the [activityScenarioRule], it can set in-app-locale properly regardless of the API level
+     */
+    constructor(
+        locale: Locale,
+        activityScenarioRule: TestRule
+    ) : this(locale) {
+        this.activityScenarioRule = activityScenarioRule
     }
 
-    private fun setApplicationLocaleInLooper(looper: Looper, locale: Locale?) {
-        Handler(looper).post {
-            initialLocales = getApplicationLocales()
-            Log.d(TAG, "initial in-app locales is $appLocalesLanguageTags")
-            setApplicationLocales(LocaleListCompat.create(locale))
-            Log.d(TAG, "in-app locales set to $appLocalesLanguageTags")
-        }
+    /**
+     * Applies [locale] as in-app-locale.
+     * By passing the [activityScenarioRule], it can set in-app-locale properly regardless of the API level
+     */
+    constructor(
+        locale: String,
+        activityScenarioRule: TestRule
+    ) : this(LocaleUtil.localeFromString(locale)) {
+        this.activityScenarioRule = activityScenarioRule
     }
 
+    private val inAppLocaleRule = ApiDependentInAppLocaleTestRule(locale)
 
-    private fun setApplicationLocaleAfterActivityOnCreate(locale: Locale?) {
-        ApplicationProvider.getApplicationContext<Application>().apply {
-            registerActivityLifecycleCallbacks(
-                object : OnActivityCreatedCallback {
-                    override fun onActivityCreated(
-                        activity: Activity,
-                        savedInstanceState: Bundle?
-                    ) {
-                        unregisterActivityLifecycleCallbacks(this)
-                        setApplicationLocaleInLooper(activity.mainLooper, locale)
-                    }
-                }
-            )
+    override fun apply(
+        base: Statement,
+        description: Description
+    ): Statement {
+        val testRule = when {
+            activityScenarioRule == null -> inAppLocaleRule
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ->
+                RuleChain
+                    .outerRule(inAppLocaleRule)
+                    .around(activityScenarioRule)
+
+            else ->
+                RuleChain
+                    .outerRule(activityScenarioRule)
+                    .around(inAppLocaleRule)
         }
+        return testRule.apply(base, description)
     }
 }
