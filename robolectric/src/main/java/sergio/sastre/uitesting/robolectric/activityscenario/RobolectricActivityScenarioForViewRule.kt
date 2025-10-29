@@ -29,6 +29,7 @@ class RobolectricActivityScenarioForViewRule(
                 config?.orientation?.also { orientation -> setInitialOrientation(orientation) }
                 config?.locale?.also { locale -> setLocale(locale) }
                 config?.uiMode?.also { uiMode -> setUiMode(uiMode) }
+                config?.fontWeight?.also { fontWeight -> setFontWeight(fontWeight) }
                 config?.fontSize?.also { fontSize -> setFontSize(fontSize) }
                 config?.displaySize?.also { displaySize -> setDisplaySize(displaySize) }
                 config?.theme?.also { theme -> setTheme(theme) }

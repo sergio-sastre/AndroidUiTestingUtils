@@ -43,6 +43,10 @@ class PaparazziScreenshotTestRuleForView(
         actionToDo()
 
     override fun snapshotDialog(name: String?, dialog: Dialog) {
+        paparazziTestRule.context.run {
+            setFontWeight(config.fontWeight)
+            setDisplaySize(config.displaySize)
+        }
         paparazziTestRule.snapshot(
             name = name,
             view = dialog.window!!.decorView,
@@ -51,6 +55,10 @@ class PaparazziScreenshotTestRuleForView(
     }
 
     override fun snapshotView(name: String?, view: View) {
+        paparazziTestRule.context.run {
+            setFontWeight(config.fontWeight)
+            setDisplaySize(config.displaySize)
+        }
         paparazziTestRule.snapshot(
             name = name,
             view = view,
@@ -59,6 +67,10 @@ class PaparazziScreenshotTestRuleForView(
     }
 
     override fun snapshotViewHolder(name: String?, viewHolder: RecyclerView.ViewHolder) {
+        paparazziTestRule.context.run {
+            setFontWeight(config.fontWeight)
+            setDisplaySize(config.displaySize)
+        }
         paparazziTestRule.snapshot(
             name = name,
             view = viewHolder.itemView,

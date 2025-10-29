@@ -30,6 +30,7 @@ import androidx.test.core.app.ActivityScenario
 import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioConfigurator
 import sergio.sastre.uitesting.utils.common.DisplaySize
 import sergio.sastre.uitesting.utils.common.FontSizeScale
+import sergio.sastre.uitesting.utils.common.FontWeight
 import sergio.sastre.uitesting.utils.common.LocaleUtil
 import sergio.sastre.uitesting.utils.common.Orientation
 import sergio.sastre.uitesting.utils.common.UiMode
@@ -180,6 +181,7 @@ class FragmentScenarioConfigurator<F : Fragment> constructor(
         private var uiMode: UiMode? = null
         private var displaySize: DisplaySize? = null
         private var theme: Int? = null
+        private var fontWeight: FontWeight? = null
 
         fun setInitialOrientation(orientation: Orientation) = apply {
             this.orientation = orientation
@@ -207,6 +209,10 @@ class FragmentScenarioConfigurator<F : Fragment> constructor(
 
         fun setTheme(theme: Int) = apply {
             this.theme = theme
+        }
+
+        fun setFontWeight(fontWeight: FontWeight) = apply {
+            this.fontWeight = fontWeight
         }
 
         private const val FRAGMENT_TAG = "ConfigurableFragmentScenario_Fragment_Tag"
@@ -258,6 +264,8 @@ class FragmentScenarioConfigurator<F : Fragment> constructor(
                 fontSize?.also { fontSize -> setFontSize(fontSize) }
                 displaySize?.also { displaySize -> setDisplaySize(displaySize)}
                 theme?.also { theme -> setTheme(theme) }
+
+                fontWeight?.also { fontWeight -> setFontWeight(fontWeight)}
             }.launchConfiguredActivity()
 
             orientation = null
@@ -266,6 +274,7 @@ class FragmentScenarioConfigurator<F : Fragment> constructor(
             fontSize = null
             displaySize = null
             theme = null
+            fontWeight = null
 
             val fragmentScenarioConfigurator = FragmentScenarioConfigurator(
                 fragmentClass,

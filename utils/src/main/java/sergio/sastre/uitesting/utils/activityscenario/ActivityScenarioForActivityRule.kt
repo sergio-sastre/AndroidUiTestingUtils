@@ -9,6 +9,7 @@ import org.junit.rules.RuleChain
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
+import sergio.sastre.uitesting.utils.testrules.accessibility.FontWeightTestRule
 import sergio.sastre.uitesting.utils.testrules.displaysize.DisplaySizeTestRule
 import sergio.sastre.uitesting.utils.testrules.fontsize.FontSizeTestRule
 import sergio.sastre.uitesting.utils.testrules.locale.SystemLocaleTestRule
@@ -24,6 +25,8 @@ class ActivityScenarioForActivityRule<T : Activity> private constructor() : Exte
     private var systemLocaleTestRule: SystemLocaleTestRule? = null
     private var displaySizeTestRule: DisplaySizeTestRule? = null
     private var uiModeTestRule: UiModeTestRule? = null
+
+    private var fontWeightTestRule: FontWeightTestRule? = null
 
     val activity: Activity by lazy { activityScenario.waitForActivity() }
 
@@ -50,6 +53,7 @@ class ActivityScenarioForActivityRule<T : Activity> private constructor() : Exte
 
     override fun apply(base: Statement, description: Description): Statement {
         val listRule = listOfNotNull(
+            fontWeightTestRule,
             fontSizeTestRule,
             displaySizeTestRule,
             systemLocaleTestRule,
@@ -78,6 +82,7 @@ class ActivityScenarioForActivityRule<T : Activity> private constructor() : Exte
 
     private fun createRules(config: ActivityConfigItem?) {
         config?.apply {
+            fontWeightTestRule = fontWeight?.let { FontWeightTestRule(it) }
             fontSizeTestRule = fontSize?.let { FontSizeTestRule(it) }
             displaySizeTestRule = displaySize?.let { DisplaySizeTestRule(it) }
             systemLocaleTestRule = systemLocale?.let { SystemLocaleTestRule(it) }

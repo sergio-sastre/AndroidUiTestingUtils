@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import androidx.activity.ComponentActivity
@@ -21,6 +20,8 @@ import sergio.sastre.uitesting.utils.activityscenario.orientation.OrientationTes
 import sergio.sastre.uitesting.utils.common.DisplaySize
 import sergio.sastre.uitesting.utils.common.FontSizeScale
 import java.util.*
+import androidx.core.graphics.drawable.toDrawable
+import sergio.sastre.uitesting.utils.common.FontWeight
 
 object ActivityScenarioConfigurator {
     private var fontSize: FontSizeScale? = null
@@ -28,6 +29,7 @@ object ActivityScenarioConfigurator {
     private var orientation: Orientation? = null
     private var uiMode: UiMode? = null
     private var displaySize: DisplaySize? = null
+    private var fontWeight: FontWeight? = null
 
     @ColorInt
     private var backgroundColor: Int? = null
@@ -74,6 +76,10 @@ object ActivityScenarioConfigurator {
 
         fun setTheme(@StyleRes theme: Int): ForView = apply {
             ActivityScenarioConfigurator.themeId = theme
+        }
+
+        fun setFontWeight(fontWeight: FontWeight): ForView = apply {
+            ActivityScenarioConfigurator.fontWeight = fontWeight
         }
 
         fun setActivityBackgroundColor(@ColorInt backgroundColor: Int): ForView = apply {
@@ -125,6 +131,10 @@ object ActivityScenarioConfigurator {
 
         fun setDisplaySize(displaySize: DisplaySize): ForComposable = apply {
             ActivityScenarioConfigurator.displaySize = displaySize
+        }
+
+        fun setFontWeight(fontWeight: FontWeight): ForComposable = apply {
+            ActivityScenarioConfigurator.fontWeight = fontWeight
         }
 
         fun setActivityBackgroundColor(@ColorInt backgroundColor: Int): ForComposable = apply {
@@ -202,7 +212,7 @@ object ActivityScenarioConfigurator {
     private fun Activity.applyWindowStyle() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         backgroundColor?.run {
-            window.setBackgroundDrawable(ColorDrawable(this))
+            window.setBackgroundDrawable(this.toDrawable())
             backgroundColor = null
         }
     }
@@ -217,12 +227,16 @@ object ActivityScenarioConfigurator {
             val newDensityDpi = this.value.toFloat() * newConfig.densityDpi
             newConfig.densityDpi = newDensityDpi.toInt()
         }
+        fontWeight?.run {
+            newConfig.fontWeightAdjustment = this.value
+        }
 
         fontSize = null
         locale = null
         uiMode = null
         orientation = null
         displaySize = null
+        fontWeight = null
 
         return createConfigurationContext(newConfig)
     }

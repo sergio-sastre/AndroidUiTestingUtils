@@ -56,7 +56,7 @@ class DropshotsScreenshotTestRuleForComposable(
                 .composeView
 
         dropshotsRule.assertSnapshot(
-            view= composeView,
+            view = composeView,
             bitmapCaptureMethod = dropshotsConfig.bitmapCaptureMethod,
             name = name,
             filePath = dropshotsConfig.filePath,

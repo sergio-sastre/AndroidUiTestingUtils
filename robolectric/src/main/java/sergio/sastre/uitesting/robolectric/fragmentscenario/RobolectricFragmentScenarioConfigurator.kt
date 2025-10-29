@@ -29,10 +29,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.test.core.app.ActivityScenario
 import sergio.sastre.uitesting.robolectric.activityscenario.RobolectricActivityScenarioConfigurator
+import sergio.sastre.uitesting.robolectric.activityscenario.RobolectricActivityScenarioConfigurator.ForView
 import sergio.sastre.uitesting.robolectric.config.RobolectricQualifiersBuilder.setQualifiers
 import sergio.sastre.uitesting.robolectric.config.screen.DeviceScreen
 import sergio.sastre.uitesting.utils.common.DisplaySize
 import sergio.sastre.uitesting.utils.common.FontSizeScale
+import sergio.sastre.uitesting.utils.common.FontWeight
 import sergio.sastre.uitesting.utils.common.LocaleUtil
 import sergio.sastre.uitesting.utils.common.Orientation
 import sergio.sastre.uitesting.utils.common.UiMode
@@ -190,6 +192,7 @@ class RobolectricFragmentScenarioConfigurator<F : Fragment> constructor(
             var orientation: Orientation? = null,
             var uiMode: UiMode? = null,
             var displaySize: DisplaySize? = null,
+            var fontWeight: FontWeight? = null,
 
             @StyleRes
             var themeId: Int? = null,
@@ -233,6 +236,10 @@ class RobolectricFragmentScenarioConfigurator<F : Fragment> constructor(
 
         fun setTheme(theme: Int) = apply {
             state = state.copy(themeId = theme)
+        }
+
+        fun setFontWeight(fontWeight: FontWeight) = apply {
+            state = state.copy(fontWeight = fontWeight)
         }
 
         /**
@@ -285,6 +292,7 @@ class RobolectricFragmentScenarioConfigurator<F : Fragment> constructor(
                     state.orientation?.also { orientation -> setInitialOrientation(orientation) }
                     state.locale?.also { locale -> setLocale(locale) }
                     state.uiMode?.also { uiMode -> setUiMode(uiMode) }
+                    state.fontWeight?.also { fontWeight -> setFontWeight(fontWeight) }
                     state.fontSize?.also { fontSize -> setFontSize(fontSize) }
                     state.displaySize?.also { displaySize -> setDisplaySize(displaySize) }
                     state.themeId?.also { theme -> setTheme(theme) }

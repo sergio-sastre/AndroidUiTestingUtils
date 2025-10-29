@@ -27,12 +27,18 @@ class PaparazziScreenshotTestRuleForComposable(
         paparazziTestRule.apply(base, description)
 
     override fun snapshot(name: String?, composable: @Composable () -> Unit) {
-        paparazziTestRule.context.setDisplaySize(config.displaySize)
+        paparazziTestRule.context.run {
+            setFontWeight(config.fontWeight)
+            setDisplaySize(config.displaySize)
+        }
         paparazziTestRule.snapshot(name) { composable() }
     }
 
     override fun snapshot(composable: @Composable () -> Unit) {
-        paparazziTestRule.context.setDisplaySize(config.displaySize)
+        paparazziTestRule.context.run {
+            setFontWeight(config.fontWeight)
+            setDisplaySize(config.displaySize)
+        }
         paparazziTestRule.snapshot { composable() }
     }
 

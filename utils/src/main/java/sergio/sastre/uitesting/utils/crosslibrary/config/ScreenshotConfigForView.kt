@@ -7,6 +7,7 @@ import sergio.sastre.uitesting.utils.activityscenario.ViewConfigItem
 import sergio.sastre.uitesting.utils.common.DisplaySize
 import sergio.sastre.uitesting.utils.common.FontSize
 import sergio.sastre.uitesting.utils.common.FontSizeScale
+import sergio.sastre.uitesting.utils.common.FontWeight
 import sergio.sastre.uitesting.utils.common.Orientation
 import sergio.sastre.uitesting.utils.common.UiMode
 
@@ -32,6 +33,7 @@ data class ScreenshotConfigForView(
     val fontSize: FontSizeScale = FontSize.NORMAL,
     val displaySize: DisplaySize = DisplaySize.NORMAL,
     val theme: String? = null,
+    val fontWeight: FontWeight = FontWeight.NORMAL,
 ) {
     fun toViewConfig(): ViewConfigItem =
         ViewConfigItem(
@@ -40,9 +42,11 @@ data class ScreenshotConfigForView(
             locale = locale,
             fontSize = fontSize,
             displaySize = displaySize,
-            theme = theme.asTheme()
+            theme = theme.asTheme(),
+            fontWeight = fontWeight,
         )
 
+    // Do not use with Paparazzi, since its context is different from this
     private val context
         get() = InstrumentationRegistry.getInstrumentation().targetContext
 
