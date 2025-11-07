@@ -4,7 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.annotation.ColorInt
@@ -227,8 +229,11 @@ object ActivityScenarioConfigurator {
             val newDensityDpi = this.value.toFloat() * newConfig.densityDpi
             newConfig.densityDpi = newDensityDpi.toInt()
         }
-        fontWeight?.run {
-            newConfig.fontWeightAdjustment = this.value
+        fontWeight?.let {
+            when (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                true -> newConfig.fontWeightAdjustment = it.value
+                false -> Log.d(this.javaClass.simpleName, "Skipping FontWeightAdjustment. It can only be used on API 31+, and the current API is ${Build.VERSION.SDK_INT}")
+            }
         }
 
         fontSize = null
