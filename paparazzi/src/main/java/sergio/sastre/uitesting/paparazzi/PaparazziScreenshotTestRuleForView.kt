@@ -18,6 +18,7 @@ class PaparazziScreenshotTestRuleForView(
 ) : ScreenshotTestRuleForView(config) {
 
     private var paparazziConfig = PaparazziConfig()
+    private var originalContext: Context? = null
 
     private val paparazziTestRule: Paparazzi by lazy {
         PaparazziForViewTestRuleBuilder()
@@ -30,14 +31,20 @@ class PaparazziScreenshotTestRuleForView(
         paparazziTestRule.apply(base, description)
 
     override val context: Context
-        get() = paparazziTestRule.context
+        get() {
+            if (originalContext == null) {
+                originalContext = paparazziTestRule.context.apply {
+                    setFontWeight(config.fontWeight)
+                    setDisplaySize(config.displaySize)
+                }
+            }
+            return requireNotNull(originalContext)
+        }
+
 
     override fun inflate(layoutId: Int): View {
         // FontWeight must be applied before inflating the corresponding View to take effect
-        paparazziTestRule.context.run {
-            setFontWeight(config.fontWeight)
-            setDisplaySize(config.displaySize)
-        }
+        context
         return paparazziTestRule.inflate(layoutId)
     }
 
