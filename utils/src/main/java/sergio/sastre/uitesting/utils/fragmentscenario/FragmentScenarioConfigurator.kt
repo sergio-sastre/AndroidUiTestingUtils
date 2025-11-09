@@ -261,11 +261,10 @@ class FragmentScenarioConfigurator<F : Fragment> constructor(
                 orientation?.also { orientation -> setInitialOrientation(orientation) }
                 locale?.also { locale -> setLocale(locale) }
                 uiMode?.also { uiMode -> setUiMode(uiMode)  }
+                fontWeight?.also { fontWeight -> setFontWeight(fontWeight) }
                 fontSize?.also { fontSize -> setFontSize(fontSize) }
                 displaySize?.also { displaySize -> setDisplaySize(displaySize)}
                 theme?.also { theme -> setTheme(theme) }
-
-                fontWeight?.also { fontWeight -> setFontWeight(fontWeight)}
             }.launchConfiguredActivity()
 
             orientation = null
