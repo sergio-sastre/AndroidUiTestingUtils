@@ -194,7 +194,7 @@ class RobolectricFragmentScenarioConfigurator<F : Fragment> constructor(
             var displaySize: DisplaySize? = null,
             var fontWeight: FontWeight? = null,
 
-            @StyleRes
+            @get:StyleRes
             var themeId: Int? = null,
         )
 

@@ -23,5 +23,5 @@ data class AndroidTestifyConfig(
     val exclusionRectProvider: ExclusionRectProvider? = null,
     val compareMethod: CompareMethod? = null,
     val pauseForInspection: Boolean = false,
-    @ColorInt val backgroundColor: Int? = null,
+    @get:ColorInt val backgroundColor: Int? = null,
 ) : LibraryConfig

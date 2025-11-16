@@ -14,7 +14,7 @@ data class FragmentConfigItem(
     val locale: String? = null,
     val fontSize: FontSizeScale? = null,
     val displaySize: DisplaySize? = null,
-    @StyleRes val theme: Int? = null,
+    @get:StyleRes val theme: Int? = null,
     val fontWeight: FontWeight? = null,
 ) {
     val id : String
