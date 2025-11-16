@@ -20,7 +20,7 @@ internal class ApiDependentInAppLocaleTestRule constructor(
         private val TAG = InAppLocaleTestRule::class.java.simpleName
     }
 
-    private lateinit var initialLocales: LocaleListCompat
+    private var initialLocales: LocaleListCompat? = null
 
     constructor(
         testLocale: String
@@ -46,15 +46,17 @@ internal class ApiDependentInAppLocaleTestRule constructor(
                     Log.e(TAG, errorMessage)
                     throw throwable
                 } finally {
-                    setApplicationLocaleInLooper(Looper.getMainLooper(), initialLocales)
+                    initialLocales?.let { locales ->
+                        setApplicationLocaleInLooper(Looper.getMainLooper(), locales)
+                    }
                 }
             }
         }
     }
 
-    private fun setApplicationLocaleInLooper(looper: Looper, locale: LocaleListCompat) {
+    private fun setApplicationLocaleInLooper(looper: Looper, locales: LocaleListCompat) {
         Handler(looper).post {
-            setApplicationLocales(locale)
+            setApplicationLocales(locales)
             Log.d(TAG, "in-app locales set to $appLocalesLanguageTags")
         }
     }

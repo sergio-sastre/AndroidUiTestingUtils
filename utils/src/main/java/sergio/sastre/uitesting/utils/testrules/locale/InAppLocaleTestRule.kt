@@ -33,7 +33,7 @@ import java.util.*
  *
  * WARNING 1: It's not compatible with Robolectric
  * WARNING 2: If you are also using [SystemLocaleTestRule], make sure that [InAppLocaleTestRule] is applied after it (e.g. has a higher order number).
- *            Otherwise, the System Locale is not reset correctly on API 36+
+ *            Otherwise, the System Locale is not reset correctly on API 33+
  **/
 class InAppLocaleTestRule
 /**
@@ -51,7 +51,7 @@ class InAppLocaleTestRule
 )
 constructor(private val locale: Locale) : TestRule {
 
-    private var activityScenarioRule: TestRule? = null
+    private var testRule: TestRule? = null
 
     /**
      * Applies [testLocale] as in-app-locale.
@@ -63,13 +63,13 @@ constructor(private val locale: Locale) : TestRule {
      * which handles order correctly on its own
      */
     @Deprecated(
-        message = "Use the (locale: String, activityScenarioRule: TestRule) constructor instead. This will be removed in version 2.9.0",
+        message = "Use the (locale: String, activityScenarioRule: ActivityScenarioRule<*>) constructor instead. This will be removed in version 2.9.0",
         replaceWith = ReplaceWith("InAppLocaleTestRule(locale, activityScenarioRule)")
     )
     constructor(
         testLocale: String
     ) : this(LocaleUtil.localeFromString(testLocale)) {
-        this.activityScenarioRule = null
+        this.testRule = null
     }
 
     /**
@@ -80,7 +80,7 @@ constructor(private val locale: Locale) : TestRule {
         locale: Locale,
         activityScenarioRule: ActivityScenarioRule<*>
     ) : this(locale) {
-        this.activityScenarioRule = activityScenarioRule
+        this.testRule = activityScenarioRule
     }
 
     /**
@@ -91,7 +91,7 @@ constructor(private val locale: Locale) : TestRule {
         locale: String,
         activityScenarioRule: ActivityScenarioRule<*>
     ) : this(LocaleUtil.localeFromString(locale)) {
-        this.activityScenarioRule = activityScenarioRule
+        this.testRule = activityScenarioRule
     }
 
     /**
@@ -102,7 +102,7 @@ constructor(private val locale: Locale) : TestRule {
         locale: Locale,
         activityScenarioForActivityRule: ActivityScenarioForActivityRule<*>
     ) : this(locale) {
-        this.activityScenarioRule = activityScenarioForActivityRule
+        this.testRule = activityScenarioForActivityRule
     }
 
     /**
@@ -113,7 +113,7 @@ constructor(private val locale: Locale) : TestRule {
         locale: String,
         activityScenarioForActivityRule: ActivityScenarioForActivityRule<*>
     ) : this(LocaleUtil.localeFromString(locale)) {
-        this.activityScenarioRule = activityScenarioForActivityRule
+        this.testRule = activityScenarioForActivityRule
     }
 
     private val inAppLocaleRule = ApiDependentInAppLocaleTestRule(locale)
@@ -122,18 +122,18 @@ constructor(private val locale: Locale) : TestRule {
         base: Statement,
         description: Description
     ): Statement {
-        val testRule = when {
-            activityScenarioRule == null -> inAppLocaleRule
+        val ruleToApply = when {
+            testRule == null -> inAppLocaleRule
             Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ->
                 RuleChain
                     .outerRule(inAppLocaleRule)
-                    .around(activityScenarioRule)
+                    .around(testRule)
 
             else ->
                 RuleChain
-                    .outerRule(activityScenarioRule)
+                    .outerRule(testRule)
                     .around(inAppLocaleRule)
         }
-        return testRule.apply(base, description)
+        return ruleToApply.apply(base, description)
     }
 }
