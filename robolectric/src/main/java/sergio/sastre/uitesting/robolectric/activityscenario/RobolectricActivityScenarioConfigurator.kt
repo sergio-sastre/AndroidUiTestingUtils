@@ -4,8 +4,9 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.annotation.ColorInt
 import androidx.annotation.StyleRes
@@ -21,7 +22,9 @@ import sergio.sastre.uitesting.utils.common.Orientation
 import sergio.sastre.uitesting.utils.common.UiMode
 import sergio.sastre.uitesting.utils.common.DisplaySize
 import sergio.sastre.uitesting.utils.common.FontSizeScale
+import sergio.sastre.uitesting.utils.common.FontWeight
 import java.util.*
+import androidx.core.graphics.drawable.toDrawable
 
 object RobolectricActivityScenarioConfigurator {
 
@@ -32,11 +35,12 @@ object RobolectricActivityScenarioConfigurator {
         var orientation: Orientation? = null,
         var uiMode: UiMode? = null,
         var displaySize: DisplaySize? = null,
+        var fontWeight: FontWeight? = null,
 
-        @ColorInt
+        @get:ColorInt
         var backgroundColor: Int? = null,
 
-        @StyleRes
+        @get:StyleRes
         var themeId: Int? = null,
     )
 
@@ -58,6 +62,15 @@ object RobolectricActivityScenarioConfigurator {
         val newConfig = this@applyState
         state.apply {
             orientation?.let { newConfig.orientation = it.activityInfo }
+            fontWeight?.let {
+                when (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    true -> newConfig.fontWeightAdjustment = it.value
+                    false -> Log.d(
+                        RobolectricActivityScenarioConfigurator.javaClass.simpleName,
+                        "Skipping FontWeightAdjustment. It can only be used on API 31+, and the current API is ${Build.VERSION.SDK_INT}"
+                    )
+                }
+            }
             fontSize?.let { newConfig.fontScale = it.scale }
             displaySize?.let {
                 val newDensityDpi = it.value.toFloat() * newConfig.densityDpi
@@ -79,7 +92,7 @@ object RobolectricActivityScenarioConfigurator {
     ) = apply {
         backgroundColor?.let { color ->
             onActivity { activity ->
-                activity.window.setBackgroundDrawable(ColorDrawable(color))
+                activity.window.setBackgroundDrawable(color.toDrawable())
             }
         }
     }
@@ -136,6 +149,10 @@ object RobolectricActivityScenarioConfigurator {
 
         fun setTheme(@StyleRes theme: Int): ForView = apply {
             state = state.copy(themeId = theme)
+        }
+
+        fun setFontWeight(fontWeight: FontWeight): ForView = apply {
+            state = state.copy(fontWeight = fontWeight)
         }
 
         fun launchConfiguredActivity(
@@ -214,6 +231,10 @@ object RobolectricActivityScenarioConfigurator {
             state = state.copy(displaySize = displaySize)
         }
 
+        fun setFontWeight(fontWeight: FontWeight): ForComposable = apply {
+            state = state.copy(fontWeight = fontWeight)
+        }
+
         fun launchConfiguredActivity(
             @ColorInt backgroundColor: Int? = null,
         ): ActivityScenario<out FragmentActivity> {
@@ -281,6 +302,10 @@ object RobolectricActivityScenarioConfigurator {
 
         fun setDisplaySize(displaySize: DisplaySize): ForActivity = apply {
             state = state.copy(displaySize = displaySize)
+        }
+
+        fun setFontWeight(fontWeight: FontWeight): ForActivity = apply {
+            state = state.copy(fontWeight = fontWeight)
         }
 
         fun <T : Activity> launch(clazz: Class<T>): ActivityScenario<T> {

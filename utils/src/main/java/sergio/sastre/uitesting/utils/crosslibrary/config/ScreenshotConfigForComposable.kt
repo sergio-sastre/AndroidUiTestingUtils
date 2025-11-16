@@ -4,6 +4,7 @@ import sergio.sastre.uitesting.utils.activityscenario.ComposableConfigItem
 import sergio.sastre.uitesting.utils.common.DisplaySize
 import sergio.sastre.uitesting.utils.common.FontSize
 import sergio.sastre.uitesting.utils.common.FontSizeScale
+import sergio.sastre.uitesting.utils.common.FontWeight
 import sergio.sastre.uitesting.utils.common.Orientation
 import sergio.sastre.uitesting.utils.common.UiMode
 
@@ -25,6 +26,7 @@ class ScreenshotConfigForComposable(
     val fontScale: FontSizeScale = FontSize.NORMAL,
     val locale: String = "en",
     val displaySize: DisplaySize = DisplaySize.NORMAL,
+    val fontWeight: FontWeight = FontWeight.NORMAL
 ) {
 
     fun toComposableConfig(): ComposableConfigItem =
@@ -34,5 +36,6 @@ class ScreenshotConfigForComposable(
             locale = locale,
             fontSize = fontScale,
             displaySize = displaySize,
+            fontWeight = fontWeight,
         )
 }

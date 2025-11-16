@@ -4,6 +4,7 @@ import androidx.annotation.StyleRes
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import sergio.sastre.uitesting.utils.common.DisplaySize
 import sergio.sastre.uitesting.utils.common.FontSizeScale
+import sergio.sastre.uitesting.utils.common.FontWeight
 import sergio.sastre.uitesting.utils.common.Orientation
 import sergio.sastre.uitesting.utils.common.UiMode
 
@@ -13,7 +14,8 @@ data class FragmentConfigItem(
     val locale: String? = null,
     val fontSize: FontSizeScale? = null,
     val displaySize: DisplaySize? = null,
-    @StyleRes val theme: Int? = null,
+    @get:StyleRes val theme: Int? = null,
+    val fontWeight: FontWeight? = null,
 ) {
     val id : String
         get() {
@@ -27,6 +29,7 @@ data class FragmentConfigItem(
                 nonNullProperties.add(theme.replace(".","_").uppercase())
             }
             fontSize?.let { nonNullProperties.add("FONT_${it.valueAsName()}") }
+            fontWeight?.let { nonNullProperties.add("WEIGHT_${it.name}") }
             displaySize?.let { nonNullProperties.add("DISPLAY_${it.name}") }
             orientation?.let { nonNullProperties.add(it.name) }
             return nonNullProperties.joinToString(separator = "_")

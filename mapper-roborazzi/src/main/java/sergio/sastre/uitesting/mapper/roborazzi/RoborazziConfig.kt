@@ -12,7 +12,7 @@ data class RoborazziConfig(
     val filePath: String = DEFAULT_ROBORAZZI_OUTPUT_DIR_PATH,
     val roborazziOptions: RoborazziOptions = RoborazziOptions(),
     val deviceScreen: DeviceScreen? = null,
-    @ColorInt val backgroundColor: Int? = null,
+    @get:ColorInt val backgroundColor: Int? = null,
     val bitmapCaptureMethod: BitmapCaptureMethod? = null,
 ) : LibraryConfig {
 

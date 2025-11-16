@@ -71,6 +71,7 @@ class RobolectricActivityScenarioForActivityRule<T : Activity> private construct
         config?.orientation?.also { orientation -> setOrientation(orientation) }
         config?.systemLocale?.also { locale -> setSystemLocale(locale) }
         config?.uiMode?.also { uiMode -> setUiMode(uiMode) }
+        config?.fontWeight?.also { fontWeight -> setFontWeight(fontWeight)}
         config?.fontSize?.also { fontSize -> setFontSize(fontSize) }
         config?.displaySize?.also { displaySize -> setDisplaySize(displaySize) }
     }

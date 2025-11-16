@@ -14,6 +14,6 @@ data class ShotConfig(
     val ignoredViews: List<Int> = emptyList(),
     val prepareUIForScreenshot: () -> Unit = {},
     val bitmapCaptureMethod: BitmapCaptureMethod? = null,
-    @ColorInt val backgroundColor: Int? = null,
+    @get:ColorInt val backgroundColor: Int? = null,
     val viewMaxPixels: Long = 10_000_000L,
 ): LibraryConfig
