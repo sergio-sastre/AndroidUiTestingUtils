@@ -211,7 +211,7 @@ fun grantChangeConfigurationIfNeeded() {
         ) != PackageManager.PERMISSION_GRANTED
     ) {
         /*
-      The following fails on API 27 or before
+      The following fails on API 27 or before:
       UiAutomation.grantRuntimePermission(...)
 
       Therefore better to use .executeShellCommand(..)

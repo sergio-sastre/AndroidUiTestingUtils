@@ -6,6 +6,7 @@ import org.junit.rules.RuleChain
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
+import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioForActivityRule
 import sergio.sastre.uitesting.utils.common.LocaleUtil
 import java.util.*
 
@@ -30,7 +31,9 @@ import java.util.*
  *    />
  *</service>
  *
- * WARNING: It's not compatible with Robolectric
+ * WARNING 1: It's not compatible with Robolectric
+ * WARNING 2: If you are also using [SystemLocaleTestRule], make sure that [InAppLocaleTestRule] is applied after it (e.g. has a higher order number).
+ *            Otherwise, the System Locale is not reset correctly on API 36+
  **/
 class InAppLocaleTestRule
 /**
@@ -48,7 +51,7 @@ class InAppLocaleTestRule
 )
 constructor(private val locale: Locale) : TestRule {
 
-    private var activityScenarioRule: ActivityScenarioRule<*>? = null
+    private var activityScenarioRule: TestRule? = null
 
     /**
      * Applies [testLocale] as in-app-locale.
@@ -89,6 +92,28 @@ constructor(private val locale: Locale) : TestRule {
         activityScenarioRule: ActivityScenarioRule<*>
     ) : this(LocaleUtil.localeFromString(locale)) {
         this.activityScenarioRule = activityScenarioRule
+    }
+
+    /**
+     * Applies [locale] as in-app-locale.
+     * By passing the [activityScenarioForActivityRule], it can set in-app-locale properly regardless of the API level
+     */
+    constructor(
+        locale: Locale,
+        activityScenarioForActivityRule: ActivityScenarioForActivityRule<*>
+    ) : this(locale) {
+        this.activityScenarioRule = activityScenarioForActivityRule
+    }
+
+    /**
+     * Applies [locale] as in-app-locale.
+     * By passing the [activityScenarioForActivityRule], it can set in-app-locale properly regardless of the API level
+     */
+    constructor(
+        locale: String,
+        activityScenarioForActivityRule: ActivityScenarioForActivityRule<*>
+    ) : this(LocaleUtil.localeFromString(locale)) {
+        this.activityScenarioRule = activityScenarioForActivityRule
     }
 
     private val inAppLocaleRule = ApiDependentInAppLocaleTestRule(locale)

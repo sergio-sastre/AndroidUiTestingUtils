@@ -1,7 +1,5 @@
 package sergio.sastre.uitesting.utils.testrules.locale
 
-import android.content.pm.PackageManager.*
-import androidx.core.content.ContextCompat.*
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
@@ -21,7 +19,9 @@ import kotlin.Throws
  * The code was converted to Kotlin, and added the [grantChangeConfigurationIfNeeded] method
  * to enable locale change
  *
- * WARNING: It's not compatible with Robolectric
+ * WARNING 1: It's not compatible with Robolectric
+ * WARNING 2: If you are also using [InAppLocaleTestRule], make sure that [SystemLocaleTestRule] is applied before it (e.g. has a lower order number).
+ *            Otherwise, the System Locale is not reset correctly on API 36+
  */
 class SystemLocaleTestRule constructor(private val locale: Locale) : TestRule {
 
