@@ -1,6 +1,7 @@
 package sergio.sastre.uitesting.utils.testrules.locale
 
 import android.os.Build
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import org.junit.rules.RuleChain
 import org.junit.rules.TestRule
 import org.junit.runner.Description
@@ -42,12 +43,12 @@ class InAppLocaleTestRule
  * which handles order correctly on its own
  */
 @Deprecated(
-    message = "Use the (locale: Locale, activityScenarioRule: TestRule) constructor instead. This will be removed in version 2.9.0",
+    message = "Use the (locale: Locale, activityScenarioRule: ActivityScenarioRule<*>) constructor instead. This will be removed in version 2.9.0",
     replaceWith = ReplaceWith("InAppLocaleTestRule(locale, activityScenarioRule)")
 )
 constructor(private val locale: Locale) : TestRule {
 
-    private var activityScenarioRule: TestRule? = null
+    private var activityScenarioRule: ActivityScenarioRule<*>? = null
 
     /**
      * Applies [testLocale] as in-app-locale.
@@ -74,7 +75,7 @@ constructor(private val locale: Locale) : TestRule {
      */
     constructor(
         locale: Locale,
-        activityScenarioRule: TestRule
+        activityScenarioRule: ActivityScenarioRule<*>
     ) : this(locale) {
         this.activityScenarioRule = activityScenarioRule
     }
@@ -85,7 +86,7 @@ constructor(private val locale: Locale) : TestRule {
      */
     constructor(
         locale: String,
-        activityScenarioRule: TestRule
+        activityScenarioRule: ActivityScenarioRule<*>
     ) : this(LocaleUtil.localeFromString(locale)) {
         this.activityScenarioRule = activityScenarioRule
     }
