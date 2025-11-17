@@ -35,9 +35,12 @@ _AndroidUiTestingUtils_ also supports [per-app language preferences](https://dev
 androidTestImplementation 'androidx.appcompat:appcompat:1.6.0-alpha04' // or higher version!
 ```
 
-Use this rule to test Activities with in-app Locales that differ from the System Locale.
+Use this rule to test Activities with in-app Locales that differ from the System Locale. You''ll also need to pass an `ActivityScenarioRule` or `ActivityScenarioForActivityRule` to apply the inAppLocale properly regardless the API level.
 
 ```kotlin
 @get:Rule
-val inAppLocale = InAppLocaleTestRule("en")
+val inAppLocale = InAppLocaleTestRule(
+    locale = "en",
+    activityScenarioRule = activityScenarioRule
+)
 ```

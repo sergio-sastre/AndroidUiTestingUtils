@@ -31,7 +31,7 @@ Use _AndroidUiTesting_ [TestRules ](../testrules-and-other-utils.md#testrules)wi
 @get:Rule
 val screenshotRule =
     ScreenshotRuleWithConfigurationForFragment(
-        exactness = 0.85f,
+        exactness = 0.85f
         fragmentClass = MyFragment::class.java,
         fragmentArgs = bundleOf("key" to "value"),
         config = FragmentConfigItem(
@@ -106,9 +106,9 @@ val screenshotRule =
         config = ComposableConfigItem(
             locale = "en",
             uiMode = UiMode.DAY,
+            orientation = Orientation.PORTRAIT,
             fontSize = FontSize.NORMAL,
             displaySize = DisplaySize.NORMAL,
-            orientation = Orientation.PORTRAIT
         )
     )
 

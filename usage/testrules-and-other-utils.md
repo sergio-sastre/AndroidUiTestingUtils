@@ -8,9 +8,13 @@ Some utilities and TestRules to facilitate UI and Screenshot Testing&#x20;
 @get:Rule
 val disableAnimations = DisableAnimationsTestRule()
 
-// Sets the Locale of the app under test only, i.e. the per-app language preference feature
+// Sets the Locale of the app under test only, 
+// i.e. the per-app language preference feature
 @get:Rule
-val inAppLocale = InAppLocaleTestRule("en")
+val inAppLocale = InAppLocaleTestRule(
+    locale = "en",
+    activityScenarioRule = activityScenarioRule
+)
 
 // Sets the Locale of the Android system
 @get:Rule
@@ -45,6 +49,17 @@ From all those Test Rules, it is important to highlight those that can be used i
 <figure><img src="../.gitbook/assets/9.png" alt=""><figcaption></figcaption></figure>
 
 <figure><img src="../.gitbook/assets/8.png" alt=""><figcaption></figcaption></figure>
+
+{% hint style="info" %}
+All of them, except the `HighTextContrastTestRule` , are also supported in
+
+* `ActivityConfigItem`
+* `FragmentConfigItem`
+* `ComposableConfigItem`
+* `ViewConfigItem`
+* `ScreenshotConfigForView` (CrossLibrary)
+* `ScreenshotConfigForComposable` (CrossLibrary)
+{% endhint %}
 
 ## **WaitFor...**
 

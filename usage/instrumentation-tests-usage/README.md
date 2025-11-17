@@ -26,6 +26,7 @@ val screenshotRule =
             fontSize = FontSize.LARGEST,
             systemLocale = "en",
             displaySize = DisplaySize.LARGEST,
+            fontWeight = FontWeight.BOLD,
         )
     )
 
@@ -48,12 +49,15 @@ Apart from that, this would be equivalent
 val systemLocale = SystemLocaleTestRule("en")
 
 @get:Rule(order = 1)
-val fontSize = FontSizeTestRule(FontSizeScale.Value(1.75f))
+val fontWeight = FontWeightTestRule(FontWeight.BOLD)
 
 @get:Rule(order = 2)
-val displaySize = DisplaySizeTestRule(DisplaySize.LARGEST)
+val fontSize = FontSizeTestRule(FontSizeScale.Value(1.75f))
 
 @get:Rule(order = 3)
+val displaySize = DisplaySizeTestRule(DisplaySize.LARGEST)
+
+@get:Rule(order = 4)
 val uiMode = UiModeTestRule(UiMode.NIGHT)
 
 @Test
@@ -86,9 +90,10 @@ val screenshotRule = fragmentScenarioConfiguratorRule<MyFragment>(
             orientation = Orientation.LANDSCAPE,
             uiMode = UiMode.DAY,
             locale = "de",
+            theme = R.style.Custom_Theme,
             fontSize = FontSize.SMALL,
             displaySize = DisplaySize.SMALL,
-            theme = R.style.Custom_Theme,
+            fontWeight = FontWeight.BOLD,
         ),
     )
 
@@ -111,9 +116,10 @@ fun snapFragment() {
             .setInitialOrientation(Orientation.LANDSCAPE)
             .setUiMode(UiMode.DAY)
             .setLocale("de")
+            .setTheme(R.style.Custom_Theme)
             .setFontSize(FontSize.SMALL)
             .setDisplaySize(DisplaySize.LARGE)
-            .setTheme(R.style.Custom_Theme)
+            .setFontWeight(FontWeight.BOLD)
             .launchInContainer<MyFragment>(
                 fragmentArgs = bundleOf("arg_key" to "arg_value"),
             )
@@ -142,6 +148,7 @@ val rule =
             uiMode = UiMode.DAY,
             theme = R.style.Custom_Theme,
             displaySize = DisplaySize.SMALL,
+            fontWeight = FontWeight.BOLD,
         ),
         backgroundColor = TRANSPARENT,
     )
@@ -175,12 +182,13 @@ In case you don't want to/cannot use the rule, you can use **ActivityScenarioCon
 fun snapViewHolderTest() {
     val activityScenario =
         ActivityScenarioConfigurator.ForView()
-            .setFontSize(FontSize.NORMAL)
             .setLocale("en")
             .setInitialOrientation(Orientation.PORTRAIT)
             .setUiMode(UiMode.DAY)
             .setTheme(R.style.Custom_Theme)
+            .setFontSize(FontSize.NORMAL)
             .setDisplaySize(DisplaySize.SMALL)
+            .setFontWeight(FontWeight.BOLD)
             .launchConfiguredActivity(TRANSPARENT)
 
     val activity = activityScenario.waitForActivity()
@@ -217,11 +225,12 @@ The simplest way is to use the **ActivityScenarioForComposableRule**, to avoid t
 @get:Rule
 val screenshotRule = ActivityScenarioForComposableRule(
         config = ComposableConfigItem(
-            fontSize = FontSize.SMALL,
+            orientation = Orientation.PORTRAIT,
             locale = "de",
             uiMode = UiMode.DAY,
+            fontSize = FontSize.SMALL,
             displaySize = DisplaySize.LARGE,
-            orientation = Orientation.PORTRAIT,
+            fontWeight = FontWeight.BOLD,
         ),
         backgroundColor = TRANSPARENT,
     )
@@ -259,6 +268,7 @@ fun snapComposableTest() {
         .setInitialOrientation(Orientation.PORTRAIT)
         .setUiMode(UiMode.DAY)
         .setDisplaySize(DisplaySize.LARGE)
+        .setFontWeight(FontWeight.BOLD)
         .launchConfiguredActivity(TRANSPARENT)
         .onActivity {
             it.setContent {
@@ -336,11 +346,7 @@ and one extra to fully screenshot a scrollable Android View:&#x20;
 
 Differences between Bitmaps generated via `Canvas` and `Pixel Copy` might be specially noticeable on API 31:
 
-<div align="center">
-
-<img src="https://user-images.githubusercontent.com/6097181/211920600-6cfcdde3-1fd6-4b23-84d1-3eae587c811d.png" alt="Differences between bitmaps generated with Canvas &#x26; Pixel Copy on API 31" width="350">
-
-</div>
+<div align="center"><img src="https://user-images.githubusercontent.com/6097181/211920600-6cfcdde3-1fd6-4b23-84d1-3eae587c811d.png" alt="Differences between bitmaps generated with Canvas &#x26; Pixel Copy on API 31" width="350"></div>
 
 {% hint style="info" %}
 If using `PixelCopy` with ViewHolders/Views/Dialogs/Composables, consider launching the container Activity with transparent background for a more realistic screenshot of the UI component.

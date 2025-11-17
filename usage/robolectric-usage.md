@@ -23,6 +23,7 @@ class SnapActivityTest {
                 orientation = Orientation.PORTRAIT,
                 fontSize = FontSize.NORMAL,
                 displaySize = DisplaySize.NORMAL,
+                fontWeight = FontWeight.BOLD,
             ),
             deviceScreen = DeviceScreen.Phone.PIXEL_4A,
         )
@@ -55,6 +56,7 @@ class SnapActivityTest {
                 .setOrientation(Orientation.PORTRAIT)
                 .setFontSize(FontSize.NORMAL)
                 .setDisplaySize(DisplaySize.NORMAL)
+                .setFontWeight(FontWeight.BOLD)
                 .launch(MyActivity::class.java)
 
         activityScenario
@@ -86,6 +88,7 @@ class SnapFragmentTest {
                 orientation = Orientation.PORTRAIT,
                 fontSize = FontSize.NORMAL,
                 displaySize = DisplaySize.NORMAL,
+                fontWeight = FontWeight.BOLD,
             ),
             deviceScreen = DeviceScreen.Phone.PIXEL_4A,
         )
@@ -120,6 +123,7 @@ class SnapFragmentTest {
                 .setOrientation(Orientation.PORTRAIT)
                 .setFontSize(FontSize.NORMAL)
                 .setDisplaySize(DisplaySize.NORMAL)
+                .setFontWeight(FontWeight.BOLD)
                 .launchInContainer(
                     fragmentClass = MyFragment::class.java,
                     fragmentArgs = bundleOf("arg_key" to "arg_value"),
@@ -154,6 +158,7 @@ class SnapViewHolderTest {
                 orientation = Orientation.PORTRAIT,
                 fontSize = FontSize.NORMAL,
                 displaySize = DisplaySize.NORMAL,
+                fontWeight = FontWeight.BOLD,
             ),
             deviceScreen = DeviceScreen.Phone.PIXEL_4A,
             backgroundColor = TRANSPARENT,
@@ -202,6 +207,7 @@ class SnapViewHolderTest {
                 .setOrientation(Orientation.PORTRAIT)
                 .setFontSize(FontSize.NORMAL)
                 .setDisplaySize(DisplaySize.NORMAL)
+                .setFontWeight(FontWeight.BOLD)
                 .launchConfiguredActivity(TRANSPARENT)
 
         val activity = activityScenario.waitForActivity()
@@ -239,11 +245,12 @@ class SnapComposableTest {
     val robolectricScreenshotRule =
         RobolectricActivityScenarioForComposableRule(
             config = ComposableConfigItem(
-                fontSize = FontSize.SMALL,
                 locale = "ar_XB",
                 uiMode = UiMode.DAY,
-                displaySize = DisplaySize.LARGE,
                 orientation = Orientation.PORTRAIT,
+                fontSize = FontSize.SMALL,
+                displaySize = DisplaySize.LARGE,
+                fontWeight = FontWeight.BOLD,
             ),
             deviceScreen = DeviceScreen.Phone.PIXEL_4A,
             backgroundColor = TRANSPARENT,
@@ -311,6 +318,7 @@ class SnapComposableTest {
                 .setInitialOrientation(Orientation.PORTRAIT)
                 .setUiMode(UiMode.DAY)
                 .setDisplaySize(DisplaySize.LARGE)
+                .setFontWeight(FontWeight.BOLD)
                 .launchConfiguredActivity(TRANSPARENT)
                 .onActivity {
                     it.setContent {

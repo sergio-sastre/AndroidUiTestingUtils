@@ -47,6 +47,7 @@ class MyCrossLibraryScreenshotTest {
                 locale = "en",
                 fontScale = FontSize.NORMAL,
                 displaySize = DisplaySize.NORMAL,
+                fontWeight = FontWeight.BOLD,
             ),
         )
         // Optional: Override the default config for the desired libraries
