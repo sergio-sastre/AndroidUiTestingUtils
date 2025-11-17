@@ -57,7 +57,9 @@ dependencies {
     api 'androidx.compose.ui:ui-test-junit4:1.9.4'
     api 'androidx.fragment:fragment-ktx:1.8.9'
     implementation 'androidx.test:core:1.7.0'
-    implementation 'androidx.core:core-ktx:1.17.0'
+    implementation 'androidx.core:core-ktx:1.16.0' because {
+        "it crashes with newer versions if executing ./gradlew :app:checkDebugAarMetadata"
+    }
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:6.1'
 }
 
