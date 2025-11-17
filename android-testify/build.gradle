@@ -50,8 +50,8 @@ android {
 
 dependencies {
     implementation project(':utils')
-    implementation 'androidx.test:rules:1.6.1'
-    api 'dev.testify:testify:3.2.2'
+    implementation 'androidx.test:rules:1.7.0'
+    api 'dev.testify:testify:3.2.3'
     api ("androidx.activity:activity-compose:1.9.3") {
         because "the last one requires compose option 1.6.x"
     }
@@ -63,7 +63,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "android-testify"
-            version = '2.7.0'
+            version = '2.8.0'
 
             afterEvaluate {
                 from components.release
