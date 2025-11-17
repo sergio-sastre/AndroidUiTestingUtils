@@ -52,14 +52,12 @@ android {
 
 dependencies {
     api 'androidx.appcompat:appcompat:1.7.1'
-    api 'com.google.android.material:material:1.12.0'
-    api 'androidx.test:core:1.6.1'
-
-    api 'androidx.test.espresso:espresso-core:3.6.1'
-
-    api 'androidx.compose.ui:ui-test-junit4:1.8.2'
-    api 'androidx.fragment:fragment-ktx:1.8.8'
-    implementation 'androidx.core:core-ktx:1.16.0'
+    api 'com.google.android.material:material:1.13.0'
+    api 'androidx.test.espresso:espresso-core:3.7.0'
+    api 'androidx.compose.ui:ui-test-junit4:1.9.4'
+    api 'androidx.fragment:fragment-ktx:1.8.9'
+    implementation 'androidx.test:core:1.7.0'
+    implementation 'androidx.core:core-ktx:1.17.0'
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:6.1'
 }
 
@@ -69,7 +67,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "utils"
-            version = '2.7.0'
+            version = '2.8.0'
 
             afterEvaluate {
                 from components.release
