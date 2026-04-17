@@ -1,4 +1,4 @@
-[![](https://jitpack.io/v/sergio-sastre/AndroidUiTestingUtils.svg)](https://jitpack.io/#sergio-sastre/AndroidUiTestingUtils)</br>
+[![](https://jitpack.io/v/sergio-sastre/AndroidUiTestingUtils.svg)](https://jitpack.io/#sergio-sastre/AndroidUiTestingUtils) ![](https://jitpack.io/v/sergio-sastre/AndroidUiTestingUtils/month.svg)</br>
 <a href="https://androidweekly.net/issues/issue-508">
 <img src="https://androidweekly.net/issues/issue-508/badge">
 </a>
