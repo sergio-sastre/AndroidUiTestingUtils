@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'maven-publish'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 android {
@@ -24,22 +25,18 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
         freeCompilerArgs += ["-Xjvm-default=all"]
     }
 
     buildFeatures {
         // Enables Jetpack Compose for this module
         compose true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.5.15'
     }
 
     publishing {
@@ -54,7 +51,7 @@ dependencies {
     api 'androidx.appcompat:appcompat:1.7.1'
     api 'com.google.android.material:material:1.13.0'
     api 'androidx.test.espresso:espresso-core:3.7.0'
-    api 'androidx.compose.ui:ui-test-junit4:1.9.4'
+    api 'androidx.compose.ui:ui-test-junit4:1.7.5'
     api 'androidx.fragment:fragment-ktx:1.8.9'
     implementation 'androidx.test:core:1.7.0'
     implementation ('androidx.core:core-ktx:1.16.0') {

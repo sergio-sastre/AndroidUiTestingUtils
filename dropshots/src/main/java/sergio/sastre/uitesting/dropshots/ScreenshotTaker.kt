@@ -47,6 +47,7 @@ internal class ScreenshotTaker(
                 name = name,
                 filePath = filePath,
             )
+            else -> throw IllegalArgumentException("Unknown BitmapCaptureMethod: $bitmapCaptureMethod")
         }
     }
 
@@ -76,6 +77,7 @@ internal class ScreenshotTaker(
                 name = name,
                 filePath = filePath,
             )
+            else -> throw IllegalArgumentException("Unknown BitmapCaptureMethod: $bitmapCaptureMethod")
         }
     }
 

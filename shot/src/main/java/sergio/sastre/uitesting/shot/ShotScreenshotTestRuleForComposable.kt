@@ -68,6 +68,7 @@ class ShotScreenshotTestRuleForComposable(
             is BitmapCaptureMethod.PixelCopy ->
                 takeSnapshotWithPixelCopy(bitmapCaptureMethod.config, composeView, name)
             null -> takeSnapshotWithComposeRuleIfPossible(composeView, name)
+            else -> throw IllegalArgumentException("Unknown BitmapCaptureMethod: $bitmapCaptureMethod")
         }
     }
 
