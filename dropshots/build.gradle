@@ -50,7 +50,7 @@ android {
 dependencies {
     implementation project(':utils')
     implementation 'androidx.test:rules:1.7.0'
-    api 'com.dropbox.dropshots:dropshots:0.5.1'
+    api 'com.dropbox.dropshots:dropshots:0.6.0'
     api ("androidx.activity:activity-compose:1.9.3") {
         because "the last one requires compose option 1.6.x"
     }
