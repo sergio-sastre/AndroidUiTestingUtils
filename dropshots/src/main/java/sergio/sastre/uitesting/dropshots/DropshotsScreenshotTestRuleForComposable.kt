@@ -1,7 +1,6 @@
 package sergio.sastre.uitesting.dropshots
 
 import androidx.compose.runtime.Composable
-import com.dropbox.dropshots.Dropshots
 import org.junit.rules.RuleChain
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
@@ -22,12 +21,7 @@ class DropshotsScreenshotTestRuleForComposable(
     }
 
     private val dropshotsRule: ScreenshotTaker by lazy {
-        ScreenshotTaker(
-            Dropshots(
-                resultValidator = dropshotsConfig.resultValidator,
-                imageComparator = dropshotsConfig.imageComparator,
-            )
-        )
+        createScreenshotTaker(dropshotsConfig)
     }
 
     private var dropshotsConfig: DropshotsConfig = DropshotsConfig()
