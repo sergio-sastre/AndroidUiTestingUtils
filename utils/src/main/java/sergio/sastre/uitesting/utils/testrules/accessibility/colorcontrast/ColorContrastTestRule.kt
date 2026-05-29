@@ -11,7 +11,7 @@ import sergio.sastre.uitesting.utils.testrules.accessibility.colorcontrast.Color
 import java.io.IOException
 
 /**
- * A [TestWatcher] that allows to set color contrast during a test.
+ * A [TestRule] that allows to set color contrast during a test.
  * It ALWAYS sets color contrast to the initial value at the end of the test.
  *
  * @param renderingOffsetInMillis fills the gap between the moment the Color Contrast takes effect
@@ -42,7 +42,7 @@ class ColorContrastTestRule(
             override fun evaluate() {
                 Log.d(
                     TAG,
-                    "Skipping ${this.javaClass.simpleName}. It can only be used on API ${Build.VERSION_CODES.VANILLA_ICE_CREAM}+, and the current API is ${Build.VERSION.SDK_INT}"
+                    "Skipping ${this.javaClass.simpleName}. It can only be used on API ${Build.VERSION_CODES.UPSIDE_DOWN_CAKE}+, and the current API is ${Build.VERSION.SDK_INT}"
                 )
                 base.evaluate()
             }
@@ -62,11 +62,14 @@ class ColorContrastTestRule(
                     ColorContrastHelper(colorContrast, renderingOffsetInMillis)
                         .applyColorContrast()
                     base.evaluate()
-                } catch (e: IOException) {
-                    Log.e(TAG, "Error setting color contrast", e)
                 } finally {
-                    initialColorContrast?.run { setColorContrast(this) }
-                    initialColorContrast = null
+                    try {
+                        initialColorContrast?.run { setColorContrast(this) }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error restoring initial color contrast", e)
+                    } finally {
+                        initialColorContrast = null
+                    }
                 }
             }
         }
