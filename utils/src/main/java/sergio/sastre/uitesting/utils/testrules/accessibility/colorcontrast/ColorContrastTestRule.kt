@@ -21,7 +21,7 @@ import java.io.IOException
  */
 class ColorContrastTestRule(
     private val colorContrast: ColorContrast,
-    private val renderingOffsetInMillis: Long = 250,
+    private val renderingOffsetInMillis: Long = 800,
 ) : TestRule {
 
     private val TAG = ColorContrastTestRule::class.java.simpleName
