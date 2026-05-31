@@ -33,10 +33,9 @@ class OutlineTextTestRule(val outlineText: OutlineText = ENABLED) : TestRule {
     private fun getCurrentOutlineText(): OutlineText {
         val outlineText =
             getInstrumentation().waitForExecuteShellCommand("settings get secure high_text_contrast_enabled")
-        val outlineTextValue = outlineText.substringAfterLast("=").toInt()
+        val outlineTextValue = outlineText.substringAfterLast("=").toIntOrNull()
         return OutlineText.entries.find { it.value == outlineTextValue } ?: OutlineText.DISABLED
     }
-
 
     @Throws(IOException::class)
     private fun setOutlineText(enabled: OutlineText) {

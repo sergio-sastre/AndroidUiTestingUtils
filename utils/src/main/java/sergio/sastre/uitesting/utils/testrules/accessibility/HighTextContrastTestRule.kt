@@ -12,6 +12,9 @@ import java.io.IOException
  *
  * WARNING: Only works on Instrumentation tests, not on Robolectric tests.
  */
+@Deprecated(
+    message = "Use the OutlineTextTestRule instead. This will be removed in version 2.10.0",
+    replaceWith = ReplaceWith("OutlineTextTestRule(OutlineText)"))
 class HighTextContrastTestRule: TestRule {
     override fun apply(base: Statement, description: Description): Statement {
         return object : Statement() {
