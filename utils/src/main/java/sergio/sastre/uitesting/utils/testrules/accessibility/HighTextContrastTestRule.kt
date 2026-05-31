@@ -14,7 +14,10 @@ import java.io.IOException
  */
 @Deprecated(
     message = "Use the OutlineTextTestRule instead. This will be removed in version 2.10.0",
-    replaceWith = ReplaceWith("OutlineTextTestRule(OutlineText)"))
+    replaceWith = ReplaceWith(
+        "OutlineTextTestRule()",
+        imports = ["sergio.sastre.uitesting.utils.testrules.accessibility.outlinetext.OutlineTextTestRule"]
+    ))
 class HighTextContrastTestRule: TestRule {
     override fun apply(base: Statement, description: Description): Statement {
         return object : Statement() {
