@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace 'sergio.sastre.uitesting.android_testify'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         minSdk 23
@@ -49,7 +49,7 @@ dependencies {
     implementation project(':utils')
     implementation 'androidx.test:rules:1.7.0'
     api 'dev.testify:testify:3.2.3'
-    api "androidx.activity:activity-compose:1.9.3"
+    api "androidx.activity:activity-compose:1.10.0"
 }
 
 //https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/
