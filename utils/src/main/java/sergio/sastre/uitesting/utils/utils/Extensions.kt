@@ -7,6 +7,7 @@ import android.app.Dialog
 import android.app.Instrumentation
 import android.content.pm.PackageManager
 import android.os.ParcelFileDescriptor
+import android.os.ParcelFileDescriptor.AutoCloseInputStream
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,11 +25,10 @@ import sergio.sastre.uitesting.utils.common.Orientation
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-private fun waitForCompletion(descriptor: ParcelFileDescriptor) {
-    BufferedReader(InputStreamReader(ParcelFileDescriptor.AutoCloseInputStream(descriptor))).use {
-        it.readText()
-    }
-}
+private fun waitForCompletion(descriptor: ParcelFileDescriptor): String =
+    BufferedReader(InputStreamReader(AutoCloseInputStream(descriptor)))
+        .use { it.readText() }
+        .trim()
 
 /**
  * Returns a view with [layoutId] using the context of [Activity], and attaches it to the root.
@@ -118,9 +118,8 @@ fun Activity.rotateTo(orientation: Orientation) {
     }
 }
 
-fun Instrumentation.waitForExecuteShellCommand(command: String) {
+fun Instrumentation.waitForExecuteShellCommand(command: String): String =
     waitForCompletion(uiAutomation.executeShellCommand(command))
-}
 
 /**
  * Waits for the Ui thread to be Idle and calculates the expected dimensions of the
