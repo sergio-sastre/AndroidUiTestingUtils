@@ -49,7 +49,7 @@ dependencies {
     implementation project(':utils')
     implementation 'androidx.test:rules:1.7.0'
     api 'dev.testify:testify:3.2.3'
-    api "androidx.activity:activity-compose:1.10.0"
+    api "androidx.activity:activity-compose:1.13.0"
 }
 
 //https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/
