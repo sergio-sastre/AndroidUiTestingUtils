@@ -9,7 +9,7 @@ internal fun ActivityScenarioForComposableRule.setContent(
 ): ActivityScenarioForComposableRule {
     this.activityScenario
         .onActivity {
-            it?.setContent { composable() }
+            it.setContent { composable() }
         }
 
     return this

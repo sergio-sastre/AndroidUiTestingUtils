@@ -1,7 +1,6 @@
 package sergio.sastre.uitesting.utils.utils
 
 import android.R.id.content
-import android.annotation.TargetApi
 import android.app.Activity
 import android.app.Dialog
 import android.graphics.Bitmap
@@ -13,11 +12,13 @@ import android.util.Log
 import android.view.PixelCopy
 import android.view.View
 import android.view.Window
+import androidx.annotation.RequiresApi
 import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import java.util.concurrent.CountDownLatch
 import kotlin.random.Random
+import androidx.core.graphics.createBitmap
 
 /**
  * Return a [Bitmap] representation of the itemView of this [RecyclerView.ViewHolder].
@@ -237,12 +238,12 @@ private fun View.drawToBitmapWithElevation(
         drawToBitmap(config)
     }
 
-@TargetApi(Build.VERSION_CODES.O)
+@RequiresApi(Build.VERSION_CODES.O)
 private fun View.drawToBitmapWithPixelCopy(
     window: Window,
     config: Bitmap.Config = Bitmap.Config.ARGB_8888,
 ): Bitmap {
-    val bitmap = Bitmap.createBitmap(width, height, config)
+    val bitmap = createBitmap(width, height, config)
 
     val locationInWindow = IntArray(2)
     getLocationInWindow(locationInWindow)
