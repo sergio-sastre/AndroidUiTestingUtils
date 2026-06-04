@@ -17,6 +17,7 @@ import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.random.Random
 import androidx.core.graphics.createBitmap
 
@@ -248,6 +249,7 @@ private fun View.drawToBitmapWithPixelCopy(
     val locationInWindow = IntArray(2)
     getLocationInWindow(locationInWindow)
     val latch = CountDownLatch(1)
+    val error = AtomicReference<Throwable?>(null)
     val handlerThread =
         HandlerThread("PixelCopy${Random.nextInt(0, Int.MAX_VALUE)}").apply { start() }
 
@@ -261,17 +263,21 @@ private fun View.drawToBitmapWithPixelCopy(
         ),
         bitmap,
         { copyResult ->
-            if (copyResult == PixelCopy.SUCCESS) {
+            try {
+                if (copyResult != PixelCopy.SUCCESS) {
+                    error.set(RuntimeException("Failed to capture bitmap with PixelCopy: $copyResult"))
+                }
+            } finally {
                 latch.countDown()
-            } else {
-                throw RuntimeException("Failed to capture bitmap with PixelCopy")
+                handlerThread.quitSafely()
             }
-            handlerThread.quitSafely()
         },
         Handler(handlerThread.looper)
     )
 
     latch.await()
+
+    error.get()?.let { throw it }
 
     return bitmap
 }
