@@ -9,7 +9,7 @@ import sergio.sastre.uitesting.utils.utils.waitForExecuteShellCommand
 import java.io.IOException
 
 /**
- * Allows to enable/disable high text contrast accessibility during a test.
+ * Allows to enable/disable high contrast text/outline text accessibility option during a test.
  *
  * WARNING: Only works on Instrumentation tests, not on Robolectric tests.
  */
