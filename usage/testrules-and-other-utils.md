@@ -34,7 +34,10 @@ val displaySize = DisplaySizeTestRule(DisplaySize.LARGEST)
 val boldText = FontWeightTestRule(FontWeight.BOLD)
 
 @get:Rule
-val highTextContrast = HighTextContrastTestRule()
+val outlineText = OutlineTextTestRule(OutlineText.ENABLED)
+
+@get:Rule
+val colorContrast = ColorContrastTestRule(ColorContrast.HIGH)
 
 ```
 
@@ -48,10 +51,12 @@ From all those Test Rules, it is important to highlight those that can be used i
 
 <figure><img src="../.gitbook/assets/9.png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src="../.gitbook/assets/8.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/OutlineText.png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/ColorContrast.png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="info" %}
-All of them, except the `HighTextContrastTestRule` , are also supported in
+All of them, except the `OutlineTextTestRule` and the `ColorContrastTestRule` , are also supported in
 
 * `ActivityConfigItem`
 * `FragmentConfigItem`
@@ -82,8 +87,7 @@ Prefer `waitForMeasuredView` over `waitForView` (which is discouraged), speciall
 ## **Inflate or measure**
 
 1. `activity.inflate(R.layout_of_your_view)`\
-   Use it to inflate android Views with the activity's context configuration. In doing so, the configuration becomes effective in the view. It also adds the view to the Activity's root.\
-
+   Use it to inflate android Views with the activity's context configuration. In doing so, the configuration becomes effective in the view. It also adds the view to the Activity's root.<br>
 2. `activity.inflateAndWaitForIdle(R.layout_of_your_view)`\
    Like `activity.inflate(...)`, but waits till the view is Idle to return it
 
