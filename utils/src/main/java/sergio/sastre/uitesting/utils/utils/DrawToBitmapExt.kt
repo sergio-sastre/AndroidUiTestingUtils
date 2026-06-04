@@ -1,7 +1,6 @@
 package sergio.sastre.uitesting.utils.utils
 
 import android.R.id.content
-import android.annotation.TargetApi
 import android.app.Activity
 import android.app.Dialog
 import android.graphics.Bitmap
@@ -13,11 +12,14 @@ import android.util.Log
 import android.view.PixelCopy
 import android.view.View
 import android.view.Window
+import androidx.annotation.RequiresApi
 import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.random.Random
+import androidx.core.graphics.createBitmap
 
 /**
  * Return a [Bitmap] representation of the itemView of this [RecyclerView.ViewHolder].
@@ -237,16 +239,17 @@ private fun View.drawToBitmapWithElevation(
         drawToBitmap(config)
     }
 
-@TargetApi(Build.VERSION_CODES.O)
+@RequiresApi(Build.VERSION_CODES.O)
 private fun View.drawToBitmapWithPixelCopy(
     window: Window,
     config: Bitmap.Config = Bitmap.Config.ARGB_8888,
 ): Bitmap {
-    val bitmap = Bitmap.createBitmap(width, height, config)
+    val bitmap = createBitmap(width, height, config)
 
     val locationInWindow = IntArray(2)
     getLocationInWindow(locationInWindow)
     val latch = CountDownLatch(1)
+    val error = AtomicReference<Throwable?>(null)
     val handlerThread =
         HandlerThread("PixelCopy${Random.nextInt(0, Int.MAX_VALUE)}").apply { start() }
 
@@ -260,17 +263,21 @@ private fun View.drawToBitmapWithPixelCopy(
         ),
         bitmap,
         { copyResult ->
-            if (copyResult == PixelCopy.SUCCESS) {
+            try {
+                if (copyResult != PixelCopy.SUCCESS) {
+                    error.set(RuntimeException("Failed to capture bitmap with PixelCopy: $copyResult"))
+                }
+            } finally {
                 latch.countDown()
-            } else {
-                throw RuntimeException("Failed to capture bitmap with PixelCopy")
+                handlerThread.quitSafely()
             }
-            handlerThread.quitSafely()
         },
         Handler(handlerThread.looper)
     )
 
     latch.await()
+
+    error.get()?.let { throw it }
 
     return bitmap
 }

@@ -1,12 +1,13 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
     id 'maven-publish'
 }
 
 android {
     namespace 'sergio.sastre.uitesting.shot'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         minSdk 23
@@ -22,21 +23,17 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
 
     buildFeatures {
         // Enables Jetpack Compose for this module
         compose true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.5.15'
     }
 
     publishing {
@@ -50,9 +47,7 @@ android {
 dependencies {
     implementation project(':utils')
     api 'com.karumi:shot-android:6.1.0'
-    api ("androidx.activity:activity-compose:1.9.3") {
-        because "the last one requires compose option 1.6.x"
-    }
+    api "androidx.activity:activity-compose:1.13.0"
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:6.1'
 }
 

@@ -4,12 +4,12 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import sergio.sastre.uitesting.utils.activityscenario.ActivityScenarioForComposableRule
 
-fun ActivityScenarioForComposableRule.setContent(
+internal fun ActivityScenarioForComposableRule.setContent(
     composable: @Composable () -> Unit,
 ): ActivityScenarioForComposableRule {
     this.activityScenario
         .onActivity {
-            it.setContent { composable.invoke() }
+            it.setContent { composable() }
         }
 
     return this

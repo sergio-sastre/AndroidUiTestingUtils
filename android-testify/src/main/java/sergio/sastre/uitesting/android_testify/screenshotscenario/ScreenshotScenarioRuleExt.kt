@@ -78,6 +78,7 @@ internal fun ScreenshotScenarioRule.setBitmapCaptureMethod(
         }
 
         null -> { /*no-op*/ }
+        else -> throw IllegalArgumentException("Unknown BitmapCaptureMethod: $bitmapCaptureMethod")
     }
 }
 

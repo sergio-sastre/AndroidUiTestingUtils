@@ -2,7 +2,7 @@ package sergio.sastre.uitesting.utils.crosslibrary.config
 
 import android.graphics.Bitmap
 
-sealed class BitmapCaptureMethod {
+abstract class BitmapCaptureMethod {
     class PixelCopy(val config: Bitmap.Config = Bitmap.Config.ARGB_8888): BitmapCaptureMethod()
     class Canvas(val config: Bitmap.Config = Bitmap.Config.ARGB_8888): BitmapCaptureMethod()
 }
