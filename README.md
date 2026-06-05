@@ -33,7 +33,7 @@ This library enables you to easily change the following configurations in your U
 4. Orientation
 5. Font size
 6. Display size
-7. Accessibility (e.g. high contrast text, bold text)
+7. Accessibility (e.g. outline text, bold text, color contrast)
 
 Wondering why verifying our design under these configurations is important? I've got you covered:
 
