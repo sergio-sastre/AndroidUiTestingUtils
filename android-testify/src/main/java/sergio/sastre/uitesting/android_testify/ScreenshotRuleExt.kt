@@ -93,6 +93,7 @@ internal fun <T : Activity> ScreenshotRule<T>.setBitmapCaptureMethod(
 
         null -> {/*no-op*/
         }
+        else -> throw IllegalArgumentException("Unknown BitmapCaptureMethod: $bitmapCaptureMethod")
     }
 }
 

@@ -35,43 +35,9 @@ import java.util.*
  * WARNING 2: If you are also using [SystemLocaleTestRule], make sure that [InAppLocaleTestRule] is applied after it (e.g. has a higher order number).
  *            Otherwise, the System Locale is not reset correctly on API 33+
  **/
-class InAppLocaleTestRule
-/**
- * Applies [locale] as in-app-locale.
- *
- * WARNING: The order in which this rule applies is important:
- * 1. For API < 33, the order must be lower than that of the ActivityScenarioRule
- * 2. For API 33+, the order must be greater than that of the ActivityScenarioRule
- * Alternatively, use InAppLocaleTestRule(locale, activityScenarioRule),
- * which handles order correctly on its own
- */
-@Deprecated(
-    message = "Use the (locale: Locale, activityScenarioRule: ActivityScenarioRule<*>) constructor instead. This will be removed in version 2.9.0",
-    replaceWith = ReplaceWith("InAppLocaleTestRule(locale, activityScenarioRule)")
-)
-constructor(private val locale: Locale) : TestRule {
+class InAppLocaleTestRule private constructor(locale: Locale) : TestRule {
 
     private var testRule: TestRule? = null
-
-    /**
-     * Applies [testLocale] as in-app-locale.
-     *
-     * WARNING: The order in which this rule applies is important:
-     * 1. For API < 33, the order must be lower than that of the ActivityScenarioRule
-     * 2. For API 33+, the order must be greater than that of the ActivityScenarioRule
-     * Alternatively, use InAppLocaleTestRule(locale, activityScenarioRule),
-     * which handles order correctly on its own
-     */
-    @Deprecated(
-        message = "Use the (locale: String, activityScenarioRule: ActivityScenarioRule<*>) constructor instead. This will be removed in version 2.9.0",
-        replaceWith = ReplaceWith("InAppLocaleTestRule(locale, activityScenarioRule)")
-    )
-    constructor(
-        testLocale: String
-    ) : this(LocaleUtil.localeFromString(testLocale)) {
-        this.testRule = null
-    }
-
     /**
      * Applies [locale] as in-app-locale.
      * By passing the [activityScenarioRule], it can set in-app-locale properly regardless of the API level

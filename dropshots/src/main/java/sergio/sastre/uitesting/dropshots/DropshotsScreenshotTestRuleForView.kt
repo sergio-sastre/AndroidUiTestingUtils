@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.dropbox.dropshots.Dropshots
 import org.junit.rules.RuleChain
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
@@ -28,12 +27,7 @@ class DropshotsScreenshotTestRuleForView(
     }
 
     private val dropshotsRule: ScreenshotTaker by lazy {
-        ScreenshotTaker(
-            Dropshots(
-                resultValidator = dropshotsConfig.resultValidator,
-                imageComparator = dropshotsConfig.imageComparator,
-            )
-        )
+        createScreenshotTaker(dropshotsConfig)
     }
 
     private var dropshotsConfig: DropshotsConfig = DropshotsConfig()

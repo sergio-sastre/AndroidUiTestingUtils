@@ -8,10 +8,16 @@ import sergio.sastre.uitesting.utils.utils.waitForExecuteShellCommand
 import java.io.IOException
 
 /**
- * Allows to enable/disable high text contrast accessibility during a test.
+ * Allows to enable/disable high contrast text accessibility during a test.
  *
  * WARNING: Only works on Instrumentation tests, not on Robolectric tests.
  */
+@Deprecated(
+    message = "Use the OutlineTextTestRule instead. This will be removed in version 2.10.0",
+    replaceWith = ReplaceWith(
+        "OutlineTextTestRule()",
+        imports = ["sergio.sastre.uitesting.utils.testrules.accessibility.outlinetext.OutlineTextTestRule"]
+    ))
 class HighTextContrastTestRule: TestRule {
     override fun apply(base: Statement, description: Description): Statement {
         return object : Statement() {

@@ -14,6 +14,7 @@ internal fun View.drawToBitmap(
         is BitmapCaptureMethod.Canvas -> drawToBitmap(config = bitmapCaptureMethod.config)
         is BitmapCaptureMethod.PixelCopy -> drawToBitmapWithElevation(config = bitmapCaptureMethod.config)
         null -> drawToBitmapWithElevation()
+        else -> throw IllegalArgumentException("Unknown BitmapCaptureMethod: $bitmapCaptureMethod")
     }
 
 internal fun Dialog.drawToBitmap(

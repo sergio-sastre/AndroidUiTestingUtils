@@ -34,17 +34,20 @@ internal class ScreenshotTaker(
                     name = name,
                     filePath = filePath,
                 )
+
             is BitmapCaptureMethod.PixelCopy ->
                 assertSnapshot(
                     bitmap = view.drawToBitmapWithElevation(config = bitmapCaptureMethod.config),
                     name = name,
                     filePath = filePath,
                 )
+
             null -> assertSnapshot(
                 view = view,
                 name = name,
                 filePath = filePath,
             )
+            else -> throw IllegalArgumentException("Unknown BitmapCaptureMethod: $bitmapCaptureMethod")
         }
     }
 
@@ -61,17 +64,20 @@ internal class ScreenshotTaker(
                     name = name,
                     filePath = filePath,
                 )
+
             is BitmapCaptureMethod.PixelCopy ->
                 assertSnapshot(
                     bitmap = dialog.drawToBitmapWithElevation(config = bitmapCaptureMethod.config),
                     name = name,
                     filePath = filePath,
                 )
+
             null -> assertSnapshot(
                 view = dialog.window!!.decorView,
                 name = name,
                 filePath = filePath,
             )
+            else -> throw IllegalArgumentException("Unknown BitmapCaptureMethod: $bitmapCaptureMethod")
         }
     }
 
@@ -104,4 +110,13 @@ internal class ScreenshotTaker(
             )
         }
     }
+}
+
+internal fun createScreenshotTaker(dropshotsConfig: DropshotsConfig): ScreenshotTaker {
+    val dropshots = Dropshots(
+        resultValidator = dropshotsConfig.resultValidator,
+        imageComparator = dropshotsConfig.imageComparator,
+        rootScreenshotDirectory = dropshotsConfig.rootScreenshotDir
+    )
+    return ScreenshotTaker(dropshots)
 }

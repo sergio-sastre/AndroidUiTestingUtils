@@ -1,12 +1,13 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
     id 'maven-publish'
 }
 
 android {
     namespace 'sergio.sastre.uitesting.roborazzi'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         minSdk 23
@@ -21,20 +22,16 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
 
     buildFeatures {
         // Enables Jetpack Compose for this module
         compose true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.5.15'
     }
 
     publishing {
@@ -52,11 +49,9 @@ dependencies {
 
     implementation("org.hamcrest:hamcrest:3.0")
     implementation("io.github.darkxanter:webp-imageio:0.3.3")
-    implementation("androidx.activity:activity-compose:1.9.3") {
-        because "the last one requires compose option 1.6.x"
-    }
+    implementation "androidx.activity:activity-compose:1.13.0"
 
-    api 'io.github.takahirom.roborazzi:roborazzi:1.51.0'
+    api 'io.github.takahirom.roborazzi:roborazzi:1.60.0'
     api 'androidx.test.espresso:espresso-core:3.7.0'
 }
 
@@ -66,7 +61,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "roborazzi"
-            version = '2.8.0'
+            version = '2.9.0'
 
             afterEvaluate {
                 from components.release

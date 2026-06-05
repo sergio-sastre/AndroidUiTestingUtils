@@ -32,6 +32,7 @@ internal class ScreenshotTaker(
                 name = name,
             )
             null -> onNoBitmapCapturedMethod()
+            else -> throw IllegalArgumentException("Unknown BitmapCaptureMethod: $bitmapCaptureMethod")
         }
     }
 
@@ -117,6 +118,7 @@ internal class ScreenshotTaker(
                     maxPixels = maxPixels,
                 )
             }
+            else -> throw IllegalArgumentException("Unknown BitmapCaptureMethod: $bitmapCaptureMethod")
         }
     }
 
