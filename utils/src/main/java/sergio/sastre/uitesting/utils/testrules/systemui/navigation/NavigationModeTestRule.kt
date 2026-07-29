@@ -14,12 +14,7 @@ import sergio.sastre.uitesting.utils.utils.waitForExecuteShellCommand
  * A [TestRule] that changes the system navigation mode (e.g., Three-button or Gestural)
  * for the duration of a test and restores it afterwards.
  *
- * This rule uses shell commands (`cmd overlay`) to toggle the system navigation bar overlays
- * and uses UI Automator to wait until the UI components (home, back, recents) correctly
- * reflect the requested mode.
- *
- * **Note:** This rule is not compatible with Robolectric as it relies on system-level
- * shell commands and UI Automator, which require a real device or emulator.
+ * WARNING: Only works on Instrumentation tests, not on Robolectric tests.
  *
  * @param navigation The target [Navigation] mode to set during the test.
  */
