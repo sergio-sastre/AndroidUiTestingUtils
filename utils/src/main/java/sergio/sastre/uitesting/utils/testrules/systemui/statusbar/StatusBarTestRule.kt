@@ -34,14 +34,18 @@ class StatusBarTestRule(
 
     private val TAG = javaClass.simpleName
 
-    private val BROADCAST_DEMO_COMMAND = "am broadcast -a com.android.systemui.demo -e command"
-
-    private val lifecycleCallback = androidx.test.runner.lifecycle.ActivityLifecycleCallback { _, stage ->
-        if (stage == androidx.test.runner.lifecycle.Stage.RESUMED) {
-            // Re-Apply Demo Mode when the activity is fully resumed and focused
-            applyDemoMode()
-        }
+    companion object {
+        private const val BROADCAST_DEMO_COMMAND =
+            "am broadcast -a com.android.systemui.demo -e command"
     }
+
+    private val lifecycleCallback =
+        androidx.test.runner.lifecycle.ActivityLifecycleCallback { _, stage ->
+            if (stage == androidx.test.runner.lifecycle.Stage.RESUMED) {
+                // Re-Apply Demo Mode when the activity is fully resumed and focused
+                applyDemoMode()
+            }
+        }
 
     private fun applyDemoMode() {
         val instrumentation = getInstrumentation()
@@ -57,14 +61,15 @@ class StatusBarTestRule(
             UiDevice.getInstance(instrumentation).waitForIdle()
             instrumentation.waitForIdleSync()
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to apply demo mode on RESUMED", e)
+            throw IllegalStateException("Failed to change the status bar by applying demo mode on RESUMED", e)
         }
     }
 
     override fun apply(base: Statement, description: Description): Statement {
         return object : Statement() {
             override fun evaluate() {
-                val monitor = androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry.getInstance()
+                val monitor =
+                    androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry.getInstance()
                 try {
                     // Register callback to catch the activity launch
                     monitor.addLifecycleCallback(lifecycleCallback)
