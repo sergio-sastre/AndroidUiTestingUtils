@@ -55,6 +55,7 @@ dependencies {
     implementation 'androidx.test:core:1.7.0'
     implementation 'androidx.core:core-ktx:1.18.0'
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:6.1'
+    implementation 'androidx.test.uiautomator:uiautomator:2.4.0'
 }
 
 //https://www.talentica.com/blogs/publish-your-android-library-on-jitpack-for-better-reachability/
