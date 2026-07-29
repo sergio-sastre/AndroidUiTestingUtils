@@ -6,8 +6,8 @@ import java.util.Locale
  * A data class representing a valid clock time in 24h format.
  */
 data class ClockTime(
-    private val hour: Int,
-    private val minute: Int,
+    val hour: Int,
+    val minute: Int,
 ) {
     init {
         require(hour in 0..23) { "Hour must be between 0 and 23. It was $hour" }
@@ -18,8 +18,7 @@ data class ClockTime(
 
     internal fun toHhmmString(): String = String.format(Locale.US, "%02d%02d", hour, minute)
 
-    companion object {
-        /**
+    companion object {        /**
          * Creates a [ClockTime] from a string in "hh:mm" format.
          */
         fun from(time: String): ClockTime {

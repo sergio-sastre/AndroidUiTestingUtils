@@ -1,6 +1,5 @@
 package sergio.sastre.uitesting.utils.testrules.systemui.statusbar
 
-import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.uiautomator.UiDevice
 import org.junit.rules.TestRule
