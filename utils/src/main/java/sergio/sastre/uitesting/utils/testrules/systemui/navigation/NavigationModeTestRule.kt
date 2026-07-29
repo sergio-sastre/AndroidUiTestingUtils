@@ -10,6 +10,19 @@ import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import sergio.sastre.uitesting.utils.utils.waitForExecuteShellCommand
 
+/**
+ * A [TestRule] that changes the system navigation mode (e.g., Three-button or Gestural)
+ * for the duration of a test and restores it afterwards.
+ *
+ * This rule uses shell commands (`cmd overlay`) to toggle the system navigation bar overlays
+ * and uses UI Automator to wait until the UI components (home, back, recents) correctly
+ * reflect the requested mode.
+ *
+ * **Note:** This rule is not compatible with Robolectric as it relies on system-level
+ * shell commands and UI Automator, which require a real device or emulator.
+ *
+ * @param navigation The target [Navigation] mode to set during the test.
+ */
 class NavigationModeTestRule(
     private val navigation: Navigation
 ) : TestRule {
@@ -30,6 +43,12 @@ class NavigationModeTestRule(
                 instrumentation.setNavigationMode(targetMode)
                 instrumentation.waitUntilUiMatches(navigation, TIMEOUT_IN_MS)
                 base.evaluate()
+            } catch (throwable: Throwable) {
+                val testName = "${description.testClass.simpleName}\$${description.methodName}"
+                val errorMessage =
+                    "Test $testName failed on setting NavigationMode to ${navigation.name}"
+                Log.e(TAG, errorMessage)
+                throw throwable
             } finally {
                 instrumentation.setNavigationMode(originalMode)
                 UiDevice.getInstance(instrumentation).waitForIdle()
@@ -38,6 +57,9 @@ class NavigationModeTestRule(
         }
     }
 
+    /**
+     * Reads the current navigation mode from system settings.
+     */
     private fun Instrumentation.getNavigationMode(): NavigationMode {
         val currentNavigationMode =
             waitForExecuteShellCommand("settings get secure navigation_mode").toIntOrNull()
@@ -45,6 +67,9 @@ class NavigationModeTestRule(
             ?: NavigationMode.GESTURAL
     }
 
+    /**
+     * Sets the navigation mode using shell commands (`cmd overlay`) and waits for the system setting to change.
+     */
     private fun Instrumentation.setNavigationMode(targetMode: NavigationMode) {
         if (getNavigationMode() == targetMode) return
 
@@ -60,10 +85,14 @@ class NavigationModeTestRule(
         }
 
         if (getNavigationMode() != targetMode) {
-            Log.e(TAG, "Timed out waiting for system setting to change to: $targetMode")
+            throw IllegalStateException("Timed out waiting for system setting to change to: $targetMode")
         }
     }
 
+    /**
+     * Waits until the System UI reflects the requested navigation mode.
+     * It checks for the presence or absence of the home, back, and recents buttons.
+     */
     private fun Instrumentation.waitUntilUiMatches(navigation: Navigation, timeout: Long) {
         val device = UiDevice.getInstance(this)
         val startTime = System.currentTimeMillis()
@@ -89,7 +118,7 @@ class NavigationModeTestRule(
             }
             Thread.sleep(100)
         }
-        Log.e(TAG, "Timed out waiting for Navigation UI to reflect mode: $navigation")
+        throw IllegalStateException("Timed out waiting for Navigation UI to reflect mode: $navigation")
     }
 
     private enum class NavigationMode(val adbValue: String, val navModeValue: Int) {
