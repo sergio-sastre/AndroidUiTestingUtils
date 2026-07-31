@@ -12,4 +12,7 @@ import androidx.test.uiautomator.UiDevice
  * 2. You ensure they are reproducible (e.g., by using [sergio.sastre.uitesting.utils.testrules.systemui.SystemUiTestRule]).
  */
 fun drawFullScreenToBitmap(): Bitmap =
-    UiDevice.getInstance(getInstrumentation()).apply { waitForIdle() }.takeScreenshot()!!
+    UiDevice.getInstance(getInstrumentation())
+        .apply { waitForIdle() }
+        .takeScreenshot()
+        ?: error("Unable to capture a full-screen screenshot")
