@@ -51,7 +51,7 @@ dependencies {
     implementation("io.github.darkxanter:webp-imageio:0.3.3")
     implementation "androidx.activity:activity-compose:1.13.0"
 
-    api 'io.github.takahirom.roborazzi:roborazzi:1.60.0'
+    api 'io.github.takahirom.roborazzi:roborazzi:1.70.0'
     api 'androidx.test.espresso:espresso-core:3.7.0'
 }
 

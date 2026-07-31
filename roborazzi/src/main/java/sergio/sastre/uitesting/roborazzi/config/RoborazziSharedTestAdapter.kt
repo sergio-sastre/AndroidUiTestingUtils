@@ -11,6 +11,7 @@ import com.github.takahirom.roborazzi.JvmImageIoFormat
 import com.github.takahirom.roborazzi.LosslessWebPImageIoFormat
 import com.github.takahirom.roborazzi.RoborazziOptions
 import com.github.takahirom.roborazzi.ThresholdValidator
+import com.github.takahirom.roborazzi.UiTreeDumpOptions
 import sergio.sastre.uitesting.robolectric.config.screen.DeviceScreen
 import sergio.sastre.uitesting.robolectric.config.screen.RoundScreen
 import sergio.sastre.uitesting.robolectric.config.screen.ScreenAspect
@@ -89,11 +90,16 @@ internal class RoborazziSharedTestAdapter(
                     }
                 )
 
+            val adaptedUiTreeDumpOptions = it.uiTreeDumpOptions?.let { option ->
+                UiTreeDumpOptions(annotateImage = option.annotateImage)
+            }
+
             return RoborazziOptions(
                 captureType = adaptedCaptureType,
                 compareOptions = adaptedCompareOptions,
                 contextData = it.contextData,
                 recordOptions = adaptedRecordOptions,
+                uiTreeDumpOptions = adaptedUiTreeDumpOptions,
             ).addedAiAssertions(it.aiAssertions)
         }
     }

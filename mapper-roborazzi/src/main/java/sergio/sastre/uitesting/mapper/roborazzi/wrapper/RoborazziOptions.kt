@@ -11,5 +11,6 @@ data class RoborazziOptions(
     val compareOptions: CompareOptions = CompareOptions(),
     val recordOptions: RecordOptions = RecordOptions(),
     val contextData: Map<String, Any> = emptyMap(),
-    val aiAssertions: List<AiAssertion> = emptyList()
+    val aiAssertions: List<AiAssertion> = emptyList(),
+    val uiTreeDumpOptions: UiTreeDumpOptions? = null,
 )
