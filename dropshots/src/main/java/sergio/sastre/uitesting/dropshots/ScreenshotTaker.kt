@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.graphics.Bitmap
 import android.view.View
 import androidx.core.view.drawToBitmap
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import com.dropbox.dropshots.Dropshots
 import org.junit.rules.TestRule
 import org.junit.runner.Description
@@ -116,7 +117,7 @@ internal fun createScreenshotTaker(dropshotsConfig: DropshotsConfig): Screenshot
     val dropshots = Dropshots(
         resultValidator = dropshotsConfig.resultValidator,
         imageComparator = dropshotsConfig.imageComparator,
-        rootScreenshotDirectory = dropshotsConfig.rootScreenshotDir
+        rootScreenshotDirectory = dropshotsConfig.rootScreenshotDir(getInstrumentation().targetContext)
     )
     return ScreenshotTaker(dropshots)
 }
