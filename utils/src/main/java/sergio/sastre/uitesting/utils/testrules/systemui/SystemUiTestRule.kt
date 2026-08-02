@@ -13,6 +13,11 @@ import sergio.sastre.uitesting.utils.utils.drawFullScreenToBitmap as fullScreenT
  * A [TestRule] that combines [StatusBarTestRule] and [NavigationModeTestRule]
  * to provide a consistent System UI for testing.
  *
+ * WARNING: the statusBarConfig uses Demo Mode via adb, which is ensured to work on Nexus and Pixel devices, but might not work on others
+ * Moreover, it does only support status bar in English language (e.g. RTL and en_XA are not reflected)
+ *
+ * WARNING 2: Only works on Instrumentation tests, not on Robolectric tests.
+ *
  * @param navigationConfig Configuration for the system navigation bar.
  * @param statusBarConfig Configuration for the system status bar.
  */
