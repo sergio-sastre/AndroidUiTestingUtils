@@ -17,14 +17,20 @@ import sergio.sastre.uitesting.utils.utils.waitForExecuteShellCommand
  * WARNING: Only works on Instrumentation tests, not on Robolectric tests.
  *
  * @param navigation The target [Navigation] mode to set during the test.
+ * @param customThreeButtonIdentifiers A set of [ThreeButtonIdentifier]s for devices that use custom
+ * resource IDs for the back, home, and recents buttons (e.g., some Samsung devices).
  */
 class NavigationModeTestRule(
-    private val navigation: Navigation
+    private val navigation: Navigation,
+    private val customThreeButtonIdentifiers: Set<ThreeButtonIdentifier> = emptySet(),
 ) : TestRule {
 
     companion object {
         const val TIMEOUT_IN_MS = 10_000L
     }
+
+    private val allThreeButtonIdentifiers =
+        customThreeButtonIdentifiers.plus(STANDARD_THREE_BUTTON_IDENTIFIER)
 
     private val TAG = javaClass.simpleName
 
@@ -92,18 +98,18 @@ class NavigationModeTestRule(
         val device = UiDevice.getInstance(this)
         val startTime = System.currentTimeMillis()
 
-        val home = By.res("com.android.systemui", "home")
-        val back = By.res("com.android.systemui", "back")
-        val recents = By.res("com.android.systemui", "recent_apps")
-
         while (System.currentTimeMillis() - startTime < timeout) {
-            val isHomeVisible = device.hasObject(home)
-            val isBackVisible = device.hasObject(back)
-            val isRecentsVisible = device.hasObject(recents)
-
             val isMatching = when (navigation) {
-                Navigation.THREE_BUTTON -> isHomeVisible && isBackVisible && isRecentsVisible
-                Navigation.GESTURAL -> !isHomeVisible && !isBackVisible && !isRecentsVisible
+                Navigation.THREE_BUTTON -> allThreeButtonIdentifiers.any { set ->
+                    device.hasObject(By.res(set.home.resPackage, set.home.resId)) &&
+                            device.hasObject(By.res(set.back.resPackage, set.back.resId)) &&
+                            device.hasObject(By.res(set.recents.resPackage, set.recents.resId))
+                }
+                Navigation.GESTURAL -> allThreeButtonIdentifiers.all { set ->
+                    !device.hasObject(By.res(set.home.resPackage, set.home.resId)) &&
+                            !device.hasObject(By.res(set.back.resPackage, set.back.resId)) &&
+                            !device.hasObject(By.res(set.recents.resPackage, set.recents.resId))
+                }
             }
 
             if (isMatching) {
