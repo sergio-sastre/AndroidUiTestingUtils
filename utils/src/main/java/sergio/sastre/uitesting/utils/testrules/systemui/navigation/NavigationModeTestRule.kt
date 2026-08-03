@@ -26,7 +26,7 @@ class NavigationModeTestRule(
 ) : TestRule {
 
     companion object {
-        const val TIMEOUT_IN_MS = 10_000L
+        private const val TIMEOUT_IN_MS = 10_000L
     }
 
     private val allThreeButtonIdentifiers =
@@ -34,29 +34,37 @@ class NavigationModeTestRule(
 
     private val TAG = javaClass.simpleName
 
-    override fun apply(base: Statement, description: Description): Statement = object : Statement() {
-        override fun evaluate() {
-            val instrumentation = getInstrumentation()
-            val targetMode = NavigationMode.from(navigation)
-            val originalMode = instrumentation.getNavigationMode()
+    override fun apply(base: Statement, description: Description): Statement =
+        object : Statement() {
+            override fun evaluate() {
+                if (!navigation.available()) {
+                    Log.w(
+                        TAG,
+                        "Navigation mode ${navigation.name} not set because it isn't supported in current Android version."
+                    )
+                    return
+                }
+                val instrumentation = getInstrumentation()
+                val targetMode = NavigationMode.from(navigation)
+                val originalMode = instrumentation.getNavigationMode()
 
-            try {
-                instrumentation.setNavigationMode(targetMode)
-                instrumentation.waitUntilUiMatches(navigation, TIMEOUT_IN_MS)
-                base.evaluate()
-            } catch (throwable: Throwable) {
-                val testName = "${description.testClass.simpleName}\$${description.methodName}"
-                val errorMessage =
-                    "Test $testName failed on setting NavigationMode to ${navigation.name}"
-                Log.e(TAG, errorMessage)
-                throw throwable
-            } finally {
-                instrumentation.setNavigationMode(originalMode)
-                UiDevice.getInstance(instrumentation).waitForIdle()
-                instrumentation.waitForIdleSync()
+                try {
+                    instrumentation.setNavigationMode(targetMode)
+                    instrumentation.waitUntilUiMatches(navigation, TIMEOUT_IN_MS)
+                    base.evaluate()
+                } catch (throwable: Throwable) {
+                    val testName = "${description.testClass.simpleName}\$${description.methodName}"
+                    val errorMessage =
+                        "Test $testName failed on setting NavigationMode to ${navigation.name}"
+                    Log.e(TAG, errorMessage)
+                    throw throwable
+                } finally {
+                    instrumentation.setNavigationMode(originalMode)
+                    UiDevice.getInstance(instrumentation).waitForIdle()
+                    instrumentation.waitForIdleSync()
+                }
             }
         }
-    }
 
     /**
      * Reads the current navigation mode from system settings.
@@ -105,6 +113,7 @@ class NavigationModeTestRule(
                             device.hasObject(By.res(set.back.resPackage, set.back.resId)) &&
                             device.hasObject(By.res(set.recents.resPackage, set.recents.resId))
                 }
+
                 Navigation.GESTURAL -> allThreeButtonIdentifiers.all { set ->
                     !device.hasObject(By.res(set.home.resPackage, set.home.resId)) &&
                             !device.hasObject(By.res(set.back.resPackage, set.back.resId)) &&
