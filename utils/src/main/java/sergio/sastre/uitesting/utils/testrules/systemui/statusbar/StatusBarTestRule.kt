@@ -20,6 +20,11 @@ import sergio.sastre.uitesting.utils.utils.waitForExecuteShellCommand
  * The Demo Mode is applied when the test starts and reapplied every time an Activity
  * enters the RESUMED stage to ensure it stays active throughout the test.
  *
+ * WARNING: Demo Mode is ensured to work on Nexus and Pixel devices, but might not work on others
+ * Moreover, it does only support status bar in English language (e.g. RTL and en_XA are not reflected)
+ *
+ * WARNING 2: Only works on Instrumentation tests, not on Robolectric tests.
+ *
  * @param clockTime The time to display in the status bar.
  */
 class StatusBarTestRule(

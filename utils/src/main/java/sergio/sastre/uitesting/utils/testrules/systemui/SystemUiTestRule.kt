@@ -5,9 +5,7 @@ import org.junit.rules.RuleChain
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
-import sergio.sastre.uitesting.utils.testrules.systemui.navigation.Navigation
 import sergio.sastre.uitesting.utils.testrules.systemui.navigation.NavigationModeTestRule
-import sergio.sastre.uitesting.utils.testrules.systemui.statusbar.ClockTime
 import sergio.sastre.uitesting.utils.testrules.systemui.statusbar.StatusBarTestRule
 import sergio.sastre.uitesting.utils.utils.drawFullScreenToBitmap as fullScreenToBitmap
 
@@ -15,17 +13,31 @@ import sergio.sastre.uitesting.utils.utils.drawFullScreenToBitmap as fullScreenT
  * A [TestRule] that combines [StatusBarTestRule] and [NavigationModeTestRule]
  * to provide a consistent System UI for testing.
  *
- * @param navigation The target [Navigation] mode.
- * @param clockTime The time to display in the status bar.
+ * WARNING: the statusBarConfig uses Demo Mode via adb, which is ensured to work on Nexus and Pixel devices, but might not work on others
+ * Moreover, it does only support status bar in English language (e.g. RTL and en_XA are not reflected)
+ *
+ * WARNING 2: Only works on Instrumentation tests, not on Robolectric tests.
+ *
+ * @param navigationConfig Configuration for the system navigation bar.
+ * @param statusBarConfig Configuration for the system status bar.
  */
 class SystemUiTestRule(
-    private val navigation: Navigation = Navigation.GESTURAL,
-    private val clockTime: ClockTime = ClockTime(12, 30),
+    private val navigationConfig: NavigationConfig = NavigationConfig(),
+    private val statusBarConfig: StatusBarConfig = StatusBarConfig(),
 ) : TestRule {
 
     override fun apply(base: Statement, description: Description): Statement =
-        RuleChain.outerRule(StatusBarTestRule(clockTime))
-            .around(NavigationModeTestRule(navigation))
+        RuleChain.outerRule(
+            StatusBarTestRule(
+                clockTime = statusBarConfig.clockTime
+            )
+        )
+            .around(
+                NavigationModeTestRule(
+                    navigation = navigationConfig.mode,
+                    customThreeButtonIdentifiers = navigationConfig.customThreeButtonIdentifiers
+                )
+            )
             .apply(base, description)
 
     /**

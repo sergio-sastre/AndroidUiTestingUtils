@@ -17,40 +17,59 @@ import sergio.sastre.uitesting.utils.utils.waitForExecuteShellCommand
  * WARNING: Only works on Instrumentation tests, not on Robolectric tests.
  *
  * @param navigation The target [Navigation] mode to set during the test.
+ * @param customThreeButtonIdentifiers A set of [ThreeButtonIdentifier]s for devices that use custom
+ * resource IDs for the back, home, and recents buttons (e.g., some Samsung devices).
  */
 class NavigationModeTestRule(
-    private val navigation: Navigation
+    private val navigation: Navigation,
+    private val customThreeButtonIdentifiers: Set<ThreeButtonIdentifier> = emptySet(),
 ) : TestRule {
 
     companion object {
-        const val TIMEOUT_IN_MS = 10_000L
+        private const val TIMEOUT_IN_MS = 10_000L
     }
+
+    private val allThreeButtonIdentifiers =
+        customThreeButtonIdentifiers.plus(
+            setOf(
+                STANDARD_THREE_BUTTON_IDENTIFIER,
+                NEXUS_THREE_BUTTON_IDENTIFIER
+            )
+        )
 
     private val TAG = javaClass.simpleName
 
-    override fun apply(base: Statement, description: Description): Statement = object : Statement() {
-        override fun evaluate() {
-            val instrumentation = getInstrumentation()
-            val targetMode = NavigationMode.from(navigation)
-            val originalMode = instrumentation.getNavigationMode()
-
-            try {
-                instrumentation.setNavigationMode(targetMode)
-                instrumentation.waitUntilUiMatches(navigation, TIMEOUT_IN_MS)
-                base.evaluate()
-            } catch (throwable: Throwable) {
-                val testName = "${description.testClass.simpleName}\$${description.methodName}"
-                val errorMessage =
-                    "Test $testName failed on setting NavigationMode to ${navigation.name}"
-                Log.e(TAG, errorMessage)
-                throw throwable
-            } finally {
-                instrumentation.setNavigationMode(originalMode)
-                UiDevice.getInstance(instrumentation).waitForIdle()
-                instrumentation.waitForIdleSync()
+    override fun apply(base: Statement, description: Description): Statement =
+        object : Statement() {
+            override fun evaluate() {
+                if (!navigation.available()) {
+                    Log.w(
+                        TAG,
+                        "Navigation mode ${navigation.name} not set because it isn't supported in current Android version."
+                    )
+                    return
+                }
+                val instrumentation = getInstrumentation()
+                val targetMode = NavigationMode.from(navigation)
+                val originalMode = instrumentation.getNavigationMode()
+                if (originalMode == targetMode) return
+                try {
+                    instrumentation.setNavigationMode(targetMode)
+                    instrumentation.waitUntilUiMatches(navigation, TIMEOUT_IN_MS)
+                    base.evaluate()
+                } catch (throwable: Throwable) {
+                    val testName = "${description.testClass.simpleName}\$${description.methodName}"
+                    val errorMessage =
+                        "Test $testName failed on setting NavigationMode to ${navigation.name}"
+                    Log.e(TAG, errorMessage)
+                    throw throwable
+                } finally {
+                    instrumentation.setNavigationMode(originalMode)
+                    UiDevice.getInstance(instrumentation).waitForIdle()
+                    instrumentation.waitForIdleSync()
+                }
             }
         }
-    }
 
     /**
      * Reads the current navigation mode from system settings.
@@ -66,8 +85,6 @@ class NavigationModeTestRule(
      * Sets the navigation mode using shell commands (`cmd overlay`) and waits for the system setting to change.
      */
     private fun Instrumentation.setNavigationMode(targetMode: NavigationMode) {
-        if (getNavigationMode() == targetMode) return
-
         NavigationMode.entries.filter { it != targetMode }.forEach {
             waitForExecuteShellCommand("cmd overlay disable ${it.adbValue}")
         }
@@ -92,18 +109,19 @@ class NavigationModeTestRule(
         val device = UiDevice.getInstance(this)
         val startTime = System.currentTimeMillis()
 
-        val home = By.res("com.android.systemui", "home")
-        val back = By.res("com.android.systemui", "back")
-        val recents = By.res("com.android.systemui", "recent_apps")
-
         while (System.currentTimeMillis() - startTime < timeout) {
-            val isHomeVisible = device.hasObject(home)
-            val isBackVisible = device.hasObject(back)
-            val isRecentsVisible = device.hasObject(recents)
-
             val isMatching = when (navigation) {
-                Navigation.THREE_BUTTON -> isHomeVisible && isBackVisible && isRecentsVisible
-                Navigation.GESTURAL -> !isHomeVisible && !isBackVisible && !isRecentsVisible
+                Navigation.THREE_BUTTON -> allThreeButtonIdentifiers.any { set ->
+                    device.hasObject(By.res(set.home.resPackage, set.home.resId)) &&
+                            device.hasObject(By.res(set.back.resPackage, set.back.resId)) &&
+                            device.hasObject(By.res(set.recents.resPackage, set.recents.resId))
+                }
+
+                Navigation.GESTURAL -> allThreeButtonIdentifiers.all { set ->
+                    !device.hasObject(By.res(set.home.resPackage, set.home.resId)) &&
+                            !device.hasObject(By.res(set.back.resPackage, set.back.resId)) &&
+                            !device.hasObject(By.res(set.recents.resPackage, set.recents.resId))
+                }
             }
 
             if (isMatching) {
