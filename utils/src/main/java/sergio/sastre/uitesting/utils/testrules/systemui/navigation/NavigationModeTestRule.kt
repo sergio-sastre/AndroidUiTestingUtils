@@ -30,7 +30,12 @@ class NavigationModeTestRule(
     }
 
     private val allThreeButtonIdentifiers =
-        customThreeButtonIdentifiers.plus(STANDARD_THREE_BUTTON_IDENTIFIER)
+        customThreeButtonIdentifiers.plus(
+            setOf(
+                STANDARD_THREE_BUTTON_IDENTIFIER,
+                NEXUS_THREE_BUTTON_IDENTIFIER
+            )
+        )
 
     private val TAG = javaClass.simpleName
 
@@ -47,7 +52,7 @@ class NavigationModeTestRule(
                 val instrumentation = getInstrumentation()
                 val targetMode = NavigationMode.from(navigation)
                 val originalMode = instrumentation.getNavigationMode()
-
+                if (originalMode == targetMode) return
                 try {
                     instrumentation.setNavigationMode(targetMode)
                     instrumentation.waitUntilUiMatches(navigation, TIMEOUT_IN_MS)
@@ -80,8 +85,6 @@ class NavigationModeTestRule(
      * Sets the navigation mode using shell commands (`cmd overlay`) and waits for the system setting to change.
      */
     private fun Instrumentation.setNavigationMode(targetMode: NavigationMode) {
-        if (getNavigationMode() == targetMode) return
-
         NavigationMode.entries.filter { it != targetMode }.forEach {
             waitForExecuteShellCommand("cmd overlay disable ${it.adbValue}")
         }
