@@ -36,6 +36,7 @@ class StatusBarTestRule(
     /**
      * Set a custom clock time using a string in "hh:mm" format (e.g., "12:30").
      */
+    @JvmOverloads
     constructor(
         hhmmClock: String,
         showWifiIcon: Boolean = true
