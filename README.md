@@ -34,6 +34,7 @@ This library enables you to easily change the following configurations in your U
 5. Font size
 6. Display size
 7. Accessibility (e.g. outline text, bold text, color contrast)
+8. Navigation mode (i.e. gestural/three button) and Status Bar (i.e. Demo Mode) in instrumentation tests
 
 Wondering why verifying our design under these configurations is important? I've got you covered:
 
