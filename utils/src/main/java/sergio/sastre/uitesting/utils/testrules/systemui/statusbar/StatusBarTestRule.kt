@@ -1,5 +1,6 @@
 package sergio.sastre.uitesting.utils.testrules.systemui.statusbar
 
+import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.uiautomator.UiDevice
 import org.junit.rules.TestRule
@@ -14,7 +15,7 @@ import sergio.sastre.uitesting.utils.utils.waitForExecuteShellCommand
  * It sets:
  * - Clock time: configurable (default 12:30)
  * - Battery: 100%, not plugged in
- * - Network: Wifi with full signal
+ * - Network: Either Wifi with full signal or hides the Wifi icon
  * - Notifications: Hidden
  *
  * The Demo Mode is applied when the test starts and reapplied every time an Activity
@@ -29,12 +30,16 @@ import sergio.sastre.uitesting.utils.utils.waitForExecuteShellCommand
  */
 class StatusBarTestRule(
     private val clockTime: ClockTime = ClockTime(12, 30),
+    private val showWifiIcon: Boolean = true,
 ) : TestRule {
 
     /**
      * Set a custom clock time using a string in "hh:mm" format (e.g., "12:30").
      */
-    constructor(hhmmClock: String) : this(ClockTime.from(hhmmClock))
+    constructor(
+        hhmmClock: String,
+        showWifiIcon: Boolean = true
+    ) : this(ClockTime.from(hhmmClock), showWifiIcon)
 
     private val TAG = javaClass.simpleName
 
@@ -51,6 +56,12 @@ class StatusBarTestRule(
             }
         }
 
+    private val wifiAdbCommand
+        get() = when (showWifiIcon) {
+            true -> "$BROADCAST_DEMO_COMMAND network -e wifi show -e level 4"
+            false -> "$BROADCAST_DEMO_COMMAND network -e wifi hide"
+        }
+
     private fun applyDemoMode() {
         val instrumentation = getInstrumentation()
         try {
@@ -58,14 +69,17 @@ class StatusBarTestRule(
             instrumentation.waitForExecuteShellCommand("$BROADCAST_DEMO_COMMAND enter")
             instrumentation.waitForExecuteShellCommand("$BROADCAST_DEMO_COMMAND clock -e hhmm ${clockTime.toHhmmString()}")
             instrumentation.waitForExecuteShellCommand("$BROADCAST_DEMO_COMMAND battery -e level 100 -e plugged false")
-            instrumentation.waitForExecuteShellCommand("$BROADCAST_DEMO_COMMAND network -e wifi show -e level 4")
+            instrumentation.waitForExecuteShellCommand(wifiAdbCommand)
             instrumentation.waitForExecuteShellCommand("$BROADCAST_DEMO_COMMAND notifications -e visible false")
 
             // Allow SystemUI a moment to reflect the changes
             UiDevice.getInstance(instrumentation).waitForIdle()
             instrumentation.waitForIdleSync()
         } catch (e: Exception) {
-            throw IllegalStateException("Failed to change the status bar by applying demo mode on RESUMED", e)
+            throw IllegalStateException(
+                "Failed to change the status bar by applying demo mode on RESUMED",
+                e
+            )
         }
     }
 
@@ -82,6 +96,12 @@ class StatusBarTestRule(
                     applyDemoMode()
 
                     base.evaluate()
+                } catch (throwable: Throwable) {
+                    val testName = "${description.testClass.simpleName}\$${description.methodName}"
+                    val errorMessage =
+                        "Test $testName failed on setting StatusBar in Demo Mode"
+                    Log.e(TAG, errorMessage)
+                    throw throwable
                 } finally {
                     monitor.removeLifecycleCallback(lifecycleCallback)
                     // Cleanup

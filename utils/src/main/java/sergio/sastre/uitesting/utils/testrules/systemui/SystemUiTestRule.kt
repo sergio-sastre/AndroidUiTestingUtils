@@ -29,13 +29,14 @@ class SystemUiTestRule(
     override fun apply(base: Statement, description: Description): Statement =
         RuleChain.outerRule(
             StatusBarTestRule(
-                clockTime = statusBarConfig.clockTime
+                clockTime = statusBarConfig.clockTime,
+                showWifiIcon = statusBarConfig.showWifiIcon,
             )
         )
             .around(
                 NavigationModeTestRule(
                     navigation = navigationConfig.mode,
-                    customThreeButtonIdentifiers = navigationConfig.customThreeButtonIdentifiers
+                    customThreeButtonIdentifiers = navigationConfig.customThreeButtonIdentifiers,
                 )
             )
             .apply(base, description)
