@@ -16,6 +16,8 @@ import java.io.File
  *
  * @property rootScreenshotDir A file provider for the root directory where screenshots are stored on the device.
  *   **The directory must be writable by the instrumentation process.**
+ * @property filenameFunc Function to create a filename from the class name and snapshot name (i.e. the name provided when taking
+ *   the snapshot). If null, it defaults to Dropshots standard naming.
  *
  *   The default value targets `Downloads/screenshots/<packageName>` and is provided as a
  *   convenience for **AGP 9.x test-storage setups that already handle permissions** via
@@ -35,7 +37,8 @@ data class DropshotsConfig(
     val filePath: String? = null,
     val rootScreenshotDir: (Context) -> File = { context ->
         defaultRootScreenshotDirectory(context)
-    }
+    },
+    val filenameFunc: ((String, String) -> String)? = null
 ) : LibraryConfig
 
 internal fun defaultRootScreenshotDirectory(context: Context): File {
