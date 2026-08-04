@@ -9,15 +9,15 @@ I wrote about why you might need it and how _AndroidUiTestingUtils_ supports thi
 
 Currently, it provides out-of-the-box support for the following screenshot testing libraries:
 
-* [Paparazzi](https://github.com/cashapp/paparazzi)&#x20;
+* [Paparazzi](https://github.com/cashapp/paparazzi)
 * [Shot](https://github.com/pedrovgs/Shot)
 * [Dropshots](https://github.com/dropbox/dropshots)
 * [Roborazzi](https://github.com/takahirom/roborazzi)
 * [Android-Testify](https://github.com/ndtp/android-testify)
 
-You can also add support for your own solution / another library in 2 steps by&#x20;
+You can also add support for your own solution / another library in 2 steps by
 
-1. Implementing `ScreenshotTestRuleForComposable` or `ScreenshotTestRuleForView` interfaces and&#x20;
+1. Implementing `ScreenshotTestRuleForComposable` or `ScreenshotTestRuleForView` interfaces and
 2. Using that implementation in `ScreenshotLibraryTestRuleForComposable` or `ScreenshotLibraryTestRuleForView` respectively, as we'll see below.
 
 ## **Basic configuration**
@@ -38,7 +38,8 @@ You can achieve this in 4 easy steps:
 
 | AndroidUiTestingUtils | Roborazzi     | Paparazzi | Dropshots | Shot  | Android-Testify |
 | --------------------- | ------------- | --------- | --------- | ----- | --------------- |
-| **2.9.0**             | _1.60.0_      | 1.3.5     | _0.6.0_   | 6.1.0 | 3.2.3           |
+| **2.10.0**            | _1.70.0_      | 1.3.5     | 0.6.0     | 6.1.0 | 3.2.3           |
+| 2.9.0                 | 1.60.0        | 1.3.5     | 0.6.0     | 6.1.0 | 3.2.3           |
 | 2.8.0                 | 1.51.0        | 1.3.5     | 0.5.1     | 6.1.0 | 3.2.3           |
 | 2.7.0                 | 1.44.0        | 1.3.5     | 0.5.0     | 6.1.0 | 3.2.2           |
 | 2.6.0                 | 1.32.2        | 1.3.5     | 0.4.1     | 6.1.0 | 3.2.0           |
@@ -78,8 +79,6 @@ dependencies {
     debugImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:android-testify:<version>'
 
     // For Paparazzi support:
-    //   2.2.0 -> AGP 8.1.1+
-    // < 2.2.0 -> AGP 8.0.0+
     debugImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:mapper-paparazzi:<version>'
     testImplementation 'com.github.sergio-sastre.AndroidUiTestingUtils:paparazzi:<version>'
 
@@ -108,8 +107,8 @@ class MyLibraryScreenshotTestRule(
 
 Executing your screenshot tests with another library will just require that you change the _ScreenshotLibraryTestRule_ accordingly!
 
-4. Finally, write your tests with that `MyLibraryScreenshotTestRule`. \
-   Put them under the corresponding folder, i.e `unitTest` (e.g. Roborazzi & Paparazzi) or `androidTest`(e.g. Dropshots, Shot, Android-Testify). \
+4. Finally, write your tests with that `MyLibraryScreenshotTestRule`.\
+   Put them under the corresponding folder, i.e `unitTest` (e.g. Roborazzi & Paparazzi) or `androidTest`(e.g. Dropshots, Shot, Android-Testify).\
    For an example, see [this section](../usage/cross-library-usage.md).
 
 Want to try it out? Check out these executable examples:
@@ -216,19 +215,19 @@ This is likely the most common use case. There are Ready-To-Run examples availab
 
 ### Pick the library dynamically
 
-If you want to use&#x20;
+If you want to use
 
-* Many On-device libraries (e.g. either **Shot**, **Dropshots** or **Android-Testify**)&#x20;
+* Many On-device libraries (e.g. either **Shot**, **Dropshots** or **Android-Testify**)
 
 and/or
 
 * Many JVM libraries (e.g.. either **Paparazzi** or **Roborazzi**).
 
-you need to dynamically pick the library your screenshot tests run with.&#x20;
+you need to dynamically pick the library your screenshot tests run with.
 
 For that you'll need some extra configuration, for instance, a custom Gradle property that you can pass via command line e.g.
 
-* &#x20;`-PscreenshotLibrary=shot`
+* `-PscreenshotLibrary=shot`
 
 Check these links for advice on how to configure the Gradle file and the `SharedScreenshotTestRule` to get it working:
 
