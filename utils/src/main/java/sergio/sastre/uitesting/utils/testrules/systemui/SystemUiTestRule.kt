@@ -22,8 +22,8 @@ import sergio.sastre.uitesting.utils.utils.drawFullScreenToBitmap as fullScreenT
  * @param statusBarConfig Configuration for the system status bar.
  */
 class SystemUiTestRule(
-    private val navigationConfig: NavigationConfig = NavigationConfig(),
     private val statusBarConfig: StatusBarConfig = StatusBarConfig(),
+    private val navigationConfig: NavigationConfig = NavigationConfig(),
 ) : TestRule {
 
     override fun apply(base: Statement, description: Description): Statement =
