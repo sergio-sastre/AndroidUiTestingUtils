@@ -48,6 +48,7 @@ internal class ScreenshotTaker(
                 name = name,
                 filePath = filePath,
             )
+
             else -> throw IllegalArgumentException("Unknown BitmapCaptureMethod: $bitmapCaptureMethod")
         }
     }
@@ -78,6 +79,7 @@ internal class ScreenshotTaker(
                 name = name,
                 filePath = filePath,
             )
+
             else -> throw IllegalArgumentException("Unknown BitmapCaptureMethod: $bitmapCaptureMethod")
         }
     }
@@ -114,10 +116,19 @@ internal class ScreenshotTaker(
 }
 
 internal fun createScreenshotTaker(dropshotsConfig: DropshotsConfig): ScreenshotTaker {
-    val dropshots = Dropshots(
-        resultValidator = dropshotsConfig.resultValidator,
-        imageComparator = dropshotsConfig.imageComparator,
-        rootScreenshotDirectory = dropshotsConfig.rootScreenshotDir(getInstrumentation().targetContext)
-    )
+    val dropshots = when (dropshotsConfig.filenameFunc == null) {
+        true -> Dropshots(
+            resultValidator = dropshotsConfig.resultValidator,
+            imageComparator = dropshotsConfig.imageComparator,
+            rootScreenshotDirectory = dropshotsConfig.rootScreenshotDir(getInstrumentation().targetContext)
+        )
+        false ->
+            Dropshots(
+                filenameFunc = dropshotsConfig.filenameFunc,
+                resultValidator = dropshotsConfig.resultValidator,
+                imageComparator = dropshotsConfig.imageComparator,
+                rootScreenshotDirectory = dropshotsConfig.rootScreenshotDir(getInstrumentation().targetContext)
+            )
+    }
     return ScreenshotTaker(dropshots)
 }
