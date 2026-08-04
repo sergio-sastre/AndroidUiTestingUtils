@@ -282,7 +282,7 @@ object ActivityScenarioConfigurator {
         return createConfigurationContext(newConfig)
     }
 
-    class PortraitSnapshotConfiguredActivity : FragmentActivity() {
+    abstract class SnapshotConfiguredActivity : FragmentActivity() {
         override fun attachBaseContext(newBase: Context?) {
             super.attachBaseContext(newBase?.wrap())
         }
@@ -313,35 +313,7 @@ object ActivityScenarioConfigurator {
         }
     }
 
-    class LandscapeSnapshotConfiguredActivity :
-        FragmentActivity() {
-        override fun attachBaseContext(newBase: Context?) {
-            super.attachBaseContext(newBase?.wrap())
-        }
+    class PortraitSnapshotConfiguredActivity : SnapshotConfiguredActivity()
 
-        override fun onCreate(savedInstanceState: Bundle?) {
-            applyThemeId()
-            super.onCreate(savedInstanceState)
-            applyWindowStyle()
-        }
-
-        override fun onPostCreate(savedInstanceState: Bundle?) {
-            super.onPostCreate(savedInstanceState)
-            applyStatusBarVisibility()
-        }
-
-        override fun onWindowFocusChanged(hasFocus: Boolean) {
-            super.onWindowFocusChanged(hasFocus)
-            if (hasFocus) {
-                applyStatusBarVisibility()
-            }
-        }
-
-        override fun onDestroy() {
-            super.onDestroy()
-            if (!isChangingConfigurations) {
-                resetConfig()
-            }
-        }
-    }
+    class LandscapeSnapshotConfiguredActivity : SnapshotConfiguredActivity()
 }
