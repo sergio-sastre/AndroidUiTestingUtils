@@ -1,6 +1,6 @@
 # TestRules & other utils
 
-Some utilities and TestRules to facilitate UI and Screenshot Testing&#x20;
+Some utilities and TestRules to facilitate UI and Screenshot Testing in instrumented tests.
 
 ## TestRules
 
@@ -14,6 +14,19 @@ val disableAnimations = DisableAnimationsTestRule()
 val inAppLocale = InAppLocaleTestRule(
     locale = "en",
     activityScenarioRule = activityScenarioRule
+)
+
+// System UI
+@get:Rule
+val navigation = NavigationModeTestRule(Navigation.THREE_BUTTON)
+
+@get:Rule
+val statusBar = StatusBarTestRule(clockTime = ClockTime.from("10:00"))
+
+@get:Rule
+val systemUi = SystemUiTestRule(
+    statusBarConfig = StatusBarConfig(clockTime = ClockTime.from("10:00")),
+    navigationConfig = NavigationConfig(Navigation.THREE_BUTTON)
 )
 
 // Sets the Locale of the Android system
@@ -40,6 +53,14 @@ val outlineText = OutlineTextTestRule(OutlineText.ENABLED)
 val colorContrast = ColorContrastTestRule(ColorContrast.HIGH)
 
 ```
+
+### **System UI**
+
+<figure><img src="../.gitbook/assets/SystemUi.png" alt=""><figcaption></figcaption></figure>
+
+{% hint style="info" %}
+This TestRule comes with a `drawToFullScreenBitmap()` method for screenshot testing
+{% endhint %}
 
 ### **Accessibility**
 
