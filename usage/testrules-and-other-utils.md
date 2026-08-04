@@ -56,7 +56,7 @@ val colorContrast = ColorContrastTestRule(ColorContrast.HIGH)
 
 ### **System UI**
 
-<figure><img src="../.gitbook/assets/SystemUi.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/SystemUi (1).png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="info" %}
 This TestRule comes with a `drawToFullScreenBitmap()` method for screenshot testing
