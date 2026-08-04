@@ -14,6 +14,7 @@ import sergio.sastre.uitesting.utils.utils.waitForComposeView
 class ActivityScenarioForComposableRule(
     config: ComposableConfigItem? = null,
     @ColorInt backgroundColor: Int? = null,
+    showStatusBar: Boolean = false
 ) : ExternalResource() {
 
     private val emptyComposeRule = createEmptyComposeRule()
@@ -31,7 +32,7 @@ class ActivityScenarioForComposableRule(
             config?.fontWeight?.also { fontWeight -> setFontWeight(fontWeight) }
             config?.fontSize?.also { fontSize -> setFontSize(fontSize) }
             config?.displaySize?.also { displaySize -> setDisplaySize(displaySize) }
-        }.launchConfiguredActivity(backgroundColor)
+        }.launchConfiguredActivity(backgroundColor, showStatusBar)
 
     val activity: Activity by lazy { activityScenario.waitForActivity() }
 

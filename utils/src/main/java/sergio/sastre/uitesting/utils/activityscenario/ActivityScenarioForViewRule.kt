@@ -11,6 +11,7 @@ import sergio.sastre.uitesting.utils.utils.waitForActivity
 class ActivityScenarioForViewRule(
     config: ViewConfigItem? = null,
     @ColorInt backgroundColor: Int? = null,
+    showStatusBar: Boolean = false
 ) : ExternalResource() {
 
     val activityScenario =
@@ -22,7 +23,7 @@ class ActivityScenarioForViewRule(
             config?.fontSize?.also { fontSize -> setFontSize(fontSize) }
             config?.displaySize?.also { displaySize -> setDisplaySize(displaySize) }
             config?.theme?.also { theme -> setTheme(theme) }
-        }.launchConfiguredActivity(backgroundColor)
+        }.launchConfiguredActivity(backgroundColor, showStatusBar)
 
     val activity: Activity by lazy { activityScenario.waitForActivity() }
 

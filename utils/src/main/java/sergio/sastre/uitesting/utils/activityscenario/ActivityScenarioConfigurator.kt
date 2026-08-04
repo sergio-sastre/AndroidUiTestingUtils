@@ -7,12 +7,14 @@ import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.annotation.ColorInt
 import androidx.annotation.Discouraged
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.test.core.app.ActivityScenario
 import sergio.sastre.uitesting.utils.common.LocaleUtil
@@ -35,6 +37,8 @@ object ActivityScenarioConfigurator {
 
     @ColorInt
     private var backgroundColor: Int? = null
+
+    private var showStatusBar: Boolean = false
 
     @StyleRes
     private var themeId: Int? = null
@@ -88,10 +92,16 @@ object ActivityScenarioConfigurator {
             ActivityScenarioConfigurator.backgroundColor = backgroundColor
         }
 
+        fun setShowStatusBar(show: Boolean): ForView = apply {
+            ActivityScenarioConfigurator.showStatusBar = show
+        }
+
         fun launchConfiguredActivity(
             @ColorInt backgroundColor: Int? = null,
+            showStatusBar: Boolean? = null,
         ): ActivityScenario<out FragmentActivity> {
-            ActivityScenarioConfigurator.backgroundColor = backgroundColor
+            backgroundColor?.let { ActivityScenarioConfigurator.backgroundColor = it }
+            showStatusBar?.let { ActivityScenarioConfigurator.showStatusBar = it }
             return ActivityScenario.launch(activityForOrientation(orientation))
         }
     }
@@ -143,10 +153,16 @@ object ActivityScenarioConfigurator {
             ActivityScenarioConfigurator.backgroundColor = backgroundColor
         }
 
+        fun setShowStatusBar(show: Boolean): ForComposable = apply {
+            ActivityScenarioConfigurator.showStatusBar = show
+        }
+
         fun launchConfiguredActivity(
             @ColorInt backgroundColor: Int? = null,
+            showStatusBar: Boolean? = null,
         ): ActivityScenario<out FragmentActivity> {
-            ActivityScenarioConfigurator.backgroundColor = backgroundColor
+            backgroundColor?.let { ActivityScenarioConfigurator.backgroundColor = it }
+            showStatusBar?.let { ActivityScenarioConfigurator.showStatusBar = it }
             return ActivityScenario.launch(activityForOrientation(orientation))
         }
     }
@@ -207,16 +223,40 @@ object ActivityScenarioConfigurator {
     private fun Activity.applyThemeId() {
         themeId?.run {
             setTheme(this)
-            themeId = null
         }
     }
 
     private fun Activity.applyWindowStyle() {
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         backgroundColor?.run {
             window.setBackgroundDrawable(this.toDrawable())
-            backgroundColor = null
         }
+    }
+
+    private fun Activity.applyStatusBarVisibility() {
+        val window = this.window
+        // Accessing window.decorView ensures mDecor is initialized in PhoneWindow,
+        // preventing NPE when accessing window.insetsController on some API 30 devices
+        val decorView = window.decorView
+        val controller = WindowCompat.getInsetsController(window, decorView)
+        if (!showStatusBar) {
+            controller.hide(WindowInsetsCompat.Type.statusBars())
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        } else {
+            controller.show(WindowInsetsCompat.Type.statusBars())
+        }
+    }
+
+    private fun resetConfig() {
+        fontSize = null
+        locale = null
+        uiMode = null
+        orientation = null
+        displaySize = null
+        fontWeight = null
+        backgroundColor = null
+        showStatusBar = false
+        themeId = null
     }
 
     private fun Context.wrap(): Context {
@@ -232,42 +272,48 @@ object ActivityScenarioConfigurator {
         fontWeight?.let {
             when (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 true -> newConfig.fontWeightAdjustment = it.value
-                false -> Log.d(this.javaClass.simpleName, "Skipping FontWeightAdjustment. It can only be used on API 31+, and the current API is ${Build.VERSION.SDK_INT}")
+                false -> Log.d(
+                    this.javaClass.simpleName,
+                    "Skipping FontWeightAdjustment. It can only be used on API 31+, and the current API is ${Build.VERSION.SDK_INT}"
+                )
             }
         }
-
-        fontSize = null
-        locale = null
-        uiMode = null
-        orientation = null
-        displaySize = null
-        fontWeight = null
 
         return createConfigurationContext(newConfig)
     }
 
-    class PortraitSnapshotConfiguredActivity : FragmentActivity() {
+    abstract class SnapshotConfiguredActivity : FragmentActivity() {
         override fun attachBaseContext(newBase: Context?) {
             super.attachBaseContext(newBase?.wrap())
         }
 
         override fun onCreate(savedInstanceState: Bundle?) {
             applyThemeId()
-            applyWindowStyle()
             super.onCreate(savedInstanceState)
+            applyWindowStyle()
+        }
+
+        override fun onPostCreate(savedInstanceState: Bundle?) {
+            super.onPostCreate(savedInstanceState)
+            applyStatusBarVisibility()
+        }
+
+        override fun onWindowFocusChanged(hasFocus: Boolean) {
+            super.onWindowFocusChanged(hasFocus)
+            if (hasFocus) {
+                applyStatusBarVisibility()
+            }
+        }
+
+        override fun onDestroy() {
+            super.onDestroy()
+            if (!isChangingConfigurations) {
+                resetConfig()
+            }
         }
     }
 
-    class LandscapeSnapshotConfiguredActivity :
-        FragmentActivity() {
-        override fun attachBaseContext(newBase: Context?) {
-            super.attachBaseContext(newBase?.wrap())
-        }
+    class PortraitSnapshotConfiguredActivity : SnapshotConfiguredActivity()
 
-        override fun onCreate(savedInstanceState: Bundle?) {
-            applyThemeId()
-            applyWindowStyle()
-            super.onCreate(savedInstanceState)
-        }
-    }
+    class LandscapeSnapshotConfiguredActivity : SnapshotConfiguredActivity()
 }
