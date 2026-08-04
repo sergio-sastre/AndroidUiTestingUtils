@@ -101,7 +101,7 @@ class StatusBarTestRule(
                     val testName = "${description.testClass.simpleName}\$${description.methodName}"
                     val errorMessage =
                         "Test $testName failed on setting StatusBar in Demo Mode"
-                    Log.e(TAG, errorMessage)
+                    Log.e(TAG, errorMessage, throwable)
                     throw throwable
                 } finally {
                     monitor.removeLifecycleCallback(lifecycleCallback)
