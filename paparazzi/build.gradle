@@ -53,7 +53,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.sergio-sastre'
             artifactId = "paparazzi"
-            version = '2.10.0'
+            version = '2.10.1'
 
             afterEvaluate {
                 from components.release
