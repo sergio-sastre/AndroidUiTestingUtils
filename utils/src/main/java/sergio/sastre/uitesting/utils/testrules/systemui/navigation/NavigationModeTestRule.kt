@@ -52,7 +52,6 @@ class NavigationModeTestRule(
                 val instrumentation = getInstrumentation()
                 val targetMode = NavigationMode.from(navigation)
                 val originalMode = instrumentation.getNavigationMode()
-                if (originalMode == targetMode) return
                 try {
                     instrumentation.setNavigationMode(targetMode)
                     instrumentation.waitUntilUiMatches(navigation, TIMEOUT_IN_MS)
