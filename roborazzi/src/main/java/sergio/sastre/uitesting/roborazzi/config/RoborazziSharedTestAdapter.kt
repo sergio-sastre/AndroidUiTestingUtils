@@ -2,6 +2,7 @@ package sergio.sastre.uitesting.roborazzi.config
 
 import com.dropbox.differ.ImageComparator
 import com.dropbox.differ.SimpleImageComparator
+import com.github.takahirom.roborazzi.AccessibilityLegend
 import com.github.takahirom.roborazzi.AiAssertionOptions
 import com.github.takahirom.roborazzi.Dump
 import com.github.takahirom.roborazzi.Dump.Companion.AccessibilityExplanation
@@ -70,6 +71,7 @@ internal class RoborazziSharedTestAdapter(
                     }
 
                     is WrapperCaptureType.Screenshot -> RoborazziOptions.CaptureType.Screenshot()
+                    is WrapperCaptureType.AccessibilityLegend -> RoborazziOptions.CaptureType.AccessibilityLegend()
                 }
 
             val adaptedCompareOptions: RoborazziOptions.CompareOptions =
