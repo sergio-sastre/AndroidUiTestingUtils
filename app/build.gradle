@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "sergio.sastre.uitesting.myapplication"
-        minSdk 23
+        minSdk 24
 
         versionCode 1
         versionName "1.0"

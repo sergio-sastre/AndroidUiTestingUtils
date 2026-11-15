@@ -5,6 +5,8 @@ import sergio.sastre.uitesting.mapper.roborazzi.wrapper.DumpExplanation.DefaultE
 sealed interface CaptureType {
     data object Screenshot : CaptureType
     data class Dump(val explanation: DumpExplanation = DefaultExplanation) : CaptureType
+
+    data object AccessibilityLegend: CaptureType
 }
 
 enum class DumpExplanation {

@@ -19,7 +19,7 @@ data class RoborazziConfig(
     fun overrideForDefaultAccessibility(): RoborazziConfig {
         return copy(
             roborazziOptions = roborazziOptions.copy(
-                captureType = CaptureType.Dump(AccessibilityExplanation)
+                captureType = CaptureType.AccessibilityLegend
             ),
         )
     }

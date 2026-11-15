@@ -50,15 +50,16 @@ class RoborazziScreenshotTestRuleForComposable(
 
     private fun snapshotView(name: String?, view: View) {
         @OptIn(ExperimentalRoborazziApi::class)
-        when (roborazziConfig.roborazziOptions.captureType is CaptureType.Dump) {
-            // Dump does not support Bitmap.captureRoboImage
-            true -> view
+        when (roborazziConfig.roborazziOptions.captureType) {
+            // Dump and AccessibilityLegend do not support Bitmap.captureRoboImage
+            is CaptureType.Dump,
+            CaptureType.AccessibilityLegend -> view
                 .captureRoboImage(
                     filePath = filePathGenerator(roborazziConfig.filePath, name),
                     roborazziOptions = roborazziAdapter.asRoborazziOptions(),
                 )
 
-            false -> view
+            CaptureType.Screenshot -> view
                 .drawToBitmap(roborazziConfig.bitmapCaptureMethod)
                 .captureRoboImage(
                     filePath = filePathGenerator.invoke(roborazziConfig.filePath, name),
